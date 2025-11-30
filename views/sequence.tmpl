@@ -5,11 +5,11 @@
             <label for="sequenceType" class="form-label">Sequence Type</label>
             <select class="form-select" id="sequenceType" name="sequenceType" required>
                 <option value="fibonacci">Fibonacci</option>
+                <option value="fibonacci_prime">Fibonacci Prime</option>
                 <option value="prime">Prime</option>
                 <option value="natural">Natural</option>
                 <option value="cubes">Cubes</option>
                 <option value="central_polygonal">Central Polygonal</option>
-                <option value="fibonacci_prime">Fibonacci Prime</option>
                 <option value="cake">Cake</option>
                 <option value="catalan">Catalan</option>
                 <option value="totient">Totient</option>
@@ -20,7 +20,7 @@
             </select>
         </div>
         <div class="mb-3">
-            <label for="maxNumber" class="form-label">Max Number</label>
+            <label for="maxNumber" class="form-label">(Max) Number or Position</label>
             <input type="number" class="form-control" id="maxNumber" name="maxNumber" required>
         </div>
         <div class="mb-3 form-check">
@@ -38,7 +38,7 @@
                 <p class="card-text"><strong>Number:</strong> <span id="resultNumber"></span></p>
                 <p class="card-text"><strong>Result:</strong> <span id="resultValue"></span></p>
                 <p class="card-text"><strong>Sequence:</strong></p>
-                <pre id="resultSequence" class="bg-light p-2" style="max-height: 300px; overflow-y: auto;"></pre>
+                <p id="resultSequence" class="card-text"></p>
             </div>
         </div>
     </div>
@@ -89,10 +89,10 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(function(data) {
-            resultName.textContent = data.Name;
-            resultNumber.textContent = data.Number;
-            resultValue.textContent = data.Result;
-            resultSequence.textContent = JSON.stringify(data.Sequence, null, 2);
+            resultName.textContent = data.name;
+            resultNumber.textContent = data.number;
+            resultValue.textContent = data.result;
+            resultSequence.textContent = data.sequence.join(', ')
             
             resultContainer.style.display = 'block';
         })

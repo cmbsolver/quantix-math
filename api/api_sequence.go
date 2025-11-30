@@ -12,6 +12,27 @@ type SequenceRequest struct {
 	Positional   bool   `json:"positional"`
 }
 
+type SequenceResponse struct {
+	Name     string   `json:"name"`
+	Number   string   `json:"number"`
+	Sequence []string `json:"sequence"`
+	Result   string   `json:"result"`
+}
+
+func getSequenceResponse(seq *sequences.NumericSequence) SequenceResponse {
+	retval := SequenceResponse{
+		Name:   seq.Name,
+		Number: seq.Number.String(),
+		Result: seq.Result.String(),
+	}
+
+	for _, item := range seq.Sequence {
+		retval.Sequence = append(retval.Sequence, item.String())
+	}
+
+	return retval
+}
+
 func GetSequenceHandler(c *fiber.Ctx) error {
 	var req SequenceRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -27,5 +48,5 @@ func GetSequenceHandler(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
 	}
 
-	return c.JSON(seq)
+	return c.JSON(getSequenceResponse(seq))
 }
