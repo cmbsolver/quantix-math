@@ -3,7 +3,6 @@ package sequences
 import (
 	"fmt"
 	"math/big"
-	"os"
 )
 
 func GetSequence(maxNumberString, sequenceType string, positional bool) (*NumericSequence, error) {
@@ -11,7 +10,7 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	maxNumber, ok := maxNumber.SetString(maxNumberString, 10)
 	if !ok {
 		fmt.Printf("Invalid max number: %s\n", maxNumberString)
-		os.Exit(1)
+		return nil, fmt.Errorf("invalid max number: %s", maxNumberString)
 	}
 
 	var sequence *NumericSequence

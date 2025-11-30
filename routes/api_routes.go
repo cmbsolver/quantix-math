@@ -9,4 +9,5 @@ import (
 func RegisterAPIRoutes(app *fiber.App) {
 	apiGroup := app.Group("/api")
 	apiGroup.Post("/sequence", api.GetSequenceHandler)
+	apiGroup.Post("/prime", api.GetIsItPrimeHandler)
 }

@@ -26,4 +26,10 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Numeric Sequences",
 		})
 	})
+
+	app.Get("/isitprime", func(c *fiber.Ctx) error {
+		return c.Render("isitprime", fiber.Map{
+			"Title": "Is It Prime?",
+		})
+	})
 }

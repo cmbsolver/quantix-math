@@ -1,0 +1,85 @@
+<div class="container mt-4">
+    <h1>Is It Prime?</h1>
+    <form id="isPrimeForm">
+        <div class="mb-3">
+            <label for="numberToCheck" class="form-label">Number to Check</label>
+            <input type="text" class="form-control" id="numberToCheck" name="numberToCheck" placeholder="Enter a number" required>
+            <div class="form-text">Enter a positive integer to check if it is a prime number.</div>
+        </div>
+        <button type="submit" class="btn btn-primary">Check</button>
+    </form>
+
+    <div id="resultContainer" class="mt-4" style="display:none;">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Result</h5>
+                <p class="card-text fs-4" id="resultText"></p>
+                <p class="card-text fs-4" id="emirpText" style="display:none;"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('isPrimeForm');
+    const resultContainer = document.getElementById('resultContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    const resultText = document.getElementById('resultText');
+    const emirpText = document.getElementById('emirpText');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Checking...';
+
+        resultContainer.style.display = 'none';
+        errorContainer.style.display = 'none';
+        emirpText.style.display = 'none';
+
+        const number = document.getElementById('numberToCheck').value;
+
+        fetch('/api/prime', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ number: number })
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                return response.text().then(function(text) {
+                    throw new Error(text || 'Failed to check number');
+                });
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            if (data.isPrime) {
+                resultText.innerHTML = '<span class="text-success"><i class="bi bi-check-circle-fill"></i> Yes, it is prime!</span>';
+                
+                if (data.isEmirp) {
+                    emirpText.innerHTML = '<span class="text-info"><i class="bi bi-arrow-repeat"></i> And it is also an Emirp!</span>';
+                    emirpText.style.display = 'block';
+                }
+            } else {
+                resultText.innerHTML = '<span class="text-warning"><i class="bi bi-x-circle-fill"></i> No, it is not prime.</span>';
+            }
+            resultContainer.style.display = 'block';
+        })
+        .catch(function(error) {
+            errorContainer.textContent = error.message;
+            errorContainer.style.display = 'block';
+        })
+        .finally(function() {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        });
+    });
+});
+</script>
