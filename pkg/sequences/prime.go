@@ -2,47 +2,11 @@ package sequences
 
 import (
 	"math/big"
-	"strings"
 )
 
 // IsPrime checks if a number is prime.
-func IsPrime(number *big.Int) bool {
-	numberArray := strings.Split(number.String(), "")
-	if len(numberArray) >= 2 {
-		lastChar := numberArray[len(numberArray)-1]
-		if lastChar == "0" || lastChar == "2" || lastChar == "4" || lastChar == "5" || lastChar == "6" || lastChar == "8" {
-			return false
-		}
-	}
-
-	if number.Cmp(big.NewInt(2)) < 0 {
-		return false
-	}
-	if number.Cmp(big.NewInt(2)) == 0 || number.Cmp(big.NewInt(3)) == 0 {
-		return true
-	}
-
-	if number.Cmp(big.NewInt(3)) > 0 && number.Cmp(big.NewInt(158981)) <= 0 {
-		return IsNumberInPrimeList(number.Int64())
-	}
-
-	if new(big.Int).Mod(number, big.NewInt(2)).Cmp(big.NewInt(0)) == 0 ||
-		new(big.Int).Mod(number, big.NewInt(3)).Cmp(big.NewInt(0)) == 0 {
-		return false
-	}
-
-	// Start checking with 6k ± 1
-	sqrt := new(big.Int).Sqrt(number)
-	k := big.NewInt(5)
-	for k.Cmp(sqrt) <= 0 {
-		if new(big.Int).Mod(number, k).Cmp(big.NewInt(0)) == 0 ||
-			new(big.Int).Mod(number, new(big.Int).Add(k, big.NewInt(2))).Cmp(big.NewInt(0)) == 0 {
-			return false
-		}
-		k.Add(k, big.NewInt(6))
-	}
-
-	return true
+func IsPrime(n *big.Int) bool {
+	return n.ProbablyPrime(20)
 }
 
 // IsEmirp checks if a number is an emirp (reversible prime).
@@ -127,4 +91,87 @@ func GetFibonacciPrimeSequence(maxNumber *big.Int, isPositional bool) (*NumericS
 	}
 
 	return numericSequence, nil
+}
+
+// IsSemiPrime checks if a number is a semi-prime (product of exactly two primes).
+// It takes a *big.Int as a parameter.
+func IsSemiPrime(n *big.Int) bool {
+	if n.Cmp(big.NewInt(4)) < 0 {
+		return false
+	}
+
+	factors := 0
+	tempN := new(big.Int).Set(n)
+	i := big.NewInt(2)
+	two := big.NewInt(2)
+	one := big.NewInt(1)
+	zero := big.NewInt(0)
+
+	// Optimization: check small factors first or standard trial division
+	// Since we don't have a complex factorization library, we will do trial division
+	// up to sqrt(n).
+
+	limit := new(big.Int).Sqrt(tempN)
+
+	for i.Cmp(limit) <= 0 {
+		remainder := new(big.Int)
+		quotient := new(big.Int)
+
+		quotient.DivMod(tempN, i, remainder)
+
+		for remainder.Cmp(zero) == 0 {
+			factors++
+			tempN.Set(quotient)
+			if factors > 2 {
+				return false
+			}
+			// Re-calculate limit/remainder for the new tempN
+			limit.Sqrt(tempN)
+			quotient.DivMod(tempN, i, remainder)
+		}
+
+		if i.Cmp(two) == 0 {
+			i.Add(i, one)
+		} else {
+			i.Add(i, two)
+		}
+	}
+
+	if tempN.Cmp(one) > 0 {
+		factors++
+	}
+
+	return factors == 2
+}
+
+// IsCircularPrime checks if a number is a circular prime.
+func IsCircularPrime(n *big.Int) bool {
+	if !IsPrime(n) {
+		return false
+	}
+
+	s := n.String()
+	length := len(s)
+
+	if length == 1 {
+		return true
+	}
+
+	for _, char := range s {
+		if (char-'0')%2 == 0 || char == '5' {
+			return false
+		}
+	}
+
+	for i := 1; i < length; i++ {
+		s = s[1:] + s[0:1]
+		rotatedN := new(big.Int)
+		rotatedN.SetString(s, 10)
+
+		if !IsPrime(rotatedN) {
+			return false
+		}
+	}
+
+	return true
 }

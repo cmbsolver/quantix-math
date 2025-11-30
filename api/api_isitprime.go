@@ -13,9 +13,11 @@ type IsItPrimeRequest struct {
 }
 
 type IsItPrimeResponse struct {
-	Number  string `json:"number"`
-	IsPrime bool   `json:"isPrime"`
-	IsEmirp bool   `json:"isEmirp"`
+	Number          string `json:"number"`
+	IsPrime         bool   `json:"isPrime"`
+	IsEmirp         bool   `json:"isEmirp"`
+	IsCircularPrime bool   `json:"isCircularPrime"`
+	IsSemiprime     bool   `json:"isSemiprime"`
 }
 
 func GetIsItPrimeHandler(c *fiber.Ctx) error {
@@ -37,8 +39,16 @@ func GetIsItPrimeHandler(c *fiber.Ctx) error {
 
 	isPrime := sequences.IsPrime(number)
 	isEmirp := sequences.IsEmirp(number)
+	isCircularPrime := sequences.IsCircularPrime(number)
+	isSemiPrime := sequences.IsSemiPrime(number)
 
-	response := &IsItPrimeResponse{Number: req.Number, IsPrime: isPrime, IsEmirp: isEmirp}
+	response := &IsItPrimeResponse{
+		Number:          req.Number,
+		IsPrime:         isPrime,
+		IsEmirp:         isEmirp,
+		IsCircularPrime: isCircularPrime,
+		IsSemiprime:     isSemiPrime,
+	}
 
 	return c.JSON(response)
 }
