@@ -13,7 +13,7 @@ func main() {
 	app := fiber.New()
 
 	// Static files
-	app.Static("/", "./quantix-math-ui/dist/quantix-math-ui/browser")
+	app.Static("/", "./quantix-math-ui/dist")
 
 	app.Listen(":3000")
 }
