@@ -1,0 +1,109 @@
+<div class="container mt-4">
+    <h1>Sequence Generator</h1>
+    <form id="sequenceForm">
+        <div class="mb-3">
+            <label for="sequenceType" class="form-label">Sequence Type</label>
+            <select class="form-select" id="sequenceType" name="sequenceType" required>
+                <option value="fibonacci">Fibonacci</option>
+                <option value="prime">Prime</option>
+                <option value="natural">Natural</option>
+                <option value="cubes">Cubes</option>
+                <option value="central_polygonal">Central Polygonal</option>
+                <option value="fibonacci_prime">Fibonacci Prime</option>
+                <option value="cake">Cake</option>
+                <option value="catalan">Catalan</option>
+                <option value="totient">Totient</option>
+                <option value="totient_prime">Totient Prime</option>
+                <option value="zekendorf">Zekendorf</option>
+                <option value="lucas">Lucas</option>
+                <option value="collatz">Collatz</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="maxNumber" class="form-label">Max Number</label>
+            <input type="number" class="form-control" id="maxNumber" name="maxNumber" required>
+        </div>
+        <div class="mb-3 form-check">
+            <input type="checkbox" class="form-check-input" id="positional" name="positional">
+            <label class="form-check-label" for="positional">Positional (Start from 0/1)</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Generate</button>
+    </form>
+
+    <div id="resultContainer" class="mt-4" style="display:none;">
+        <h3>Result</h3>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" id="resultName"></h5>
+                <p class="card-text"><strong>Number:</strong> <span id="resultNumber"></span></p>
+                <p class="card-text"><strong>Result:</strong> <span id="resultValue"></span></p>
+                <p class="card-text"><strong>Sequence:</strong></p>
+                <pre id="resultSequence" class="bg-light p-2" style="max-height: 300px; overflow-y: auto;"></pre>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('sequenceForm');
+    const resultContainer = document.getElementById('resultContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    const resultName = document.getElementById('resultName');
+    const resultNumber = document.getElementById('resultNumber');
+    const resultValue = document.getElementById('resultValue');
+    const resultSequence = document.getElementById('resultSequence');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.textContent;
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Generating...';
+
+        resultContainer.style.display = 'none';
+        errorContainer.style.display = 'none';
+
+        const formData = {
+            sequenceType: document.getElementById('sequenceType').value,
+            maxNumber: document.getElementById('maxNumber').value,
+            positional: document.getElementById('positional').checked
+        };
+
+        fetch('/api/sequence', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                return response.text().then(function(text) {
+                    throw new Error(text || 'Failed to generate sequence');
+                });
+            }
+            return response.json();
+        })
+        .then(function(data) {
+            resultName.textContent = data.Name;
+            resultNumber.textContent = data.Number;
+            resultValue.textContent = data.Result;
+            resultSequence.textContent = JSON.stringify(data.Sequence, null, 2);
+            
+            resultContainer.style.display = 'block';
+        })
+        .catch(function(error) {
+            errorContainer.textContent = error.message;
+            errorContainer.style.display = 'block';
+        })
+        .finally(function() {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+        });
+    });
+});
+</script>

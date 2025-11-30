@@ -22,6 +22,7 @@ func main() {
 	})
 
 	// Setup Routes
+	routes.RegisterAPIRoutes(app)
 	routes.SetupUIRoutes(app)
 
 	app.Listen(":3000")

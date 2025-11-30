@@ -19,4 +19,11 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "About",
 		})
 	})
+
+	// About Page
+	app.Get("/sequence", func(c *fiber.Ctx) error {
+		return c.Render("sequence", fiber.Map{
+			"Title": "Numeric Sequences",
+		})
+	})
 }
