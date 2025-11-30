@@ -32,3 +32,4 @@ go.work.sum
 # .vscode/
 /quantix-math-ui/package-lock.json
 /go.sum
+/quantix-math
