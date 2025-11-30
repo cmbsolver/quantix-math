@@ -1,8 +1,15 @@
 package main
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"db"
+
+	"github.com/gofiber/fiber/v2"
+)
 
 func main() {
+	// init database
+	db.InitDatabase()
+
 	app := fiber.New()
 
 	// Static files
