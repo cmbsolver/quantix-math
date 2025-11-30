@@ -1,7 +1,7 @@
 package main
 
 import (
-	"db"
+	"quantix-math/pkg/db"
 	"quantix-math/routes" // Import the new routes package
 
 	"github.com/gofiber/fiber/v2"

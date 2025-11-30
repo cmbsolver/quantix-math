@@ -1,9 +1,9 @@
 package db
 
 import (
-	"config"
 	"fmt"
 	"os"
+	"quantix-math/pkg/config"
 
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/net/context"
