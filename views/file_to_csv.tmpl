@@ -15,57 +15,73 @@
         <div class="mb-3">
             <textarea class="form-control" id="csvResult" rows="10" readonly></textarea>
         </div>
-        <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+        <div class="btn-group" role="group">
+            <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+            <button class="btn btn-success" onclick="downloadCSV()">Download CSV</button>
+        </div>
     </div>
 
     <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
 </div>
 
 <script>
-    function copyToClipboard() {
-        const copyText = document.getElementById("csvResult");
-        copyText.select();
-        copyText.setSelectionRange(0, 99999);
-        navigator.clipboard.writeText(copyText.value);
-    }
+function copyToClipboard() {
+    const copyText = document.getElementById("csvResult");
+    copyText.select();
+    copyText.setSelectionRange(0, 99999); 
+    navigator.clipboard.writeText(copyText.value);
+}
 
-    document.getElementById('fileToCsvForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+function downloadCSV() {
+    const csvContent = document.getElementById("csvResult").value;
+    const blob = new Blob([csvContent], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "file_bytes.csv";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+}
 
-        const submitBtn = this.querySelector('button[type="submit"]');
-        const originalBtnText = submitBtn.innerText;
-        submitBtn.disabled = true;
-        submitBtn.innerText = 'Converting...';
+document.getElementById('fileToCsvForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerText;
+    submitBtn.disabled = true;
+    submitBtn.innerText = 'Converting...';
 
-        const resultContainer = document.getElementById('resultContainer');
-        const errorContainer = document.getElementById('errorContainer');
-        resultContainer.style.display = 'none';
-        errorContainer.style.display = 'none';
+    const resultContainer = document.getElementById('resultContainer');
+    const errorContainer = document.getElementById('errorContainer');
+    resultContainer.style.display = 'none';
+    errorContainer.style.display = 'none';
 
-        const fileInput = document.getElementById('fileInput');
-        const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
+    const fileInput = document.getElementById('fileInput');
+    const formData = new FormData();
+    formData.append('file', fileInput.files[0]);
 
-        try {
-            const response = await fetch('/api/binutils/file-to-csv', {
-                method: 'POST',
-                body: formData
-            });
+    try {
+        const response = await fetch('/api/binutils/file-to-csv', {
+            method: 'POST',
+            body: formData
+        });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || 'Failed to convert file');
-            }
-
-            const data = await response.json();
-            document.getElementById('csvResult').value = data.csv;
-            resultContainer.style.display = 'block';
-        } catch (error) {
-            errorContainer.innerText = error.message;
-            errorContainer.style.display = 'block';
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerText = originalBtnText;
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(errorText || 'Failed to convert file');
         }
-    });
+
+        const data = await response.json();
+        document.getElementById('csvResult').value = data.csv;
+        resultContainer.style.display = 'block';
+    } catch (error) {
+        errorContainer.innerText = error.message;
+        errorContainer.style.display = 'block';
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerText = originalBtnText;
+    }
+});
 </script>
