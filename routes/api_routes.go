@@ -10,4 +10,8 @@ func RegisterAPIRoutes(app *fiber.App) {
 	apiGroup := app.Group("/api")
 	apiGroup.Post("/sequence", api.GetSequenceHandler)
 	apiGroup.Post("/prime", api.GetIsItPrimeHandler)
+
+	// Binutils routes
+	apiGroup.Post("/binutils/file-to-csv", api.FileToCSVHandler)
+	apiGroup.Post("/binutils/csv-to-bytes", api.CSVToBytesHandler)
 }

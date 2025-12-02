@@ -1,0 +1,62 @@
+<div class="container mt-4">
+    <h1>CSV to Bytes Converter</h1>
+    <p>Enter comma-separated byte values (0-255) to reconstruct the file.</p>
+
+    <form id="csvToBytesForm">
+        <div class="mb-3">
+            <label for="csvInput" class="form-label">CSV String</label>
+            <textarea class="form-control" id="csvInput" name="csv" rows="10" required placeholder="104,101,108,108,111..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Convert & Download</button>
+    </form>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+</div>
+
+<script>
+    document.getElementById('csvToBytesForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerText;
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Processing...';
+
+        const errorContainer = document.getElementById('errorContainer');
+        errorContainer.style.display = 'none';
+
+        const csvData = document.getElementById('csvInput').value;
+
+        try {
+            const response = await fetch('/api/binutils/csv-to-bytes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ csv: csvData })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to convert CSV');
+            }
+
+            // Handle file download
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "output.bin";
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+        } catch (error) {
+            errorContainer.innerText = error.message;
+            errorContainer.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = originalBtnText;
+        }
+    });
+</script>

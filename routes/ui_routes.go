@@ -32,4 +32,16 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Is It Prime?",
 		})
 	})
+
+	app.Get("/file_to_csv", func(c *fiber.Ctx) error {
+		return c.Render("file_to_csv", fiber.Map{
+			"Title": "File to CSV",
+		})
+	})
+
+	app.Get("/csv_to_bytes", func(c *fiber.Ctx) error {
+		return c.Render("csv_to_bytes", fiber.Map{
+			"Title": "CSV to Bytes",
+		})
+	})
 }

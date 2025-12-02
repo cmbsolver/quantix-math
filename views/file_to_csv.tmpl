@@ -1,0 +1,71 @@
+<div class="container mt-4">
+    <h1>File to CSV Converter</h1>
+    <p>Upload a file to get its byte content as a comma-separated string.</p>
+
+    <form id="fileToCsvForm">
+        <div class="mb-3">
+            <label for="fileInput" class="form-label">Select File</label>
+            <input class="form-control" type="file" id="fileInput" name="file" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Convert</button>
+    </form>
+
+    <div id="resultContainer" class="mt-4" style="display:none;">
+        <h3>Result (CSV)</h3>
+        <div class="mb-3">
+            <textarea class="form-control" id="csvResult" rows="10" readonly></textarea>
+        </div>
+        <button class="btn btn-secondary" onclick="copyToClipboard()">Copy to Clipboard</button>
+    </div>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+</div>
+
+<script>
+    function copyToClipboard() {
+        const copyText = document.getElementById("csvResult");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999);
+        navigator.clipboard.writeText(copyText.value);
+    }
+
+    document.getElementById('fileToCsvForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn.innerText;
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Converting...';
+
+        const resultContainer = document.getElementById('resultContainer');
+        const errorContainer = document.getElementById('errorContainer');
+        resultContainer.style.display = 'none';
+        errorContainer.style.display = 'none';
+
+        const fileInput = document.getElementById('fileInput');
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        try {
+            const response = await fetch('/api/binutils/file-to-csv', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to convert file');
+            }
+
+            const data = await response.json();
+            document.getElementById('csvResult').value = data.csv;
+            resultContainer.style.display = 'block';
+        } catch (error) {
+            errorContainer.innerText = error.message;
+            errorContainer.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = originalBtnText;
+        }
+    });
+</script>
