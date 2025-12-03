@@ -22,6 +22,7 @@ func main() {
 	})
 
 	// Setup Routes
+	app.Static("/assets", "./assets")
 	routes.RegisterAPIRoutes(app)
 	routes.SetupUIRoutes(app)
 
