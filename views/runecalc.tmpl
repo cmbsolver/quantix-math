@@ -1,0 +1,1208 @@
+    <style>
+        /* Merged and Adapted CSS from style.css */
+        body {
+            background-color: #f8f9fa;
+        }
+
+        #runecalc-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .wide-input {
+            width: 100%;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            padding: 0.375rem 0.75rem;
+        }
+
+        .conversion-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .results-area {
+            margin: 20px 0;
+        }
+
+        .result-row {
+            display: flex;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding: 5px 0;
+            align-items: center;
+        }
+
+        .copy-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            margin-right: 8px;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            color: #6c757d;
+        }
+
+        .copy-button:hover {
+            opacity: 1;
+            color: #0d6efd;
+        }
+
+        .text-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .result-label {
+            width: 140px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .result-content, .rune-result-content {
+            flex: 1;
+            min-height: 24px;
+            word-wrap: anywhere !important;
+            overflow-wrap: anywhere !important;
+        }
+
+        .special-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .rune-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .rune-button {
+            font-size: 18px;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            transition: all 0.2s;
+        }
+
+        .rune-button:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        /* Snackbar */
+        #snackbar {
+            visibility: hidden;
+            min-width: 250px;
+            margin-left: -125px;
+            background-color: #213350;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1050;
+            left: 50%;
+            bottom: 30px;
+        }
+
+        #snackbar.show {
+            visibility: visible;
+            animation: fadein 0.5s, fadeout 0.5s 2.5s;
+        }
+
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+
+        /* Indicators */
+        .number-indicator {
+            display: inline-block;
+            height: 20px;
+            line-height: 20px;
+            padding: 0 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-left: 5px;
+            color: #fff;
+            cursor: help;
+        }
+
+        .number-indicator.prime { background-color: #337337; }
+        .number-indicator.emirp { background-color: #935b33; }
+        .number-indicator.circular { background-color: #005278; }
+        .number-indicator.fibonacci { background-color: #57151e; }
+        .number-indicator.lucas { background-color: #091347; }
+        .number-indicator.reversable { background-color: #3f0060; }
+
+        .ioc-text { display: inline-block; font-size: 12px; color: #d43a3a; margin-left: 5px;}
+
+        /* Tabs */
+        .nav-tabs { margin-top: 20px; }
+        .tab-content {
+            border: 1px solid #dee2e6;
+            border-top: none;
+            padding: 20px;
+            background: #fff;
+            border-bottom-left-radius: 0.25rem;
+            border-bottom-right-radius: 0.25rem;
+        }
+
+        /* GP View */
+        .gp-line {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .gp-word-box {
+            padding: 6px 10px;
+            margin: 0 6px 6px 0;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .gp-word-value { font-size: 11px; margin-top: 2px; font-weight: bold; }
+
+        /* Colors */
+        .gp-word-nonprime, .gp-line-sum-nonprime { color: #000; background-color: #e2e3e5; }
+        .gp-word-prime, .gp-line-sum-prime { color: #000; background-color: #d1e7dd; } /* Bootstrap Successish */
+        .gp-word-emirp, .gp-line-sum-emirp { color: #000; background-color: #ffcc99; }
+        .gp-word-circular-prime, .gp-line-sum-circular-prime { color: #fff; background-color: #0d6efd; }
+        .gp-word-semi-prime, .gp-line-sum-semi-prime { color: #fff; background-color: #6f42c1; }
+
+        .gp-line-sum-nonprime, .gp-line-sum-prime, .gp-line-sum-emirp, .gp-line-sum-circular-prime, .gp-line-sum-semi-prime {
+            margin-left: auto;
+            font-weight: bold;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        /* Expandable */
+        .expandable-section { border: 1px solid #ddd; border-radius: 4px; margin-top: 15px; overflow: hidden; }
+        .expandable-header { background-color: #f8f9fa; padding: 10px 15px; display: flex; justify-content: space-between; cursor: pointer; }
+        .expandable-content { padding: 15px; display: none; }
+        .expandable-content.show { display: block; }
+
+        .reverse-options { margin-bottom: 15px; }
+        .reverse-options label { margin-right: 15px; cursor: pointer; }
+    </style>
+
+<div id="runecalc-container" class="container">
+    <!-- Input Area -->
+    <div class="mb-3">
+        <label for="input-area" class="form-label text-label">Text To Calculate</label>
+        <textarea id="input-area" rows="4" class="form-control"></textarea>
+    </div>
+
+    <!-- Transform Type -->
+    <div class="conversion-row">
+        <div class="me-3">
+            <label class="text-label">Pass One Rune Encryption/Decryption:</label>
+            <select id="transform-type" class="form-select" style="max-width: 300px;">
+                <option value="none" selected>No Transform</option>
+                <option value="atbash">Atbash</option>
+                <option value="albam">Albam</option>
+                <option value="albam-one">Albam (Var 1)</option>
+                <option value="achbi">Achbi</option>
+                <option value="achbi-one">Achbi (Var 1)</option>
+                <option value="avgad">Avgad</option>
+                <option value="avgad-reverse">Avgad Decrypt</option>
+                <option value="akhas">Akhas Beta</option>
+                <option value="akhas-reverse">Akhas Beta Decrypt</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="reverse-options">
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="reverse-option" id="reverse-none" value="none" checked>
+            <label class="form-check-label" for="reverse-none">Don't Reverse</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="reverse-option" id="reverse-words" value="words">
+            <label class="form-check-label" for="reverse-words">Reverse Words</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="reverse-option" id="reverse-text" value="text">
+            <label class="form-check-label" for="reverse-text">Reverse Text</label>
+        </div>
+    </div>
+
+    <!-- Conversion Type -->
+    <div class="conversion-row bg-light p-3 rounded border">
+        <select id="conversion-type" class="form-select me-2" style="max-width: 250px;">
+            <option value="from-latin">From Latin Characters</option>
+            <option value="from-rune">From Rune Characters</option>
+        </select>
+        <button id="load-button" class="btn btn-primary">Transpose</button>
+    </div>
+
+    <!-- Section Loader (Simulated) -->
+    <div class="conversion-row mt-3">
+        <label class="text-label me-2">Load Example/Section:</label>
+        <select id="lpviewer-section-select" class="form-select me-2" style="max-width: 200px;">
+            <!-- Simplified list for demo, keeping logical ones -->
+            <option value="0-2.txt">Section 0-2</option>
+            <option value="3-7.txt">Section 3-7</option>
+            <option value="8-14.txt">Section 8-14</option>
+            <option value="15-22.txt">Section 15-22</option>
+            <option value="23-26.txt">Section 23-26</option>
+            <option value="27-32.txt">Section 27-32</option>
+            <option value="33-39.txt">Section 33-39</option>
+            <option value="40-53.txt">Section 40-53</option>
+            <option value="54-55.txt">Section 54-55</option>
+            <option value="56-56.txt">Section 56</option>
+            <option value="57-57.txt">Section 57</option>
+        </select>
+        <button id="sload-button" class="btn btn-secondary">Load Text File</button>
+    </div>
+
+    <!-- Special Characters Row -->
+    <div class="special-buttons">
+        <!-- JS will populate -->
+    </div>
+
+    <!-- Rune Buttons -->
+    <div class="rune-buttons">
+        <!-- JS will populate -->
+    </div>
+
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="runeTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="info-tab" data-bs-toggle="tab" data-bs-target="#information-tab" type="button" role="tab">Information</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="prime-tab" data-bs-toggle="tab" data-bs-target="#gp-view-tab" type="button" role="tab">Prime</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="totient-tab" data-bs-toggle="tab" data-bs-target="#totient-view-tab" type="button" role="tab">Totient</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="freq-tab" data-bs-toggle="tab" data-bs-target="#frequency-view-tab" type="button" role="tab">Frequency</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="space-tab" data-bs-toggle="tab" data-bs-target="#space-view-tab" type="button" role="tab">E-Spaces</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="ispace-tab" data-bs-toggle="tab" data-bs-target="#ispace-view-tab" type="button" role="tab">I-Spaces</button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="runeTabsContent">
+        <!-- Information Tab -->
+        <div class="tab-pane fade show active" id="information-tab" role="tabpanel">
+            <div class="results-area">
+                <!-- Template for result rows -->
+                <div class="result-row">
+                    <button class="copy-button" title="Copy"><i class="bi bi-clipboard"></i> Copy</button>
+                    <div class="result-label">Runes:</div>
+                    <div id="runes-result" class="rune-result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Runeglish:</div>
+                    <div id="runeglish-result" class="rune-result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Gematria Sum:</div>
+                    <div id="gematria-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Word Count:</div>
+                    <div id="wordcount-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Rune Count:</div>
+                    <div id="runecount-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Runeglish Count:</div>
+                    <div id="runeglishcount-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Rune Values:</div>
+                    <div id="runevalues-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Distinct Runes:</div>
+                    <div id="distinct-runes-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Doublets:</div>
+                    <div id="doublets-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Starts With:</div>
+                    <div id="startswith-result" class="result-content"></div>
+                </div>
+                <div class="result-row">
+                    <button class="copy-button" title="Copy">Copy</button>
+                    <div class="result-label">Starts and Ends With:</div>
+                    <div id="startsendwith-result" class="result-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Prime View -->
+        <div class="tab-pane fade" id="gp-view-tab" role="tabpanel">
+            <div class="gp-view-content">
+                <div id="gp-visualization" class="gp-lines-container"></div>
+                <div class="mt-3">
+                    <b>Legend:</b>
+                    <span class="badge bg-secondary text-dark bg-opacity-25 border">Non-Prime</span>
+                    <span class="badge bg-primary text-white">Circular Prime</span>
+                    <span class="badge bg-success text-dark bg-opacity-25">Prime</span>
+                    <span class="badge text-dark" style="background-color: #ffcc99;">Emirp</span>
+                    <span class="badge" style="background-color: #6f42c1; color:white">Semi-Prime</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Totient View -->
+        <div class="tab-pane fade" id="totient-view-tab" role="tabpanel">
+            <div class="totient-view-content">
+                <div id="totient-sigma" class="mb-2 fw-bold"></div>
+                <div id="totient-visualization" class="gp-lines-container"></div>
+                <div class="mt-3">
+                    <b>Legend:</b>
+                    <span class="badge bg-secondary text-dark bg-opacity-25 border">Not Coprime</span>
+                    <span class="badge bg-primary text-white">Coprime</span>
+                </div>
+                <div class="expandable-section">
+                    <div class="expandable-header">
+                        <span>Coprimes</span>
+                        <button class="btn btn-sm btn-outline-secondary expand-button">Toggle</button>
+                    </div>
+                    <div id="totient-coprimes" class="expandable-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Frequency -->
+        <div class="tab-pane fade" id="frequency-view-tab" role="tabpanel">
+            <div id="frequency-view-content"></div>
+        </div>
+
+        <!-- E-Spaces -->
+        <div class="tab-pane fade" id="space-view-tab" role="tabpanel">
+            <div class="alert alert-info py-1">Excludes Non-Rune Characters</div>
+            <div id="space-view-content"></div>
+        </div>
+
+        <!-- I-Spaces -->
+        <div class="tab-pane fade" id="ispace-view-tab" role="tabpanel">
+            <div class="alert alert-info py-1">Includes Non-Rune Characters</div>
+            <div id="ispace-view-content"></div>
+        </div>
+    </div>
+
+</div>
+
+<div id="snackbar">Copied text</div>
+
+<!-- Logic Script -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+
+        // --- Initialization ---
+
+        // Config: Path to files (Since this is a standalone HTML file, this assumes 'files/text/' exists relative to it)
+        const FILE_BASE_PATH = '/assets/files/text/';
+
+        // Initialize Rune Buttons
+        const runes = [
+            'ᚪ/A', 'ᚫ/AE', 'ᛒ/B', 'ᚳ/C', 'ᛞ/D', 'ᛖ/E', 'ᛠ/EA', 'ᛇ/EO', 'ᚠ/F',
+            'ᚷ/G', 'ᚻ/H', 'ᛁ/I', 'ᛡ/IO', 'ᛝ/ING', 'ᛄ/J', 'ᛚ/L', 'ᛗ/M', 'ᚾ/N',
+            'ᚩ/O', 'ᛟ/OE', 'ᛈ/P', 'ᚱ/R', 'ᛋ/S', 'ᛏ/T', 'ᚦ/TH', 'ᚢ/U', 'ᚹ/W',
+            'ᛉ/X', 'ᚣ/Y'
+        ];
+
+        const runeButtonsContainer = document.querySelector('.rune-buttons');
+        runes.forEach(rune => {
+            const btn = document.createElement('button');
+            btn.className = 'rune-button';
+            btn.textContent = rune;
+            btn.addEventListener('click', function() {
+                insertText(this.textContent.split('/')[0]);
+                triggerCalculation();
+            });
+            runeButtonsContainer.appendChild(btn);
+        });
+
+        // Initialize Special Buttons
+        const specialButtons = [
+            { text: 'Clear', action: clearAll, class: 'btn btn-danger' },
+            { text: '•', action: () => insertText('•') },
+            { text: '\'', action: () => insertText('\'') },
+            { text: '"', action: () => insertText('"') },
+            { text: '⊹', action: () => insertText('⊹') }
+        ];
+
+        const specialButtonsContainer = document.querySelector('.special-buttons');
+        specialButtons.forEach(btnData => {
+            const btn = document.createElement('button');
+            btn.className = btnData.class || 'btn btn-outline-secondary';
+            btn.textContent = btnData.text;
+            btn.addEventListener('click', function() {
+                if(btnData.action) btnData.action();
+            });
+            specialButtonsContainer.appendChild(btn);
+        });
+
+        // Event Listeners
+        document.getElementById('load-button').addEventListener('click', triggerCalculation);
+
+        // File Loader (Using Fetch instead of Ajax)
+        document.getElementById('sload-button').addEventListener('click', function() {
+            const filename = document.getElementById('lpviewer-section-select').value;
+            const filePath = FILE_BASE_PATH + filename;
+
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("HTTP error " + response.status);
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('input-area').value = data;
+                    document.getElementById('conversion-type').value = 'from-rune';
+                    triggerCalculation();
+                })
+                .catch(err => {
+                    alert("Error loading file. ensure you are running this on a local server or that the file exists relative to index.html.\n\nDetails: " + err);
+                });
+        });
+
+        // Expandable Sections
+        document.querySelectorAll('.expandable-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                content.classList.toggle('show');
+                const btn = this.querySelector('.expand-button');
+                btn.textContent = content.classList.contains('show') ? 'Hide' : 'Toggle';
+            });
+        });
+
+        // Copy Buttons
+        document.querySelectorAll('.copy-button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const row = this.closest('.result-row');
+                const contentDiv = row.querySelector('.result-content') || row.querySelector('.rune-result-content');
+                if(contentDiv) {
+                    navigator.clipboard.writeText(contentDiv.textContent)
+                        .then(() => showSnackbar())
+                        .catch(err => console.error('Failed to copy', err));
+                }
+            });
+        });
+
+
+        // --- Logic Functions (Converted from jQuery to Vanilla) ---
+
+        function insertText(text) {
+            const textarea = document.getElementById('input-area');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const val = textarea.value;
+
+            textarea.value = val.substring(0, start) + text + val.substring(end);
+            textarea.focus();
+            textarea.selectionStart = textarea.selectionEnd = start + text.length;
+        }
+
+        function triggerCalculation() {
+            let runeText = '';
+            let runeglishText = '';
+            const input = document.getElementById('input-area').value;
+            const conversionType = document.getElementById('conversion-type').value;
+            const reverseOption = document.querySelector('input[name="reverse-option"]:checked').value;
+            const transformType = document.getElementById('transform-type').value;
+
+            if (conversionType === 'from-latin') {
+                if (reverseOption !== 'none') {
+                    let tempText = input;
+                    if (reverseOption === 'words') {
+                        tempText = reverseWords(input);
+                    } else if (reverseOption === 'text') {
+                        tempText = reverseText(input);
+                    }
+                    runeglishText = prepLatinToRune(tempText);
+                    runeText = transposeLatinToRune(runeglishText, transformType);
+                } else {
+                    runeglishText = prepLatinToRune(input);
+                    runeText = transposeLatinToRune(runeglishText, transformType);
+                }
+            } else {
+                runeText = input;
+
+                if (transformType !== 'none') {
+                    let tmpRuneText = '';
+                    for (let i = 0; i < runeText.length; i++) {
+                        tmpRuneText += getRuneFromRune(runeText[i], transformType);
+                    }
+                    runeText = tmpRuneText;
+                }
+
+                if (reverseOption !== 'none') {
+                    if (reverseOption === 'words') {
+                        runeText = reverseWords(runeText);
+                    } else if (reverseOption === 'text') {
+                        runeText = reverseText(runeText);
+                    }
+                    runeglishText = transposeRuneToLatin(runeText);
+                } else {
+                    runeglishText = transposeRuneToLatin(runeText);
+                }
+            }
+
+            const gemSum = sumAllRuneValues(runeText);
+            const runeValues = getRuneValues(runeText);
+            const runeValuesText = runeValues.join(', ');
+            const runeglishValues = getRuneglishValues(runeglishText);
+            let distinctRunesText = getDistinctRuneText(runeText);
+            let doubletText = getDoubletsText(runeText);
+            const isReversable = isRuneReversable(runeText);
+
+            // Update DOM
+            document.getElementById('runes-result').textContent = runeText;
+            document.getElementById('runeglish-result').textContent = runeglishText;
+            updateGematriaDisplay(gemSum);
+            document.getElementById('wordcount-result').textContent = getWordCount(runeText);
+            document.getElementById('runevalues-result').textContent = runeValuesText;
+            document.getElementById('runecount-result').textContent = runeValues.length;
+            document.getElementById('runeglishcount-result').textContent = runeglishValues.length;
+            document.getElementById('distinct-runes-result').textContent = distinctRunesText;
+            document.getElementById('doublets-result').textContent = doubletText;
+
+            updateGPView(runeText);
+            updateTotientView(runeText, gemSum);
+            updateFirstLastFields(runeText);
+            updateIocTexts(isReversable);
+            updateFrequencyView(runeText);
+            updateSpaceView(runeText);
+            updateISpaceView(runeText);
+        }
+
+        function clearAll() {
+            document.getElementById('input-area').value = '';
+
+            const results = document.querySelectorAll('.result-content, .rune-result-content');
+            results.forEach(el => el.textContent = '');
+
+            document.getElementById('conversion-type').value = 'from-latin';
+
+            updateGPView('');
+            updateTotientView('', 0);
+            updateFirstLastFields('');
+            updateFrequencyView('');
+            updateSpaceView('');
+            updateISpaceView('');
+
+            const snackbar = document.getElementById('snackbar');
+            snackbar.textContent = 'All content cleared';
+            showSnackbar();
+        }
+
+        function showSnackbar() {
+            const x = document.getElementById("snackbar");
+            x.classList.add("show");
+            setTimeout(function(){ x.classList.remove("show"); }, 3000);
+        }
+
+        // --- Core Algorithm Functions (Ported verbatim or adapted slightly) ---
+
+        const orderedRunes = [
+            'ᚠ', 'ᚢ', 'ᚦ', 'ᚩ', 'ᚱ', 'ᚳ', 'ᚷ',
+            'ᚹ', 'ᚻ', 'ᚾ', 'ᛁ', 'ᛄ', 'ᛇ', 'ᛈ',
+            'ᛉ', 'ᛋ', 'ᛏ', 'ᛒ', 'ᛖ', 'ᛗ', 'ᛚ',
+            'ᛝ', 'ᛟ', 'ᛞ', 'ᚪ', 'ᚫ', 'ᚣ', 'ᛡ',
+            'ᛠ'
+        ];
+
+        const runeToValue = {
+            'ᛝ': 79, 'ᛟ': 83, 'ᛇ': 41, 'ᛡ': 107, 'ᛠ': 109, 'ᚫ': 101, 'ᚦ': 5, 'ᚠ': 2,
+            'ᚢ': 3, 'ᚩ': 7, 'ᚱ': 11, 'ᚳ': 13, 'ᚷ': 17, 'ᚹ': 19, 'ᚻ': 23, 'ᚾ': 29,
+            'ᛁ': 31, 'ᛄ': 37, 'ᛈ': 43, 'ᛉ': 47, 'ᛋ': 53, 'ᛏ': 59, 'ᛒ': 61, 'ᛖ': 67,
+            'ᛗ': 71, 'ᛚ': 73, 'ᛞ': 89, 'ᚪ': 97, 'ᚣ': 103
+        };
+
+        function getRuneValue(rune) {
+            return runeToValue.hasOwnProperty(rune) ? runeToValue[rune] : 0;
+        }
+
+        const letterToRune = {
+            'ING': 'ᛝ', 'NG': 'ᛝ', 'OE': 'ᛟ', 'EO': 'ᛇ', 'IO': 'ᛡ', 'IA': 'ᛡ', 'EA': 'ᛠ', 'AE': 'ᚫ', 'TH': 'ᚦ', 'F': 'ᚠ',
+            'V': 'ᚢ', 'U': 'ᚢ', 'O': 'ᚩ', 'R': 'ᚱ', 'Q': 'ᚳ', 'K': 'ᚳ', 'C': 'ᚳ', 'G': 'ᚷ', 'W': 'ᚹ', 'H': 'ᚻ', 'N': 'ᚾ',
+            'I': 'ᛁ', 'J': 'ᛄ', 'P': 'ᛈ', 'X': 'ᛉ', 'Z': 'ᛋ', 'S': 'ᛋ', 'T': 'ᛏ', 'B': 'ᛒ', 'E': 'ᛖ', 'M': 'ᛗ', 'L': 'ᛚ',
+            'D': 'ᛞ', 'A': 'ᚪ', 'Y': 'ᚣ', ' ': '•', '.': '⊹',
+        };
+
+        function getRuneFromLetter(letter) {
+            return letterToRune.hasOwnProperty(letter) ? letterToRune[letter] : letter;
+        }
+
+        const runeToLetter = {
+            'ᛝ': 'ING', 'ᛟ': 'OE', 'ᛇ': 'EO', 'ᛡ': 'IO', 'ᛠ': 'EA', 'ᚫ': 'AE', 'ᚦ': 'TH', 'ᚠ': 'F', 'ᚢ': 'U', 'ᚩ': 'O',
+            'ᚱ': 'R', 'ᚳ': 'C', 'ᚷ': 'G', 'ᚹ': 'W', 'ᚻ': 'H', 'ᚾ': 'N', 'ᛁ': 'I', 'ᛄ': 'J', 'ᛈ': 'P', 'ᛉ': 'X', 'ᛋ': 'S',
+            'ᛏ': 'T', 'ᛒ': 'B', 'ᛖ': 'E', 'ᛗ': 'M', 'ᛚ': 'L', 'ᛞ': 'D', 'ᚪ': 'A', 'ᚣ': 'Y', '•': ' ', '⊹': '.',
+        };
+
+        function getLetterFromRune(rune) {
+            return runeToLetter.hasOwnProperty(rune) ? runeToLetter[rune] : rune;
+        }
+
+        function isRune(rune) {
+            return runeToLetter.hasOwnProperty(rune);
+        }
+
+        // Cipher Definitions
+        const atbashRune = {'ᚠ':'ᛠ', 'ᛡ': 'ᚢ', 'ᚣ': 'ᚦ', 'ᚫ': 'ᚩ', 'ᚪ': 'ᚱ', 'ᛞ': 'ᚳ', 'ᛟ': 'ᚷ', 'ᛝ': 'ᚹ', 'ᛚ': 'ᚻ', 'ᛗ': 'ᚾ', 'ᛖ': 'ᛁ', 'ᛒ': 'ᛄ', 'ᛏ': 'ᛇ', 'ᛋ': 'ᛈ', 'ᛉ': 'ᛉ', 'ᛈ': 'ᛋ', 'ᛇ': 'ᛏ', 'ᛄ': 'ᛒ', 'ᛁ': 'ᛖ', 'ᚾ': 'ᛗ', 'ᚻ': 'ᛚ', 'ᚹ': 'ᛝ', 'ᚷ': 'ᛟ', 'ᚳ': 'ᛞ', 'ᚱ': 'ᚪ', 'ᚩ': 'ᚫ', 'ᚦ': 'ᚣ', 'ᚢ': 'ᛡ', 'ᛠ':'ᚠ', '•': '•', '⊹': '⊹'};
+        const albamRune = {'ᛋ': 'ᚠ', 'ᛏ': 'ᚢ', 'ᛒ': 'ᚦ', 'ᛖ': 'ᚩ', 'ᛗ': 'ᚱ', 'ᛚ': 'ᚳ', 'ᛝ': 'ᚷ', 'ᛟ': 'ᚹ', 'ᛞ': 'ᚻ', 'ᚪ': 'ᚾ', 'ᚫ': 'ᛁ', 'ᚣ': 'ᛄ', 'ᛡ': 'ᛇ', 'ᛠ': 'ᛈ', 'ᛉ': 'ᛉ', 'ᚠ': 'ᛋ', 'ᚢ': 'ᛏ', 'ᚦ': 'ᛒ', 'ᚩ': 'ᛖ', 'ᚱ': 'ᛗ', 'ᚳ': 'ᛚ', 'ᚷ': 'ᛝ', 'ᚹ': 'ᛟ', 'ᚻ': 'ᛞ', 'ᚾ': 'ᚪ', 'ᛁ': 'ᚫ', 'ᛄ': 'ᚣ', 'ᛇ': 'ᛡ', 'ᛈ': 'ᛠ'};
+        const albamRuneVarOne = {'ᛉ': 'ᚠ', 'ᛋ': 'ᚢ', 'ᛏ': 'ᚦ', 'ᛒ': 'ᚩ', 'ᛖ': 'ᚱ', 'ᛗ': 'ᚳ', 'ᛚ': 'ᚷ', 'ᛝ': 'ᚹ', 'ᛟ': 'ᚻ', 'ᛞ': 'ᚾ', 'ᚪ': 'ᛁ', 'ᚫ': 'ᛄ', 'ᚣ': 'ᛇ', 'ᛡ': 'ᛈ', 'ᚠ': 'ᛉ', 'ᚢ': 'ᛋ', 'ᚦ': 'ᛏ', 'ᚩ': 'ᛒ', 'ᚱ': 'ᛖ', 'ᚳ': 'ᛗ', 'ᚷ': 'ᛚ', 'ᚹ': 'ᛝ', 'ᚻ': 'ᛟ', 'ᚾ': 'ᛞ', 'ᛁ': 'ᚪ', 'ᛄ': 'ᚫ', 'ᛇ': 'ᚣ', 'ᛈ': 'ᛡ', 'ᛠ': 'ᛠ'};
+        const achbiRune = {'ᛉ': 'ᚠ', 'ᛈ': 'ᚢ', 'ᛇ': 'ᚦ', 'ᛄ': 'ᚩ', 'ᛁ': 'ᚱ', 'ᚾ': 'ᚳ', 'ᚻ': 'ᚷ', 'ᚹ': 'ᚹ', 'ᚷ': 'ᚻ', 'ᚳ': 'ᚾ', 'ᚱ': 'ᛁ', 'ᚩ': 'ᛄ', 'ᚦ': 'ᛇ', 'ᚢ': 'ᛈ', 'ᚠ': 'ᛉ', 'ᛠ': 'ᛋ', 'ᛡ': 'ᛏ', 'ᚣ': 'ᛒ', 'ᚫ': 'ᛖ', 'ᚪ': 'ᛗ', 'ᛞ': 'ᛚ', 'ᛟ': 'ᛝ', 'ᛝ': 'ᛟ', 'ᛚ': 'ᛞ', 'ᛗ': 'ᚪ', 'ᛖ': 'ᚫ', 'ᛒ': 'ᚣ', 'ᛏ': 'ᛡ', 'ᛋ': 'ᛠ'};
+        const achbiRuneVarOne = {'ᛈ': 'ᚠ', 'ᛇ': 'ᚢ', 'ᛄ': 'ᚦ', 'ᛁ': 'ᚩ', 'ᚾ': 'ᚱ', 'ᚻ': 'ᚳ', 'ᚹ': 'ᚷ', 'ᚷ': 'ᚹ', 'ᚳ': 'ᚻ', 'ᚱ': 'ᚾ', 'ᚩ': 'ᛁ', 'ᚦ': 'ᛄ', 'ᚢ': 'ᛇ', 'ᚠ': 'ᛈ', 'ᛠ': 'ᛉ', 'ᛡ': 'ᛋ', 'ᚣ': 'ᛏ', 'ᚫ': 'ᛒ', 'ᚪ': 'ᛖ', 'ᛞ': 'ᛗ', 'ᛟ': 'ᛚ', 'ᛝ': 'ᛝ', 'ᛚ': 'ᛟ', 'ᛗ': 'ᛞ', 'ᛖ': 'ᚪ', 'ᛒ': 'ᚫ', 'ᛏ': 'ᚣ', 'ᛋ': 'ᛡ', 'ᛉ': 'ᛠ'};
+        const avgadRune = {'ᚠ': 'ᚢ', 'ᚢ': 'ᚦ', 'ᚦ': 'ᚩ', 'ᚩ': 'ᚱ', 'ᚱ': 'ᚳ', 'ᚳ': 'ᚷ', 'ᚷ': 'ᚹ', 'ᚹ': 'ᚻ', 'ᚻ': 'ᚾ', 'ᚾ': 'ᛁ', 'ᛁ': 'ᛄ', 'ᛄ': 'ᛇ', 'ᛇ': 'ᛈ', 'ᛈ': 'ᛉ', 'ᛉ': 'ᛋ', 'ᛋ': 'ᛏ', 'ᛏ': 'ᛒ', 'ᛒ': 'ᛖ', 'ᛖ': 'ᛗ', 'ᛗ': 'ᛚ', 'ᛚ': 'ᛝ', 'ᛝ': 'ᛟ', 'ᛟ': 'ᛞ', 'ᛞ': 'ᚪ', 'ᚪ': 'ᚫ', 'ᚫ': 'ᚣ', 'ᚣ': 'ᛡ', 'ᛡ': 'ᛠ', 'ᛠ': 'ᚠ'};
+        const avgadReverseRune = {'ᚠ': 'ᛠ', 'ᚢ': 'ᚠ', 'ᚦ': 'ᚢ', 'ᚩ': 'ᚦ', 'ᚱ': 'ᚩ', 'ᚳ': 'ᚱ', 'ᚷ': 'ᚳ', 'ᚹ': 'ᚷ', 'ᚻ': 'ᚹ', 'ᚾ': 'ᚻ', 'ᛁ': 'ᚾ', 'ᛄ': 'ᛁ', 'ᛇ': 'ᛄ', 'ᛈ': 'ᛇ', 'ᛉ': 'ᛈ', 'ᛋ': 'ᛉ', 'ᛏ': 'ᛋ', 'ᛒ': 'ᛏ', 'ᛖ': 'ᛒ', 'ᛗ': 'ᛖ', 'ᛚ': 'ᛗ', 'ᛝ': 'ᛚ', 'ᛟ': 'ᛝ', 'ᛞ': 'ᛟ', 'ᚪ': 'ᛞ', 'ᚫ': 'ᚪ', 'ᚣ': 'ᚫ', 'ᛡ': 'ᚣ', 'ᛠ': 'ᛡ'};
+        const akhasRune = {'ᚠ': 'ᚹ', 'ᚢ': 'ᚻ', 'ᚦ': 'ᚾ', 'ᚩ': 'ᛁ', 'ᚱ': 'ᛄ', 'ᚳ': 'ᛇ', 'ᚷ': 'ᛈ', 'ᚹ': 'ᛉ', 'ᚻ': 'ᛋ', 'ᚾ': 'ᛏ', 'ᛁ': 'ᛒ', 'ᛄ': 'ᛖ', 'ᛇ': 'ᛗ', 'ᛈ': 'ᛚ', 'ᛉ': 'ᛝ', 'ᛋ': 'ᛟ', 'ᛏ': 'ᛞ', 'ᛒ': 'ᚪ', 'ᛖ': 'ᚫ', 'ᛗ': 'ᚣ', 'ᛚ': 'ᛡ', 'ᛝ': 'ᚠ', 'ᛟ': 'ᚢ', 'ᛞ': 'ᚦ', 'ᚪ': 'ᚩ', 'ᚫ': 'ᚱ', 'ᚣ': 'ᚳ', 'ᛡ': 'ᚷ', 'ᛠ': 'ᛠ'};
+        const akhasReverseRune = {'ᚠ': 'ᛝ', 'ᚢ': 'ᛟ', 'ᚦ': 'ᛞ', 'ᚩ': 'ᚪ', 'ᚱ': 'ᚫ', 'ᚳ': 'ᚣ', 'ᚷ': 'ᛡ', 'ᚹ': 'ᚠ', 'ᚻ': 'ᚢ', 'ᚾ': 'ᚦ', 'ᛁ': 'ᚩ', 'ᛄ': 'ᚱ', 'ᛇ': 'ᚳ', 'ᛈ': 'ᚷ', 'ᛉ': 'ᚹ', 'ᛋ': 'ᚻ', 'ᛏ': 'ᚾ', 'ᛒ': 'ᛁ', 'ᛖ': 'ᛄ', 'ᛗ': 'ᛇ', 'ᛚ': 'ᛈ', 'ᛝ': 'ᛉ', 'ᛟ': 'ᛋ', 'ᛞ': 'ᛏ', 'ᚪ': 'ᛒ', 'ᚫ': 'ᛖ', 'ᚣ': 'ᛗ', 'ᛡ': 'ᛚ', 'ᛠ': 'ᛠ'};
+
+        function getRuneFromRune(rune, transformType) {
+            let map = null;
+            switch (transformType) {
+                case 'atbash': map = atbashRune; break;
+                case 'albam': map = albamRune; break;
+                case 'albam-one': map = albamRuneVarOne; break;
+                case 'achbi': map = achbiRune; break;
+                case 'achbi-one': map = achbiRuneVarOne; break;
+                case 'avgad': map = avgadRune; break;
+                case 'avgad-reverse': map = avgadReverseRune; break;
+                case 'akhas': map = akhasRune; break;
+                case 'akhas-reverse': map = akhasReverseRune; break;
+            }
+            return (map && map.hasOwnProperty(rune)) ? map[rune] : rune;
+        }
+
+        // --- Utils ---
+        function isRuneglish(text) {
+            const runeglishArray = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+            for (let i = 0; i < text.length; i++) {
+                if (!runeglishArray.includes(text[i])) return false;
+            }
+            return true;
+        }
+
+        function getRuneglishValues(text) {
+            const arr = [];
+            for (let i = 0; i < text.length; i++) {
+                if (isRuneglish(text[i])) arr.push(text[i]);
+            }
+            return arr;
+        }
+
+        function isDinkus(rune) { return rune === '⊹' || rune === '•'; }
+
+        function prepLatinToRune(text) {
+            text = text.toUpperCase();
+            text = text.replaceAll("QU", "CW").replaceAll("Z", "S").replaceAll("K", "C").replaceAll("Q", "C").replaceAll("V", "U");
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                const xchar = text[i];
+                if (xchar === 'I') {
+                    if (i + 1 < text.length && (text[i + 1] === 'O' || text[i + 1] === 'A')) {
+                        result += "IO"; i++;
+                    } else {
+                        result += 'I';
+                    }
+                } else {
+                    result += xchar;
+                }
+            }
+            return result;
+        }
+
+        function transposeLatinToRune(text, transformType) {
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                const xchar = text[i];
+                let tmpRune = '';
+                if (!isRune(xchar)) {
+                    // Logic to find dual chars like AE, EO etc
+                    let handled = false;
+                    const next = (i + 1 < text.length) ? text[i + 1] : '';
+                    const next2 = (i + 2 < text.length) ? text[i + 2] : '';
+
+                    if (xchar === 'A' && next === 'E') { tmpRune = "AE"; i++; handled = true; }
+                    else if (xchar === 'E' && next === 'A') { tmpRune = "EA"; i++; handled = true; }
+                    else if (xchar === 'E' && next === 'O') { tmpRune = "EO"; i++; handled = true; }
+                    else if (xchar === 'O' && next === 'E') { tmpRune = "OE"; i++; handled = true; }
+                    else if (xchar === 'T' && next === 'H') { tmpRune = "TH"; i++; handled = true; }
+                    else if (xchar === 'I' && next === 'O') { tmpRune = "IO"; i++; handled = true; }
+                    else if (xchar === 'I' && next === 'N' && next2 === 'G') { tmpRune = "ING"; i += 2; handled = true; }
+                    else if (xchar === 'I' && next === 'A') { tmpRune = "IA"; i++; handled = true; }
+                    else if (xchar === 'N' && next === 'G') { tmpRune = "NG"; i++; handled = true; }
+
+                    if (handled) {
+                        tmpRune = getRuneFromLetter(tmpRune);
+                    } else {
+                        tmpRune = getRuneFromLetter(xchar);
+                    }
+                } else {
+                    tmpRune = xchar;
+                }
+
+                if (transformType !== 'none') {
+                    tmpRune = getRuneFromRune(tmpRune, transformType);
+                }
+                result += tmpRune;
+            }
+            return result;
+        }
+
+        function transposeRuneToLatin(text) {
+            let result = "";
+            for (let i = 0; i < text.length; i++) {
+                result += isRune(text[i]) ? getLetterFromRune(text[i]) : text[i];
+            }
+            return result;
+        }
+
+        function sumAllRuneValues(text) {
+            let result = 0;
+            for (let i = 0; i < text.length; i++) {
+                if (isRune(text[i])) result += getRuneValue(text[i]);
+            }
+            return result;
+        }
+
+        function getWordCount(text) {
+            let result = 0;
+            const tmpText = text.replaceAll('⊹', '•').replaceAll('␍', '•').replaceAll('\n', '•').replaceAll('␊', '•');
+            const words = tmpText.split('•');
+            words.forEach(word => { if (word.length > 0) result++; });
+            return result;
+        }
+
+        function getRuneValues(text) {
+            const result = [];
+            for (let i = 0; i < text.length; i++) {
+                const val = getRuneValue(text[i]);
+                if (val > 0) result.push(val);
+            }
+            return result;
+        }
+
+        // --- Math Checkers ---
+        function isPrime(num) {
+            if (num < 2) return false;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
+        function isEmirp(num) {
+            if (!isPrime(num)) return false;
+            const reversedNum = parseInt(num.toString().split('').reverse().join(''));
+            return reversedNum !== num && isPrime(reversedNum);
+        }
+        function isCircularPrime(num) {
+            if (!isPrime(num)) return false;
+            const numStr = num.toString();
+            for (let i = 0; i < numStr.length; i++) {
+                const rotation = parseInt(numStr.slice(i) + numStr.slice(0, i));
+                if (!isPrime(rotation)) return false;
+            }
+            return true;
+        }
+        function isSemiPrime(num) {
+            if (num <= 1) return false;
+            let firstFactor = null;
+            for (let i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i === 0 && isPrime(i)) {
+                    firstFactor = i; break;
+                }
+            }
+            if (firstFactor) {
+                const secondFactor = num / firstFactor;
+                return isPrime(secondFactor);
+            }
+            return false;
+        }
+        function isFibonacciNumer(value) {
+            if (value < 0) return false;
+            if (value === 0 || value === 1) return true;
+            const test1 = 5 * value * value + 4;
+            const test2 = 5 * value * value - 4;
+            return Number.isInteger(Math.sqrt(test1)) || Number.isInteger(Math.sqrt(test2));
+        }
+        function isLucasNumber(value) {
+            if (value < 0) return false;
+            if (value === 2 || value === 1) return true;
+            let a = 2, b = 1;
+            while (b <= value) {
+                if (b === value) return true;
+                let temp = a + b; a = b; b = temp;
+            }
+            return false;
+        }
+
+        // --- Complex Stats Generators ---
+
+        function updateGematriaDisplay(sum) {
+            const gematriaDiv = document.getElementById('gematria-result');
+            let displayText = sum.toString();
+            if (isPrime(sum)) displayText += ' <span class="number-indicator prime" title="Prime">✓ Prime</span>';
+            if (isEmirp(sum)) displayText += ' <span class="number-indicator emirp" title="Emirp">✓ Emirp</span>';
+            if (isCircularPrime(sum)) displayText += ' <span class="number-indicator circular" title="Circular Prime">✓ Circular</span>';
+            if (isFibonacciNumer(sum)) displayText += ' <span class="number-indicator fibonacci" title="Fibonacci">✓ Fibonacci</span>';
+            if (isLucasNumber(sum)) displayText += ' <span class="number-indicator lucas" title="Lucas">✓ Lucas</span>';
+            gematriaDiv.innerHTML = displayText;
+        }
+
+        function calculateWordValue(word) {
+            let sum = 0;
+            for(let i=0; i<word.length; i++) sum += getRuneValue(word[i]);
+            return sum;
+        }
+
+        function updateGPView(inputText) {
+            const container = document.getElementById('gp-visualization');
+            container.innerHTML = '';
+            if (!inputText.trim()) return;
+
+            const lines = inputText.split(/[\n\.\⊹\␍\␗\␊]/);
+            lines.forEach(line => {
+                if (!line.trim()) return;
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'gp-line';
+                const words = line.trim().split(/[\s•]+/);
+                let lineSum = 0;
+
+                words.forEach(word => {
+                    if (!word.trim()) return;
+                    const wordValue = calculateWordValue(word);
+                    const latin = transposeRuneToLatin(word);
+                    lineSum += wordValue;
+
+                    let boxClass = 'gp-word-nonprime';
+                    if (isEmirp(wordValue)) boxClass = 'gp-word-emirp';
+                    else if (isPrime(wordValue)) boxClass = 'gp-word-prime';
+                    if (isCircularPrime(wordValue)) boxClass = 'gp-word-circular-prime';
+                    if (!isPrime(wordValue) && !isEmirp(wordValue) && isSemiPrime(wordValue)) boxClass = 'gp-word-semi-prime';
+
+                    const wordBox = document.createElement('div');
+                    wordBox.className = `gp-word-box ${boxClass}`;
+                    wordBox.title = `Value: ${wordValue}`;
+                    wordBox.innerHTML = `<div class="gp-word-text">${latin} (${word})</div><div class="gp-word-value">${wordValue}</div>`;
+                    lineDiv.appendChild(wordBox);
+                });
+
+                const lineSumElement = document.createElement('div');
+                let sumClass = 'gp-line-sum-nonprime';
+                if (isPrime(lineSum)) sumClass = 'gp-line-sum-prime';
+                if (isEmirp(lineSum)) sumClass = 'gp-line-sum-emirp';
+                if (isCircularPrime(lineSum)) sumClass = 'gp-line-sum-circular-prime';
+                if (!isPrime(lineSum) && !isEmirp(lineSum) && isSemiPrime(lineSum)) sumClass = 'gp-line-sum-semi-prime';
+
+                lineSumElement.className = sumClass;
+                lineSumElement.textContent = `Line Sum: ${lineSum}`;
+                lineDiv.appendChild(lineSumElement);
+                container.appendChild(lineDiv);
+            });
+        }
+
+        function updateTotientView(inputText, gemSum) {
+            // Helper GCD
+            const gcd = (a, b) => { while(b) [a, b] = [b, a % b]; return a; };
+            // Helper Calculate Totient
+            const calcTotient = (n) => {
+                if (n === 0) return { count: 0, coprimes: [] };
+                if (n === 1) return { count: 1, coprimes: [] };
+                let count = 1, coprimes = [1];
+                for (let i = 2; i < n; i++) {
+                    if (gcd(i, n) === 1) { count++; coprimes.push(i); }
+                }
+                return { count, coprimes };
+            };
+
+            const sigma = calcTotient(gemSum);
+            document.getElementById('totient-sigma').innerHTML = `φ(${gemSum}) = ${sigma.count}`;
+            document.getElementById('totient-coprimes').innerHTML = `Coprimes: ${sigma.coprimes.join(', ')}`;
+
+            const container = document.getElementById('totient-visualization');
+            container.innerHTML = '';
+            if (!inputText.trim()) return;
+
+            const lines = inputText.split(/[\n\.\⊹\␍\␗\␊]/);
+            lines.forEach(line => {
+                if (!line.trim()) return;
+                const lineDiv = document.createElement('div');
+                lineDiv.className = 'gp-line';
+                const words = line.trim().split(/[\s•]+/);
+                let lineSum = 0;
+
+                words.forEach(word => {
+                    if (!word.trim()) return;
+                    const wordValue = calculateWordValue(word);
+                    const latin = transposeRuneToLatin(word);
+                    lineSum += wordValue;
+
+                    let boxClass = 'gp-word-nonprime';
+                    if (sigma.coprimes.includes(wordValue)) boxClass = 'gp-word-circular-prime'; // reusing CSS class for blue
+
+                    const wordBox = document.createElement('div');
+                    wordBox.className = `gp-word-box ${boxClass}`;
+                    wordBox.title = `Value: ${wordValue}`;
+                    wordBox.innerHTML = `<div class="gp-word-text">${latin} (${word})</div><div class="gp-word-value">${wordValue}</div>`;
+                    lineDiv.appendChild(wordBox);
+                });
+
+                const lineSumElement = document.createElement('div');
+                let sumClass = 'gp-line-sum-nonprime';
+                if (sigma.coprimes.includes(lineSum)) sumClass = 'gp-line-sum-circular-prime';
+                lineSumElement.className = sumClass;
+                lineSumElement.textContent = `Line Sum: ${lineSum}`;
+                lineDiv.appendChild(lineSumElement);
+                container.appendChild(lineDiv);
+            });
+        }
+
+        // --- Other Analysis Functions ---
+        function getDistinctRunes(runeText) {
+            const runeMap = new Map();
+            for (let char of runeText) {
+                if (isRune(char) && !isDinkus(char)) {
+                    runeMap.set(char, (runeMap.get(char) || 0) + 1);
+                }
+            }
+            return new Map([...runeMap.entries()].sort((a, b) => b[1] - a[1]));
+        }
+
+        function getDistinctRuneText(runeText) {
+            const distinct = getDistinctRunes(runeText);
+            let text = [];
+            for (const [char, count] of distinct) {
+                const val = getRuneValue(char);
+                const isP = isPrime(count) ? ' Is Prime' : '';
+                text.push(val === count ? `${char}* (${count}${isP})` : `${char}(${count}${isP})`);
+            }
+            return text.join(', ');
+        }
+
+        function getDoubletsText(runeText) {
+            const runeArray = new Map;
+            let i = 0;
+            while (i < runeText.length) {
+                const rune = runeText[i];
+                const nextRune = (i + 1 < runeText.length) ? runeText[i+1] : '';
+                if (isRune(rune) && !isDinkus(rune) && rune === nextRune) {
+                    i++;
+                    runeArray.set(rune, (runeArray.get(rune)||0) + 1);
+                }
+                i++;
+            }
+            if (runeArray.size === 0) return 'No doublets found.';
+
+            let text = [];
+            for (const [char, count] of runeArray) {
+                const val = getRuneValue(char);
+                const isP = isPrime(count) ? ' Is Prime' : '';
+                text.push(val === count ? `${char}* (${count}${isP})` : `${char}(${count}${isP})`);
+            }
+            return text.join(', ');
+        }
+
+        function updateFirstLastFields(dirtyText) {
+            let startMap = new Map();
+            let startEndMap = new Map();
+
+            const lines = dirtyText.split(/[\n\.\⊹\␍\␗\␊]/);
+            lines.forEach(line => {
+                if (!line.trim()) return;
+                const words = line.trim().split(/[\s•]+/);
+                words.forEach(dirtyWord => {
+                    let cleanWord = '';
+                    for(let c of dirtyWord) if(isRune(c)) cleanWord += c;
+                    if(!cleanWord) return;
+
+                    const first = cleanWord[0];
+                    const firstLast = cleanWord[0] + cleanWord[cleanWord.length-1];
+
+                    startMap.set(first, (startMap.get(first)||0)+1);
+                    if(firstLast[0] === firstLast[1]) {
+                        startEndMap.set(firstLast, (startEndMap.get(firstLast)||0)+1);
+                    }
+                });
+            });
+
+            const formatMap = (m) => [...m.entries()].sort((a,b)=>b[1]-a[1]).map(([k,v]) => `${k}:(${v})`).join(', ');
+            document.getElementById('startswith-result').innerHTML = formatMap(startMap);
+            document.getElementById('startsendwith-result').innerHTML = formatMap(startEndMap);
+        }
+
+        function updateFrequencyView(runeText) {
+            const container = document.getElementById('frequency-view-content');
+            container.innerHTML = '';
+            if (!runeText) { container.innerHTML = 'No text to analyze.'; return; }
+
+            const distinct = getDistinctRunes(runeText);
+            let total = 0; distinct.forEach(v => total += v);
+            if (total === 0) { container.innerHTML = 'No runes found.'; return; }
+
+            const area = document.createElement('div');
+            area.className = 'results-area';
+
+            distinct.forEach((count, rune) => {
+                const perc = ((count/total)*100).toFixed(2);
+                const latin = getLetterFromRune(rune);
+                const row = document.createElement('div');
+                row.className = 'result-row';
+                row.innerHTML = `<div class="result-label">${rune} (${latin}):</div><div class="result-content">${count} (${perc}%)</div>`;
+                area.appendChild(row);
+            });
+            container.appendChild(area);
+        }
+
+        function updateSpaceViewHelper(runeText, containerId, includeNonRunes) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            if(!runeText) { container.innerHTML = 'No text.'; return; }
+
+            let arr = [];
+            if(!includeNonRunes) {
+                for(let c of runeText) if(isRune(c) && !isDinkus(c)) arr.push(c);
+            } else {
+                arr = runeText.split('');
+            }
+            if(arr.length === 0) { container.innerHTML = 'No runes found.'; return; }
+
+            const area = document.createElement('div');
+            area.className = 'results-area';
+
+            orderedRunes.forEach(distinctRune => {
+                let tripped = false;
+                let counter = -1;
+                const counts = [];
+
+                arr.forEach(rune => {
+                    if(rune === distinctRune && !tripped) tripped = true;
+                    if(tripped) {
+                        if(rune === distinctRune && counter >= 0) {
+                            counts.push(counter); counter = -1;
+                        } else {
+                            counter++;
+                        }
+                    }
+                });
+
+                const row = document.createElement('div');
+                row.className = 'result-row';
+                row.innerHTML = `<div class="result-label">${distinctRune}:</div><div class="result-content">${counts.join(', ')}</div>`;
+                area.appendChild(row);
+            });
+            container.appendChild(area);
+        }
+
+        function updateSpaceView(runeText) { updateSpaceViewHelper(runeText, 'space-view-content', false); }
+        function updateISpaceView(runeText) { updateSpaceViewHelper(runeText, 'ispace-view-content', true); }
+
+        function isRuneReversable(rune) {
+            const initLen = rune.length;
+            let rev = transposeLatinToRune(transposeRuneToLatin(rune), 'none');
+            return rev.length === initLen;
+        }
+
+        // IoC Logic
+        const AlphabetType = { Latin: 0, Runeglish: 1, Rune: 2 };
+        function getAlphabet(type) {
+            if(type === AlphabetType.Runeglish) return "abcdefghijlmnoprstuwxy".split("");
+            if(type === AlphabetType.Rune) return "ᛝᛟᛇᛡᛠᚫᚦᚠᚢᚩᚱᚳᚷᚹᚻᚾᛁᛄᛈᛉᛋᛏᛒᛖᛗᛚᛞᚪᚣ".split("");
+            return "abcdefghijklmnopqrstuvwxyz".split("");
+        }
+
+        function calcIOC(text, type) {
+            const alphabet = getAlphabet(type);
+            const validChars = new Set(alphabet);
+            const counts = new Map();
+            let total = 0;
+
+            for(let char of text.toLowerCase()) {
+                if(validChars.has(char)) {
+                    counts.set(char, (counts.get(char)||0)+1);
+                    total++;
+                }
+            }
+            if(total <= 1) return 0.0;
+            let sum = 0.0;
+            for(let c of counts.values()) sum += c * c;
+            return sum / (total * (total - 1));
+        }
+
+        function updateIocTexts(isReversable) {
+            const runesRes = document.getElementById('runes-result');
+            const iocRune = calcIOC(runesRes.textContent, AlphabetType.Rune);
+            let html = runesRes.textContent + ` <span class="ioc-text" title="IOC">IOC: ${iocRune.toFixed(6)}</span>`;
+            if(isReversable) html += ' <span class="number-indicator reversable" title="Reversable">✓ Reversable</span>';
+            runesRes.innerHTML = html;
+
+            const runeglishRes = document.getElementById('runeglish-result');
+            const iocEng = calcIOC(runeglishRes.textContent, AlphabetType.Runeglish);
+            runeglishRes.innerHTML = runeglishRes.textContent + ` <span class="ioc-text" title="IOC">IOC: ${iocEng.toFixed(6)}</span>`;
+        }
+
+        function reverseString(str) { return [...str].reverse().join(''); }
+        function reverseText(t) { return reverseString(t); }
+        function isSeperator(char) {
+            const seps = [' ', '\n', '\r', '.', '!', '|', '[', ']', '{', '}', '(', ')', '-', '&', '%', '$', '#', '@', '_', '=', '+', '*', '^', '"', '␍', '␊', '␗'];
+            return seps.includes(char);
+        }
+        function reverseWords(text) {
+            let res = [], sb = '', chars = [...text];
+            for(let c of chars) {
+                if(isSeperator(c) || isDinkus(c)) {
+                    res.push(reverseString(sb)); res.push(c); sb = '';
+                } else sb += c;
+            }
+            if(sb.length > 0) res.push(reverseString(sb));
+            return res.join('');
+        }
+
+    });
+</script>

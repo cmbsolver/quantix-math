@@ -44,4 +44,10 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "CSV to Bytes",
 		})
 	})
+
+	app.Get("/runecalc", func(c *fiber.Ctx) error {
+		return c.Render("runecalc", fiber.Map{
+			"Title": "Rune Calculator",
+		})
+	})
 }
