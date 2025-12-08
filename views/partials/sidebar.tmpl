@@ -1,25 +1,81 @@
 <div id="sidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary border-end" style="width: 280px; transition: all 0.3s; overflow: hidden;">
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="/" class="nav-link link-body-emphasis">Home</a>
-        </li>
-        <li>
-            <a href="/about" class="nav-link link-body-emphasis">About</a>
-        </li>
-        <li>
-            <a href="/sequence" class="nav-link link-body-emphasis">Numeric Sequences</a>
-        </li>
-        <li>
-            <a href="/isitprime" class="nav-link link-body-emphasis">Is It Prime?</a>
-        </li>
-        <li>
-            <a href="/file_to_csv" class="nav-link link-body-emphasis">File to CSV</a>
-        </li>
-        <li>
-            <a href="/csv_to_bytes" class="nav-link link-body-emphasis">CSV to Bytes</a>
-        </li>
-        <li>
-            <a href="/runecalc" class="nav-link link-body-emphasis">Rune Calculator</a>
-        </li>
-    </ul>
+    <div class="accordion accordion-flush" id="accordianFlushMenu">
+        <!--Home-->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseHome" aria-expanded="false" aria-controls="flush-collapseHome">
+                    Home
+                </button>
+            </h2>
+            <div id="flush-collapseHome" class="accordion-collapse collapse" data-bs-parent="#accordianFlushMenu">
+                <div class="accordion-body">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/" class="nav-link link-body-emphasis">Home</a>
+                        </li>
+                        <li>
+                            <a href="/about" class="nav-link link-body-emphasis">About</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--Maths-->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseMaths" aria-expanded="false" aria-controls="flush-collapseMaths">
+                    Math
+                </button>
+            </h2>
+            <div id="flush-collapseMaths" class="accordion-collapse collapse" data-bs-parent="#accordianFlushMenu">
+                <div class="accordion-body">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li>
+                            <a href="/sequence" class="nav-link link-body-emphasis">Numeric Sequences</a>
+                        </li>
+                        <li>
+                            <a href="/isitprime" class="nav-link link-body-emphasis">Is It Prime?</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--3301 Tools-->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse3301" aria-expanded="false" aria-controls="flush-collapse3301">
+                    3301 Tools
+                </button>
+            </h2>
+            <div id="flush-collapse3301" class="accordion-collapse collapse" data-bs-parent="#accordianFlushMenu">
+                <div class="accordion-body">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li>
+                            <a href="/runecalc" class="nav-link link-body-emphasis">Rune Calculator</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--Utilities-->
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseUtils" aria-expanded="false" aria-controls="flush-collapseUtils">
+                    Utils
+                </button>
+            </h2>
+            <div id="flush-collapseUtils" class="accordion-collapse collapse" data-bs-parent="#accordianFlushMenu">
+                <div class="accordion-body">
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li>
+                            <a href="/file_to_csv" class="nav-link link-body-emphasis">File to CSV</a>
+                        </li>
+                        <li>
+                            <a href="/csv_to_bytes" class="nav-link link-body-emphasis">CSV to Bytes</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
