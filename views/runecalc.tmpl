@@ -146,7 +146,7 @@
             cursor: help;
         }
 
-        .number-indicator.prime { background-color: #337337; }
+        .number-indicator.prime { background-color: #d1e7dd; }
         .number-indicator.emirp { background-color: #935b33; }
         .number-indicator.circular { background-color: #005278; }
         .number-indicator.fibonacci { background-color: #57151e; }
@@ -212,10 +212,104 @@
 
         .reverse-options { margin-bottom: 15px; }
         .reverse-options label { margin-right: 15px; cursor: pointer; }
+
+        /* Dark Mode Support */
+        [data-bs-theme="dark"] body {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+
+        [data-bs-theme="dark"] #runecalc-container {
+            background-color: #2b3035;
+            color: #f8f9fa;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        [data-bs-theme="dark"] .wide-input,
+        [data-bs-theme="dark"] .form-control,
+        [data-bs-theme="dark"] .form-select {
+            background-color: #212529;
+            border-color: #495057;
+            color: #f8f9fa;
+        }
+
+        [data-bs-theme="dark"] .result-row {
+            border-bottom-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .copy-button {
+            color: #adb5bd;
+        }
+        [data-bs-theme="dark"] .copy-button:hover {
+            color: #fff;
+        }
+
+        [data-bs-theme="dark"] .rune-button {
+            background-color: #343a40;
+            border-color: #495057;
+            color: #e9ecef;
+        }
+
+        [data-bs-theme="dark"] .rune-button:hover {
+            background-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .tab-content {
+            background-color: #2b3035;
+            border-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .nav-tabs {
+            border-bottom-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .nav-tabs .nav-link {
+            color: #adb5bd;
+        }
+
+        [data-bs-theme="dark"] .nav-tabs .nav-link:hover {
+            border-color: #495057;
+            color: #e9ecef;
+        }
+
+        [data-bs-theme="dark"] .nav-tabs .nav-link.active {
+            background-color: #2b3035;
+            border-color: #495057 #495057 #2b3035;
+            color: #fff;
+        }
+
+        [data-bs-theme="dark"] .conversion-row.bg-light {
+            background-color: #212529 !important;
+            border-color: #495057 !important;
+        }
+
+        [data-bs-theme="dark"] .expandable-header {
+            background-color: #343a40;
+            color: #e9ecef;
+        }
+
+        [data-bs-theme="dark"] .expandable-section {
+            border-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .gp-line {
+            border-bottom-color: #495057;
+        }
+
+        [data-bs-theme="dark"] .gp-word-box {
+            border-color: #495057;
+        }
+
+        /* Adjust chips for dark mode to be less glaring */
+        [data-bs-theme="dark"] .gp-word-nonprime,
+        [data-bs-theme="dark"] .gp-line-sum-nonprime {
+            background-color: #343a40;
+            color: #e9ecef;
+        }
     </style>
 
-<div id="runecalc-container" class="container">
-    <!-- Input Area -->
+    <div id="runecalc-container" class="container">
+        <!-- Input Area -->
     <div class="mb-3">
         <label for="input-area" class="form-label text-label">Text To Calculate</label>
         <textarea id="input-area" rows="4" class="form-control"></textarea>
