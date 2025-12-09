@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"quantix-math/pkg/config"
+	"quantix-math/pkg/db/tables"
 
 	"github.com/jackc/pgx/v5"
 	"golang.org/x/net/context"
@@ -42,20 +43,23 @@ func InitDatabase() (*gorm.DB, error) {
 	createDatabaseSQL := `CREATE DATABASE quantixdb;`
 	_, err = adminConn.Exec(context.Background(), createDatabaseSQL)
 	if err != nil {
-		return nil, fmt.Errorf("error creating database: %v", err)
+		println(err.Error())
+		//return nil, fmt.Errorf("error creating database: %v", err)
 	}
 
 	// Now we need to put in our migrations.
 	conn, err := InitConnection()
 	if err != nil {
+		println(err.Error())
 		return nil, err
 	}
 
 	// Migrate the schemas
-	//dbCreateError := conn.AutoMigrate(&Permutation{})
-	//if dbCreateError != nil {
-	//		fmt.Printf("Error creating Factor table: %v\n", dbCreateError)
-	//}
+	dbCreateError := conn.AutoMigrate(&tables.DictionaryWord{})
+	if dbCreateError != nil {
+		println(dbCreateError.Error())
+		fmt.Printf("Error creating table: %v\n", dbCreateError)
+	}
 
 	return conn, nil
 }
@@ -75,4 +79,13 @@ func InitConnection() (*gorm.DB, error) {
 	}
 
 	return db, nil
+}
+
+// CloseConnection closes the database connection
+func CloseConnection(db *gorm.DB) error {
+	sqlDB, err := db.DB()
+	if err != nil {
+		return fmt.Errorf("error getting database instance: %v", err)
+	}
+	return sqlDB.Close()
 }
