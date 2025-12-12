@@ -1,0 +1,144 @@
+<div class="container mt-4">
+    <h1>Dictionary Words</h1>
+
+    <form id="dictionaryWordsForm" class="row g-3">
+        <div class="col-md-6">
+            <label for="field" class="form-label">Filter Field</label>
+            <select id="field" class="form-select" required>
+                <option value="dict_rune_length" selected>Rune Length (dict_rune_length)</option>
+                <option value="dict_runeglish_length">Runeglish Length (dict_runeglish_length)</option>
+                <option value="dict_word_length">Word Length (dict_word_length)</option>
+                <option value="gem_sum">Gem Sum (gem_sum)</option>
+            </select>
+        </div>
+
+        <div class="col-md-6">
+            <label for="param" class="form-label">Value</label>
+            <input type="number" id="param" class="form-control" min="1" step="1" value="5" required>
+            <div class="form-text">Must be a positive integer.</div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+
+    <div id="resultContainer" class="mt-4" style="display:none;">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Results</h5>
+                <p class="card-text">
+                    <strong>Count:</strong> <span id="countText"></span>
+                </p>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm align-middle">
+                        <thead>
+                        <tr>
+                            <th>Word</th>
+                            <th>Runeglish</th>
+                            <th>Rune</th>
+                            <th class="text-end">Gem Sum</th>
+                            <th class="text-end">Word Len</th>
+                            <th class="text-end">Runeglish Len</th>
+                            <th class="text-end">Rune Len</th>
+                            <th>Language</th>
+                        </tr>
+                        </thead>
+                        <tbody id="wordsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('dictionaryWordsForm');
+        const errorContainer = document.getElementById('errorContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const countText = document.getElementById('countText');
+        const wordsTableBody = document.getElementById('wordsTableBody');
+
+        function escapeHtml(value) {
+            const s = String(value ?? '');
+            return s
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function td(value, className) {
+            const cls = className ? ` class="${className}"` : '';
+            return `<td${cls}>${escapeHtml(value)}</td>`;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Searching...';
+
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            wordsTableBody.innerHTML = '';
+
+            const field = document.getElementById('field').value;
+            const param = parseInt(document.getElementById('param').value, 10);
+
+            fetch('/api/dictionary/words', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ field: field, param: param })
+            })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.text().then(function(text) {
+                            throw new Error(text || 'Request failed');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    const words = data.words || [];
+                    countText.textContent = data.count ?? words.length;
+
+                    // NOTE: These property names assume your Go struct is being JSON-encoded
+                    // without explicit json tags (so it uses the exported field names).
+                    // If you added json tags, adjust the property names accordingly.
+                    const rowsHtml = words.map(function(w) {
+                        return `
+                            <tr>
+                                ${td(w.DictionaryWordText)}
+                                ${td(w.RuneglishWordText)}
+                                ${td(w.RuneWordText)}
+                                ${td(w.GemSum, 'text-end')}
+                                ${td(w.DictionaryWordLength, 'text-end')}
+                                ${td(w.RuneglishWordLength, 'text-end')}
+                                ${td(w.RuneWordLength, 'text-end')}
+                                ${td(w.Language)}
+                            </tr>
+                        `;
+                    }).join('');
+
+                    wordsTableBody.innerHTML = rowsHtml;
+                    resultContainer.style.display = 'block';
+                })
+                .catch(function(err) {
+                    errorContainer.textContent = err.message;
+                    errorContainer.style.display = 'block';
+                })
+                .finally(function() {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                });
+        });
+    });
+</script>

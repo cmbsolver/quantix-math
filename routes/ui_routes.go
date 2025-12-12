@@ -50,4 +50,10 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Rune Calculator",
 		})
 	})
+
+	app.Get("/dictionary_words", func(c *fiber.Ctx) error {
+		return c.Render("dictionary_words", fiber.Map{
+			"Title": "Dictionary Words",
+		})
+	})
 }

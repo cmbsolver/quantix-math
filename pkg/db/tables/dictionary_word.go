@@ -63,6 +63,17 @@ func GetDictionaryWords(db *gorm.DB) []string {
 	return retval
 }
 
+func GetDictionaryWordsByParam(db *gorm.DB, field string, param int) []DictionaryWord {
+	var dictionaryWords []DictionaryWord
+
+	db.
+		Where(field+" = ?", param).
+		Order("dict_word ASC").
+		Find(&dictionaryWords)
+
+	return dictionaryWords
+}
+
 func GetDictionaryWordsByRuneLength(db *gorm.DB, length int) []string {
 	var dictionaryWords []DictionaryWord
 	var retval []string
