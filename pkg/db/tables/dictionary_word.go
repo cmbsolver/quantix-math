@@ -67,12 +67,41 @@ func GetDictionaryWordsByParam(db *gorm.DB, field string, param int) []Dictionar
 	var dictionaryWords []DictionaryWord
 
 	db.
-		Distinct("dict_word").
 		Where(field+" = ?", param).
 		Order("dict_word ASC").
 		Find(&dictionaryWords)
 
-	return dictionaryWords
+	return sortDistinctDictionaryWords(dictionaryWords)
+}
+
+func sortDistinctDictionaryWords(words []DictionaryWord) []DictionaryWord {
+	// Deduplicate by DictionaryWordText (dict_word) first.
+	seen := make(map[string]DictionaryWord, len(words))
+	keys := make([]string, 0, len(words))
+
+	for _, w := range words {
+		k := w.DictionaryWordText
+		if k == "" {
+			// Ignore empty keys to avoid odd "blank word" entries.
+			continue
+		}
+		if _, exists := seen[k]; exists {
+			continue
+		}
+		seen[k] = w
+		keys = append(keys, k)
+	}
+
+	// Sort by DictionaryWordText ascending.
+	slices.Sort(keys)
+
+	// Rebuild result in sorted order.
+	out := make([]DictionaryWord, 0, len(keys))
+	for _, k := range keys {
+		out = append(out, seen[k])
+	}
+
+	return out
 }
 
 func GetDictionaryWordsByRuneLength(db *gorm.DB, length int) []string {
