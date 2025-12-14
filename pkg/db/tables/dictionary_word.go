@@ -67,6 +67,7 @@ func GetDictionaryWordsByParam(db *gorm.DB, field string, param int) []Dictionar
 	var dictionaryWords []DictionaryWord
 
 	db.
+		Distinct("dict_word").
 		Where(field+" = ?", param).
 		Order("dict_word ASC").
 		Find(&dictionaryWords)
