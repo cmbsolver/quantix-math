@@ -31,5 +31,5 @@ func main() {
 	routes.RegisterAPIRoutes(app)
 	routes.SetupUIRoutes(app)
 
-	app.Listen(":3000")
+	app.Listen(":3301")
 }
