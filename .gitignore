@@ -33,3 +33,4 @@ go.work.sum
 /quantix-math-ui/package-lock.json
 /go.sum
 /quantix-math
+/.idea/go.imports.xml
