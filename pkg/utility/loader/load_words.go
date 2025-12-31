@@ -81,7 +81,7 @@ func LoadWords() {
 		dictList = append(dictList, dictWord)
 		delete(wordList, word) // Remove the word from wordList
 
-		if len(dictList) >= 500 {
+		if len(dictList) >= 750 {
 			tables.AddDictionaryWords(dbConn, dictList)
 			dictList = dictList[:0]
 		}

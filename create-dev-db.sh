@@ -1,3 +1,6 @@
+echo "Cleaning up existing pod and containers..."
+podman pod rm -f quantix-pod 2>/dev/null
+
 echo "cleaning up the containers"
 podman stop postgres
 

@@ -1,12 +1,14 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"quantix-math/pkg/config"
 	"quantix-math/pkg/db/tables"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 	"golang.org/x/net/context"
 	"gorm.io/driver/postgres"
 	_ "gorm.io/driver/postgres"
@@ -27,7 +29,7 @@ func InitDatabase() (*gorm.DB, error) {
 		if err != nil {
 			return nil, err
 		}
-		os.Exit(1)
+		//os.Exit(1)
 	}
 	defer func(adminConn *pgx.Conn, ctx context.Context) {
 		err := adminConn.Close(ctx)
@@ -43,8 +45,13 @@ func InitDatabase() (*gorm.DB, error) {
 	createDatabaseSQL := `CREATE DATABASE quantixdb;`
 	_, err = adminConn.Exec(context.Background(), createDatabaseSQL)
 	if err != nil {
-		println(err.Error())
-		//return nil, fmt.Errorf("error creating database: %v", err)
+		// Check if the error is "duplicate_database" (42P04)
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "42P04" {
+			fmt.Printf("Database already exists, continuing...\n")
+		} else {
+			return nil, err
+		}
 	}
 
 	// Now we need to put in our migrations.

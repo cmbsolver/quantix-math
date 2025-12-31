@@ -26,7 +26,7 @@ podman run -d \
   $DB_IMAGE
 
 echo "Letting the db fully set up"
-sleep 2m
+sleep 1m
 
 echo "Starting the Quantix application container in the pod..."
 # Since they share the pod, the app connects to DB via localhost:5432

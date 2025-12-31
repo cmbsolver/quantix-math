@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"quantix-math/pkg/db"
 	"quantix-math/pkg/utility/loader"
 	"quantix-math/routes" // Import the new routes package
@@ -13,6 +14,7 @@ func main() {
 	// init database
 	_, err := db.InitDatabase()
 	if err != nil {
+		fmt.Printf("Database initialization failed: %v\n", err)
 		return
 	}
 	loader.LoadWords()
@@ -31,5 +33,9 @@ func main() {
 	routes.RegisterAPIRoutes(app)
 	routes.SetupUIRoutes(app)
 
-	app.Listen(":3301")
+	listenErr := app.Listen(":3301")
+	if listenErr != nil {
+		fmt.Printf("Server failed to start: %v\n", listenErr)
+		return
+	}
 }
