@@ -21,7 +21,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o quantix-math main.go
 # Stage 2: Run the application
 FROM alpine:latest
 
-RUN apk add --no-cache ca-certificates
+# Install ca-certificates and timezone data
+RUN apk add --no-cache ca-certificates tzdata
 
 WORKDIR /root/
 
