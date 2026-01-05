@@ -1,5 +1,5 @@
 # quantix-math
-A set of math utilities
+A set of math utilities for solving the Cicada 3301 puzzle. 
 
 ## Getting Started
 
