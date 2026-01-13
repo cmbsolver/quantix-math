@@ -2,29 +2,38 @@
     <h1>Dictionary Words</h1>
 
     <form id="dictionaryWordsForm" class="row g-3">
-        <div class="col-md-6">
-            <label for="field" class="form-label">Filter Field</label>
-            <select id="field" class="form-select" required>
-                <option value="dict_rune_length" selected>Rune Length (dict_rune_length)</option>
-                <option value="dict_runeglish_length">Runeglish Length (dict_runeglish_length)</option>
-                <option value="dict_word_length">Word Length (dict_word_length)</option>
-                <option value="gem_sum">Gem Sum (gem_sum)</option>
-            </select>
-        </div>
-
-        <div class="col-md-6">
-            <label for="param" class="form-label">Value</label>
-            <input type="number" id="param" class="form-control" min="1" step="1" value="5" required>
-            <div class="form-text">Must be a positive integer.</div>
+        <div id="filterContainer">
+            <div class="row g-3 filter-row mb-2">
+                <div class="col-md-5">
+                    <label class="form-label">Filter Field</label>
+                    <select class="form-select field-select" required>
+                        <option value="dict_rune_length" selected>Rune Length (dict_rune_length)</option>
+                        <option value="dict_runeglish_length">Runeglish Length (dict_runeglish_length)</option>
+                        <option value="dict_word_length">Word Length (dict_word_length)</option>
+                        <option value="gem_sum">Gem Sum (gem_sum)</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Value</label>
+                    <input type="number" class="form-control param-input" min="1" step="1" value="5" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button type="button" class="btn btn-outline-danger remove-filter" style="display:none;">&times;</button>
+                </div>
+            </div>
         </div>
 
         <div class="col-12">
+            <button type="button" id="addFilterBtn" class="btn btn-secondary btn-sm">Add Another Filter</button>
+        </div>
+
+        <div class="col-12 mt-4">
             <button type="submit" class="btn btn-primary">Search</button>
             <button type="button" id="downloadBtn" class="btn btn-success ms-2">Download Excel</button>
+            <button type="button" id="clearBtn" class="btn btn-danger ms-2">Clear</button>
         </div>
-    </form>
 
-    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+        <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
 
     <div id="resultContainer" class="mt-4" style="display:none;">
         <div class="card">
@@ -59,16 +68,57 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('dictionaryWordsForm');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const filterContainer = document.getElementById('filterContainer');
+        const addFilterBtn = document.getElementById('addFilterBtn');
+        const clearBtn = document.getElementById('clearBtn');
         const errorContainer = document.getElementById('errorContainer');
         const resultContainer = document.getElementById('resultContainer');
         const countText = document.getElementById('countText');
         const wordsTableBody = document.getElementById('wordsTableBody');
 
+        addFilterBtn.addEventListener('click', function() {
+            const firstRow = filterContainer.querySelector('.filter-row');
+            const newRow = firstRow.cloneNode(true);
+            newRow.querySelector('.param-input').value = '';
+            newRow.querySelector('.remove-filter').style.display = 'block';
+            filterContainer.appendChild(newRow);
+        });
+
+        filterContainer.addEventListener('click', function(e) {
+            if (e.target.classList.contains('remove-filter')) {
+                e.target.closest('.filter-row').remove();
+            }
+        });
+
         downloadBtn.addEventListener('click', function() {
-            const field = document.getElementById('field').value;
-            const param = document.getElementById('param').value;
-            window.location.href = `/api/dictionary/words/download?field=${field}&param=${param}`;
+            const rows = filterContainer.querySelectorAll('.filter-row');
+            const params = new URLSearchParams();
+            rows.forEach(row => {
+                params.append('field', row.querySelector('.field-select').value);
+                params.append('param', row.querySelector('.param-input').value);
+            });
+            window.location.href = `/api/dictionary/words/download?${params.toString()}`;
+        });
+
+        clearBtn.addEventListener('click', function() {
+            // Reset form fields
+            form.reset();
+
+            // Remove all filter rows except the first one
+            const rows = filterContainer.querySelectorAll('.filter-row');
+            rows.forEach((row, index) => {
+                if (index > 0) {
+                    row.remove();
+                } else {
+                    // Ensure the close button is hidden on the first row
+                    row.querySelector('.remove-filter').style.display = 'none';
+                }
+            });
+
+            // Hide containers
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            wordsTableBody.innerHTML = '';
         });
 
         function escapeHtml(value) {
@@ -98,13 +148,15 @@
             resultContainer.style.display = 'none';
             wordsTableBody.innerHTML = '';
 
-            const field = document.getElementById('field').value;
-            const param = parseInt(document.getElementById('param').value, 10);
+            const filters = Array.from(filterContainer.querySelectorAll('.filter-row')).map(row => ({
+                field: row.querySelector('.field-select').value,
+                param: parseInt(row.querySelector('.param-input').value, 10)
+            }));
 
             fetch('/api/dictionary/words', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ field: field, param: param })
+                body: JSON.stringify({ filters: filters })
             })
                 .then(function(response) {
                     if (!response.ok) {

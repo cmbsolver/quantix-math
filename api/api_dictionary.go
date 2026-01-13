@@ -11,14 +11,21 @@ import (
 	"github.com/xuri/excelize/v2"
 )
 
+type DictionarySearchRequest struct {
+	Filters []struct {
+		Field string `json:"field"`
+		Param int    `json:"param"`
+	} `json:"filters"`
+}
+
 type DictionaryWordsByParamRequest struct {
-	Field string `json:"field"`
-	Param int    `json:"param"`
+	Filters []struct {
+		Field string `json:"field"`
+		Param int    `json:"param"`
+	} `json:"filters"`
 }
 
 type DictionaryWordsByParamResponse struct {
-	Field string                  `json:"field"`
-	Param int                     `json:"param"`
 	Words []tables.DictionaryWord `json:"words"`
 	Count int                     `json:"count"`
 }
@@ -29,24 +36,27 @@ func GetDictionaryWordsByParamHandler(c *fiber.Ctx) error {
 		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
 	}
 
-	if req.Param <= 0 {
-		return c.Status(fiber.StatusBadRequest).SendString("param must be a positive integer")
+	if len(req.Filters) == 0 {
+		return c.Status(fiber.StatusBadRequest).SendString("at least one filter is required")
 	}
 
 	// IMPORTANT: whitelist DB columns to avoid SQL injection via `field`
-	allowedFields := map[string]string{
-		"dict_rune_length":      "dict_rune_length",
-		"dict_runeglish_length": "dict_runeglish_length",
-		"dict_word_length":      "dict_word_length",
-		"gem_sum":               "gem_sum",
+	allowedFields := map[string]bool{
+		"dict_rune_length":      true,
+		"dict_runeglish_length": true,
+		"dict_word_length":      true,
+		"gem_sum":               true,
 	}
 
-	dbField, ok := allowedFields[req.Field]
-	if !ok {
-		return c.Status(fiber.StatusBadRequest).SendString(fmt.Sprintf(
-			"invalid field; allowed: %v",
-			[]string{"dict_rune_length", "dict_runeglish_length", "dict_word_length", "gem_sum"},
-		))
+	filterMap := make(map[string]int)
+	for _, f := range req.Filters {
+		if !allowedFields[f.Field] {
+			return c.Status(fiber.StatusBadRequest).SendString(fmt.Sprintf("invalid field: %s", f.Field))
+		}
+		if f.Param <= 0 {
+			return c.Status(fiber.StatusBadRequest).SendString("params must be positive integers")
+		}
+		filterMap[f.Field] = f.Param
 	}
 
 	conn, err := db.InitConnection()
@@ -55,36 +65,41 @@ func GetDictionaryWordsByParamHandler(c *fiber.Ctx) error {
 	}
 	defer func() { _ = db.CloseConnection(conn) }()
 
-	words := tables.GetDictionaryWordsByParam(conn, dbField, req.Param)
+	words := tables.GetDictionaryWordsByFilters(conn, filterMap)
 
 	return c.JSON(DictionaryWordsByParamResponse{
-		Field: req.Field,
-		Param: req.Param,
 		Words: words,
 		Count: len(words),
 	})
 }
 
 func DownloadDictionaryWordsExcelHandler(c *fiber.Ctx) error {
-	field := c.Query("field")
-	paramStr := c.Query("param")
-	var param int
-	fmt.Sscanf(paramStr, "%d", &param)
+	queryArgs := c.Context().QueryArgs()
+	fieldArgs := queryArgs.PeekMulti("field")
+	paramArgs := queryArgs.PeekMulti("param")
 
-	if param <= 0 || field == "" {
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid parameters")
+	if len(fieldArgs) == 0 || len(fieldArgs) != len(paramArgs) {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid or mismatched parameters")
 	}
 
-	allowedFields := map[string]string{
-		"dict_rune_length":      "dict_rune_length",
-		"dict_runeglish_length": "dict_runeglish_length",
-		"dict_word_length":      "dict_word_length",
-		"gem_sum":               "gem_sum",
+	allowedFields := map[string]bool{
+		"dict_rune_length":      true,
+		"dict_runeglish_length": true,
+		"dict_word_length":      true,
+		"gem_sum":               true,
 	}
 
-	dbField, ok := allowedFields[field]
-	if !ok {
-		return c.Status(fiber.StatusBadRequest).SendString("Invalid field")
+	filterMap := make(map[string]int)
+	for i := range fieldArgs {
+		field := string(fieldArgs[i])
+		if !allowedFields[field] {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid field: " + field)
+		}
+		var p int
+		if _, err := fmt.Sscanf(string(paramArgs[i]), "%d", &p); err != nil || p <= 0 {
+			return c.Status(fiber.StatusBadRequest).SendString("Invalid param value")
+		}
+		filterMap[field] = p
 	}
 
 	conn, err := db.InitConnection()
@@ -93,7 +108,7 @@ func DownloadDictionaryWordsExcelHandler(c *fiber.Ctx) error {
 	}
 	defer func() { _ = db.CloseConnection(conn) }()
 
-	words := tables.GetDictionaryWordsByParam(conn, dbField, param)
+	words := tables.GetDictionaryWordsByFilters(conn, filterMap)
 
 	f := excelize.NewFile()
 	defer func() { _ = f.Close() }()
@@ -125,7 +140,7 @@ func DownloadDictionaryWordsExcelHandler(c *fiber.Ctx) error {
 	f.SetActiveSheet(index)
 
 	c.Set("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-	c.Set("Content-Disposition", fmt.Sprintf("attachment; filename=dictionary_words_%s_%d.xlsx", field, param))
+	c.Set("Content-Disposition", "attachment; filename=dictionary_words_search.xlsx")
 
 	// Stream file to response
 	reader, writer := io.Pipe()
