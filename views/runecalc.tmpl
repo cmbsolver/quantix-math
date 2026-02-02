@@ -146,12 +146,15 @@
             cursor: help;
         }
 
-        .number-indicator.prime { background-color: #d1e7dd; }
-        .number-indicator.emirp { background-color: #935b33; }
-        .number-indicator.circular { background-color: #005278; }
-        .number-indicator.fibonacci { background-color: #57151e; }
-        .number-indicator.lucas { background-color: #091347; }
-        .number-indicator.reversable { background-color: #3f0060; }
+        .number-indicator.prime { background-color: #d1e7dd; color: #000; }
+        .number-indicator.emirp { background-color: #ffcc99; color: #000; }
+        .number-indicator.circular { background-color: #0d6efd; color: #fff; }
+        .number-indicator.palindromic { background-color: #ff99cc; color: #000; }
+        .number-indicator.mersenne { background-color: #ff5722; color: #fff; }
+        .number-indicator.sophie { background-color: #00bcd4; color: #fff; }
+        .number-indicator.fibonacci { background-color: #57151e; color: #fff; }
+        .number-indicator.lucas { background-color: #091347; color: #fff; }
+        .number-indicator.reversable { background-color: #3f0060; color: #fff; }
 
         .ioc-text { display: inline-block; font-size: 12px; color: #d43a3a; margin-left: 5px;}
 
@@ -195,14 +198,27 @@
         .gp-word-emirp, .gp-line-sum-emirp { color: #000; background-color: #ffcc99; }
         .gp-word-circular-prime, .gp-line-sum-circular-prime { color: #fff; background-color: #0d6efd; }
         .gp-word-semi-prime, .gp-line-sum-semi-prime { color: #fff; background-color: #6f42c1; }
+        .gp-word-palindromic-prime, .gp-line-sum-palindromic-prime { color: #000; background-color: #ff99cc; }
+        .gp-word-mersenne-prime, .gp-line-sum-mersenne-prime { color: #fff; background-color: #ff5722; }
+        .gp-word-sophie-germain-prime, .gp-line-sum-sophie-germain-prime { color: #fff; background-color: #00bcd4; }
 
-        .gp-line-sum-nonprime, .gp-line-sum-prime, .gp-line-sum-emirp, .gp-line-sum-circular-prime, .gp-line-sum-semi-prime {
+        .gp-line-sum-nonprime, .gp-line-sum-prime, .gp-line-sum-emirp, .gp-line-sum-circular-prime, .gp-line-sum-semi-prime,
+        .gp-line-sum-palindromic-prime, .gp-line-sum-mersenne-prime, .gp-line-sum-sophie-germain-prime {
             margin-left: auto;
             font-weight: bold;
             padding: 6px 12px;
             border-radius: 4px;
             font-size: 0.9rem;
         }
+
+        [data-bs-theme="dark"] .gp-word-nonprime, [data-bs-theme="dark"] .gp-line-sum-nonprime { background-color: #343a40; color: #adb5bd; }
+        [data-bs-theme="dark"] .gp-word-prime, [data-bs-theme="dark"] .gp-line-sum-prime { background-color: #198754; color: #fff; }
+        [data-bs-theme="dark"] .gp-word-emirp, [data-bs-theme="dark"] .gp-line-sum-emirp { background-color: #935b33; color: #fff; }
+        [data-bs-theme="dark"] .gp-word-circular-prime, [data-bs-theme="dark"] .gp-line-sum-circular-prime { background-color: #005278; color: #fff; }
+        [data-bs-theme="dark"] .gp-word-semi-prime, [data-bs-theme="dark"] .gp-line-sum-semi-prime { background-color: #4b2c85; color: #fff; }
+        [data-bs-theme="dark"] .gp-word-palindromic-prime, [data-bs-theme="dark"] .gp-line-sum-palindromic-prime { background-color: #cc0066; color: #fff; }
+        [data-bs-theme="dark"] .gp-word-mersenne-prime, [data-bs-theme="dark"] .gp-line-sum-mersenne-prime { background-color: #b23c17; color: #fff; }
+        [data-bs-theme="dark"] .gp-word-sophie-germain-prime, [data-bs-theme="dark"] .gp-line-sum-sophie-germain-prime { background-color: #008ba3; color: #fff; }
 
         /* Expandable */
         .expandable-section { border: 1px solid #ddd; border-radius: 4px; margin-top: 15px; overflow: hidden; }
@@ -477,6 +493,19 @@
         <!-- Prime View -->
         <div class="tab-pane fade" id="gp-view-tab" role="tabpanel">
             <div class="gp-view-content">
+                <div class="mb-3 d-flex align-items-center">
+                    <label for="prime-filter" class="me-2 fw-bold">Highlight:</label>
+                    <select id="prime-filter" class="form-select form-select-sm w-auto">
+                        <option value="all">All Primes</option>
+                        <option value="prime">Prime</option>
+                        <option value="circular">Circular Prime</option>
+                        <option value="emirp">Emirp</option>
+                        <option value="palindromic">Palindromic Prime</option>
+                        <option value="mersenne">Mersenne Prime</option>
+                        <option value="sophie">Sophie Germain Prime</option>
+                        <option value="semi">Semi-Prime</option>
+                    </select>
+                </div>
                 <div id="gp-visualization" class="gp-lines-container"></div>
                 <div class="mt-3">
                     <b>Legend:</b>
@@ -484,6 +513,9 @@
                     <span class="badge bg-primary text-white">Circular Prime</span>
                     <span class="badge bg-success text-dark bg-opacity-25">Prime</span>
                     <span class="badge text-dark" style="background-color: #ffcc99;">Emirp</span>
+                    <span class="badge text-dark" style="background-color: #ff99cc;">Palindromic Prime</span>
+                    <span class="badge text-white" style="background-color: #ff5722;">Mersenne Prime</span>
+                    <span class="badge text-white" style="background-color: #00bcd4;">Sophie Germain Prime</span>
                     <span class="badge" style="background-color: #6f42c1; color:white">Semi-Prime</span>
                 </div>
             </div>
@@ -582,6 +614,7 @@
 
         // Event Listeners
         document.getElementById('load-button').addEventListener('click', triggerCalculation);
+        document.getElementById('prime-filter').addEventListener('change', triggerCalculation);
 
         // File Loader (Using Fetch instead of Ajax)
         document.getElementById('sload-button').addEventListener('click', function() {
@@ -945,6 +978,26 @@
             }
             return true;
         }
+        function isPalindromicPrime(num) {
+            if (!isPrime(num)) return false;
+            const s = num.toString();
+            return s === s.split('').reverse().join('');
+        }
+        function isMersennePrime(num) {
+            if (!isPrime(num)) return false;
+            // Mersenne primes are of the form 2^p - 1
+            let p = 1;
+            let m = 0;
+            while (m < num) {
+                p++;
+                m = Math.pow(2, p) - 1;
+            }
+            return m === num;
+        }
+        function isSophieGermainPrime(num) {
+            if (!isPrime(num)) return false;
+            return isPrime(2 * num + 1);
+        }
         function isSemiPrime(num) {
             if (num <= 1) return false;
             let firstFactor = null;
@@ -985,6 +1038,9 @@
             if (isPrime(sum)) displayText += ' <span class="number-indicator prime" title="Prime">✓ Prime</span>';
             if (isEmirp(sum)) displayText += ' <span class="number-indicator emirp" title="Emirp">✓ Emirp</span>';
             if (isCircularPrime(sum)) displayText += ' <span class="number-indicator circular" title="Circular Prime">✓ Circular</span>';
+            if (isPalindromicPrime(sum)) displayText += ' <span class="number-indicator palindromic" title="Palindromic Prime">✓ Palindromic</span>';
+            if (isMersennePrime(sum)) displayText += ' <span class="number-indicator mersenne" title="Mersenne Prime">✓ Mersenne</span>';
+            if (isSophieGermainPrime(sum)) displayText += ' <span class="number-indicator sophie" title="Sophie Germain Prime">✓ Sophie Germain</span>';
             if (isFibonacciNumer(sum)) displayText += ' <span class="number-indicator fibonacci" title="Fibonacci">✓ Fibonacci</span>';
             if (isLucasNumber(sum)) displayText += ' <span class="number-indicator lucas" title="Lucas">✓ Lucas</span>';
             gematriaDiv.innerHTML = displayText;
@@ -998,6 +1054,7 @@
 
         function updateGPView(inputText) {
             const container = document.getElementById('gp-visualization');
+            const filter = document.getElementById('prime-filter').value;
             container.innerHTML = '';
             if (!inputText.trim()) return;
 
@@ -1015,11 +1072,40 @@
                     const latin = transposeRuneToLatin(word);
                     lineSum += wordValue;
 
+                    let isMatch = false;
                     let boxClass = 'gp-word-nonprime';
-                    if (isEmirp(wordValue)) boxClass = 'gp-word-emirp';
-                    else if (isPrime(wordValue)) boxClass = 'gp-word-prime';
-                    if (isCircularPrime(wordValue)) boxClass = 'gp-word-circular-prime';
-                    if (!isPrime(wordValue) && !isEmirp(wordValue) && isSemiPrime(wordValue)) boxClass = 'gp-word-semi-prime';
+                    
+                    const isP = isPrime(wordValue);
+                    const isC = isCircularPrime(wordValue);
+                    const isE = isEmirp(wordValue);
+                    const isPal = isPalindromicPrime(wordValue);
+                    const isMer = isMersennePrime(wordValue);
+                    const isSG = isSophieGermainPrime(wordValue);
+                    const isS = !isP && !isE && isSemiPrime(wordValue);
+
+                    if (filter === 'all') {
+                        if (isE) boxClass = 'gp-word-emirp';
+                        else if (isP) boxClass = 'gp-word-prime';
+                        if (isC) boxClass = 'gp-word-circular-prime';
+                        if (isPal) boxClass = 'gp-word-palindromic-prime';
+                        if (isMer) boxClass = 'gp-word-mersenne-prime';
+                        if (isSG) boxClass = 'gp-word-sophie-germain-prime';
+                        if (isS) boxClass = 'gp-word-semi-prime';
+                    } else if (filter === 'prime' && isP) {
+                        boxClass = 'gp-word-prime';
+                    } else if (filter === 'circular' && isC) {
+                        boxClass = 'gp-word-circular-prime';
+                    } else if (filter === 'emirp' && isE) {
+                        boxClass = 'gp-word-emirp';
+                    } else if (filter === 'palindromic' && isPal) {
+                        boxClass = 'gp-word-palindromic-prime';
+                    } else if (filter === 'mersenne' && isMer) {
+                        boxClass = 'gp-word-mersenne-prime';
+                    } else if (filter === 'sophie' && isSG) {
+                        boxClass = 'gp-word-sophie-germain-prime';
+                    } else if (filter === 'semi' && isS) {
+                        boxClass = 'gp-word-semi-prime';
+                    }
 
                     const wordBox = document.createElement('div');
                     wordBox.className = `gp-word-box ${boxClass}`;
@@ -1030,10 +1116,38 @@
 
                 const lineSumElement = document.createElement('div');
                 let sumClass = 'gp-line-sum-nonprime';
-                if (isPrime(lineSum)) sumClass = 'gp-line-sum-prime';
-                if (isEmirp(lineSum)) sumClass = 'gp-line-sum-emirp';
-                if (isCircularPrime(lineSum)) sumClass = 'gp-line-sum-circular-prime';
-                if (!isPrime(lineSum) && !isEmirp(lineSum) && isSemiPrime(lineSum)) sumClass = 'gp-line-sum-semi-prime';
+                
+                const isP = isPrime(lineSum);
+                const isC = isCircularPrime(lineSum);
+                const isE = isEmirp(lineSum);
+                const isPal = isPalindromicPrime(lineSum);
+                const isMer = isMersennePrime(lineSum);
+                const isSG = isSophieGermainPrime(lineSum);
+                const isS = !isP && !isE && isSemiPrime(lineSum);
+
+                if (filter === 'all') {
+                    if (isP) sumClass = 'gp-line-sum-prime';
+                    if (isE) sumClass = 'gp-line-sum-emirp';
+                    if (isC) sumClass = 'gp-line-sum-circular-prime';
+                    if (isPal) sumClass = 'gp-line-sum-palindromic-prime';
+                    if (isMer) sumClass = 'gp-line-sum-mersenne-prime';
+                    if (isSG) sumClass = 'gp-line-sum-sophie-germain-prime';
+                    if (isS) sumClass = 'gp-line-sum-semi-prime';
+                } else if (filter === 'prime' && isP) {
+                    sumClass = 'gp-line-sum-prime';
+                } else if (filter === 'circular' && isC) {
+                    sumClass = 'gp-line-sum-circular-prime';
+                } else if (filter === 'emirp' && isE) {
+                    sumClass = 'gp-line-sum-emirp';
+                } else if (filter === 'palindromic' && isPal) {
+                    sumClass = 'gp-line-sum-palindromic-prime';
+                } else if (filter === 'mersenne' && isMer) {
+                    sumClass = 'gp-line-sum-mersenne-prime';
+                } else if (filter === 'sophie' && isSG) {
+                    sumClass = 'gp-line-sum-sophie-germain-prime';
+                } else if (filter === 'semi' && isS) {
+                    sumClass = 'gp-line-sum-semi-prime';
+                }
 
                 lineSumElement.className = sumClass;
                 lineSumElement.textContent = `Line Sum: ${lineSum}`;
