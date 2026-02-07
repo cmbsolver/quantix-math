@@ -87,7 +87,7 @@
             if (points.length > 0) {
                 processPoints(points);
             } else {
-                alert('No valid coordinates found in file. Format should be: X,Y');
+                alert('No valid coordinates found in file. Format should be: X,Y or TSPLIB format.');
             }
         };
         reader.readAsText(file);
@@ -95,17 +95,54 @@
 
     function parsePoints(content) {
         const lines = content.split('\n');
-        const points = [];
-        lines.forEach(line => {
-            const parts = line.trim().split(/[,\s]+/);
-            if (parts.length >= 2) {
-                const x = parseFloat(parts[0]);
-                const y = parseFloat(parts[1]);
-                if (!isNaN(x) && !isNaN(y)) {
-                    points.push({x, y});
+        let points = [];
+        
+        // Detect TSPLIB format
+        const isTSPLIB = content.includes('NODE_COORD_SECTION');
+        
+        if (isTSPLIB) {
+            let inCoordSection = false;
+            for (let line of lines) {
+                line = line.trim();
+                if (line === 'NODE_COORD_SECTION') {
+                    inCoordSection = true;
+                    continue;
+                }
+                if (line === 'EOF' || line === 'DEMAND_SECTION' || line === 'DEPOT_SECTION') {
+                    break;
+                }
+                if (inCoordSection) {
+                    const parts = line.split(/\s+/).filter(p => p.length > 0);
+                    if (parts.length >= 3) {
+                        // TSPLIB typically has: ID X Y
+                        const x = parseFloat(parts[1]);
+                        const y = parseFloat(parts[2]);
+                        if (!isNaN(x) && !isNaN(y)) {
+                            points.push({x, y});
+                        }
+                    } else if (parts.length === 2) {
+                        // Some variations might just be X Y
+                        const x = parseFloat(parts[0]);
+                        const y = parseFloat(parts[1]);
+                        if (!isNaN(x) && !isNaN(y)) {
+                            points.push({x, y});
+                        }
+                    }
                 }
             }
-        });
+        } else {
+            // Original X,Y or X Y format
+            lines.forEach(line => {
+                const parts = line.trim().split(/[,\s]+/);
+                if (parts.length >= 2) {
+                    const x = parseFloat(parts[0]);
+                    const y = parseFloat(parts[1]);
+                    if (!isNaN(x) && !isNaN(y)) {
+                        points.push({x, y});
+                    }
+                }
+            });
+        }
         return points;
     }
 
