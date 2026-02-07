@@ -34,3 +34,4 @@ go.work.sum
 /go.sum
 /quantix-math
 /.idea/go.imports.xml
+/assets/files/coordinates/

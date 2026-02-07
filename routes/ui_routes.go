@@ -56,4 +56,10 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Dictionary Words",
 		})
 	})
+
+	app.Get("/coordinate_graph", func(c *fiber.Ctx) error {
+		return c.Render("coordinate_graph", fiber.Map{
+			"Title": "Coordinate Graph",
+		})
+	})
 }

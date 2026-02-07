@@ -18,4 +18,7 @@ func RegisterAPIRoutes(app *fiber.App) {
 	// Binutils routes
 	apiGroup.Post("/binutils/file-to-csv", api.FileToCSVHandler)
 	apiGroup.Post("/binutils/csv-to-bytes", api.CSVToBytesHandler)
+
+	// Graph routes
+	apiGroup.Post("/graph/process", api.ProcessGraphHandler)
 }
