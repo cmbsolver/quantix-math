@@ -28,6 +28,26 @@
                         <label for="totalLength" class="form-label">Total Length of All Lines</label>
                         <input type="text" class="form-control" id="totalLength" readonly>
                     </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="pointCount" class="form-label">Points</label>
+                            <input type="text" class="form-control" id="pointCount" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label for="lineCount" class="form-label">Lines</label>
+                            <input type="text" class="form-control" id="lineCount" readonly>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label for="minCoord" class="form-label">Min X,Y</label>
+                            <input type="text" class="form-control" id="minCoord" readonly>
+                        </div>
+                        <div class="col-6">
+                            <label for="maxCoord" class="form-label">Max X,Y</label>
+                            <input type="text" class="form-control" id="maxCoord" readonly>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="lineList" class="form-label">Lines List</label>
                         <select class="form-select" id="lineList" size="15"></select>
@@ -50,6 +70,10 @@
     const container = document.getElementById('graphContainer');
     const coordinateFile = document.getElementById('coordinateFile');
     const totalLengthInput = document.getElementById('totalLength');
+    const pointCountInput = document.getElementById('pointCount');
+    const lineCountInput = document.getElementById('lineCount');
+    const minCoordInput = document.getElementById('minCoord');
+    const maxCoordInput = document.getElementById('maxCoord');
     const lineList = document.getElementById('lineList');
     const lineDetails = document.getElementById('lineDetails');
     const detailLength = document.getElementById('detailLength');
@@ -170,6 +194,24 @@
 
     function updateUI() {
         totalLengthInput.value = graphData.totalLength.toFixed(4);
+        pointCountInput.value = graphData.points.length;
+        lineCountInput.value = graphData.lines.length;
+        
+        if (graphData.points.length > 0) {
+            let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+            graphData.points.forEach(p => {
+                minX = Math.min(minX, p.x);
+                maxX = Math.max(maxX, p.x);
+                minY = Math.min(minY, p.y);
+                maxY = Math.max(maxY, p.y);
+            });
+            minCoordInput.value = `${minX}, ${minY}`;
+            maxCoordInput.value = `${maxX}, ${maxY}`;
+        } else {
+            minCoordInput.value = '-';
+            maxCoordInput.value = '-';
+        }
+
         lineList.innerHTML = '';
         graphData.lines.forEach((line, index) => {
             const option = document.createElement('option');
