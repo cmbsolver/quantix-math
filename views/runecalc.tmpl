@@ -1174,7 +1174,20 @@
                     } else {
                         wordBox.classList.add('gp-word-nonprime');
                     }
-                    wordBox.title = `Value: ${wordValue}`;
+                    const types = [];
+                    if (isP) types.push("Prime");
+                    if (isC) types.push("Circular Prime");
+                    if (isE) types.push("Emirp");
+                    if (isPal) types.push("Palindromic Prime");
+                    if (isMer) types.push("Mersenne Prime");
+                    if (isSG) types.push("Sophie Germain Prime");
+                    if (isS) types.push("Semi-Prime");
+                    
+                    if (types.length > 0) {
+                        wordBox.title = types.join(", ");
+                    } else {
+                        wordBox.title = "Non-Prime";
+                    }
                     wordBox.innerHTML = `<div class="gp-word-text">${latin} (${word})</div><div class="gp-word-value">${wordValue}</div>`;
                     lineDiv.appendChild(wordBox);
                 });
@@ -1255,6 +1268,20 @@
                 } else {
                     lineSumElement.className = 'gp-line-sum-nonprime';
                 }
+                const sumTypes = [];
+                if (isP) sumTypes.push("Prime");
+                if (isC) sumTypes.push("Circular Prime");
+                if (isE) sumTypes.push("Emirp");
+                if (isPal) sumTypes.push("Palindromic Prime");
+                if (isMer) sumTypes.push("Mersenne Prime");
+                if (isSG) sumTypes.push("Sophie Germain Prime");
+                if (isS) sumTypes.push("Semi-Prime");
+
+                if (sumTypes.length > 0) {
+                    lineSumElement.title = sumTypes.join(", ");
+                } else {
+                    lineSumElement.title = "Non-Prime";
+                }
                 lineSumElement.textContent = `Line Sum: ${lineSum}`;
                 lineDiv.appendChild(lineSumElement);
                 container.appendChild(lineDiv);
@@ -1297,19 +1324,28 @@
                     const latin = transposeRuneToLatin(word);
                     lineSum += wordValue;
 
-                    let boxClass = 'gp-word-nonprime';
-                    if (sigma.coprimes.includes(wordValue)) boxClass = 'gp-word-circular-prime'; // reusing CSS class for blue
-
                     const wordBox = document.createElement('div');
+                    let boxClass = 'gp-word-nonprime';
+                    if (sigma.coprimes.includes(wordValue)) {
+                        boxClass = 'gp-word-circular-prime'; // reusing CSS class for blue
+                        wordBox.title = "Coprime";
+                    } else {
+                        wordBox.title = "Not Coprime";
+                    }
+
                     wordBox.className = `gp-word-box ${boxClass}`;
-                    wordBox.title = `Value: ${wordValue}`;
                     wordBox.innerHTML = `<div class="gp-word-text">${latin} (${word})</div><div class="gp-word-value">${wordValue}</div>`;
                     lineDiv.appendChild(wordBox);
                 });
 
                 const lineSumElement = document.createElement('div');
                 let sumClass = 'gp-line-sum-nonprime';
-                if (sigma.coprimes.includes(lineSum)) sumClass = 'gp-line-sum-circular-prime';
+                if (sigma.coprimes.includes(lineSum)) {
+                    sumClass = 'gp-line-sum-circular-prime';
+                    lineSumElement.title = "Coprime";
+                } else {
+                    lineSumElement.title = "Not Coprime";
+                }
                 lineSumElement.className = sumClass;
                 lineSumElement.textContent = `Line Sum: ${lineSum}`;
                 lineDiv.appendChild(lineSumElement);
