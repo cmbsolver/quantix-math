@@ -1,0 +1,118 @@
+<div class="container mt-4">
+    <h1>Base64 Converter</h1>
+    <p>Convert Base64 strings to byte arrays (CSV) and vice versa.</p>
+
+    <div class="row">
+        <!-- Base64 to CSV -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Base64 to Byte Array (CSV)</h5>
+                </div>
+                <div class="card-body">
+                    <form id="base64ToCsvForm">
+                        <div class="mb-3">
+                            <label for="base64Input" class="form-label">Base64 String</label>
+                            <textarea class="form-control" id="base64Input" name="base64" rows="5" required placeholder="SGVsbG8gV29ybGQ="></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Convert to CSV</button>
+                    </form>
+                    <div class="mt-3">
+                        <label for="csvOutput" class="form-label">Result (CSV)</label>
+                        <textarea class="form-control" id="csvOutput" rows="5" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CSV to Base64 -->
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Byte Array (CSV) to Base64</h5>
+                </div>
+                <div class="card-body">
+                    <form id="csvToBase64Form">
+                        <div class="mb-3">
+                            <label for="csvInput" class="form-label">Byte Array (CSV)</label>
+                            <textarea class="form-control" id="csvInput" name="csv" rows="5" required placeholder="72, 101, 108, 108, 111, 32, 87, 111, 114, 108, 100"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Convert to Base64</button>
+                    </form>
+                    <div class="mt-3">
+                        <label for="base64Output" class="form-label">Result (Base64)</label>
+                        <textarea class="form-control" id="base64Output" rows="5" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+</div>
+
+<script>
+    // Base64 to CSV
+    document.getElementById('base64ToCsvForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        const errorContainer = document.getElementById('errorContainer');
+        errorContainer.style.display = 'none';
+        
+        const base64Data = document.getElementById('base64Input').value;
+
+        try {
+            const response = await fetch('/api/binutils/base64-to-csv', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ base64: base64Data })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to convert Base64');
+            }
+
+            const result = await response.json();
+            document.getElementById('csvOutput').value = result.csv;
+        } catch (error) {
+            errorContainer.innerText = error.message;
+            errorContainer.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+
+    // CSV to Base64
+    document.getElementById('csvToBase64Form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        const errorContainer = document.getElementById('errorContainer');
+        errorContainer.style.display = 'none';
+
+        const csvData = document.getElementById('csvInput').value;
+
+        try {
+            const response = await fetch('/api/binutils/csv-to-base64', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ csv: csvData })
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(errorText || 'Failed to convert CSV');
+            }
+
+            const result = await response.json();
+            document.getElementById('base64Output').value = result.base64;
+        } catch (error) {
+            errorContainer.innerText = error.message;
+            errorContainer.style.display = 'block';
+        } finally {
+            submitBtn.disabled = false;
+        }
+    });
+</script>

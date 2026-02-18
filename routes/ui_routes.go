@@ -45,6 +45,12 @@ func SetupUIRoutes(app *fiber.App) {
 		})
 	})
 
+	app.Get("/base64_converter", func(c *fiber.Ctx) error {
+		return c.Render("base64_converter", fiber.Map{
+			"Title": "Base64 Converter",
+		})
+	})
+
 	app.Get("/runecalc", func(c *fiber.Ctx) error {
 		return c.Render("runecalc", fiber.Map{
 			"Title": "Rune Calculator",

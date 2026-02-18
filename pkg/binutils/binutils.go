@@ -1,10 +1,19 @@
 package binutils
 
 import (
+	"encoding/base64"
 	"fmt"
 	"strconv"
 	"strings"
 )
+
+func Base64ToBytes(b64 string) ([]byte, error) {
+	return base64.StdEncoding.DecodeString(b64)
+}
+
+func BytesToBase64(b []byte) string {
+	return base64.StdEncoding.EncodeToString(b)
+}
 
 func BytesToCSV(b []byte) string {
 	if len(b) == 0 {
