@@ -46,8 +46,7 @@ func InitDatabase() (*gorm.DB, error) {
 	_, err = adminConn.Exec(context.Background(), createDatabaseSQL)
 	if err != nil {
 		// Check if the error is "duplicate_database" (42P04)
-		var pgErr *pgconn.PgError
-		if errors.As(err, &pgErr) && pgErr.Code == "42P04" {
+		if pgErr, ok := errors.AsType[*pgconn.PgError](err); ok && pgErr.Code == "42P04" {
 			fmt.Printf("Database already exists, continuing...\n")
 		} else {
 			return nil, err
