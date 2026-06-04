@@ -10,9 +10,8 @@ import (
 
 // AppConfig represents the application configuration.
 type AppConfig struct {
-	ExistingHash            string `json:"existing_hash"`
-	AdminConnectionString   string `json:"admin_connection_string"`
-	GeneralConnectionString string `json:"general_connection_string"`
+	ExistingHash string `json:"existing_hash"`
+	DBPath       string `json:"db_path"`
 }
 
 // getConfigFilePath returns the path to the configuration file.
@@ -74,9 +73,8 @@ func CreateDefaultConfig() error {
 	}
 
 	defaultConfig := AppConfig{
-		ExistingHash:            "36367763ab73783c7af284446c59466b4cd653239a311cb7116d4618dee09a8425893dc7500b464fdaf1672d7bef5e891c6e2274568926a49fb4f45132c2a8b4",
-		AdminConnectionString:   "postgres://postgres:quantixpw@localhost:5432/postgres",
-		GeneralConnectionString: "host=localhost user=postgres password=quantixpw dbname=quantixdb port=5432 sslmode=disable TimeZone=America/Chicago search_path=public",
+		ExistingHash: "36367763ab73783c7af284446c59466b4cd653239a311cb7116d4618dee09a8425893dc7500b464fdaf1672d7bef5e891c6e2274568926a49fb4f45132c2a8b4",
+		DBPath:       "quantix.db",
 	}
 
 	data, err := json.MarshalIndent(defaultConfig, "", "  ")
@@ -119,10 +117,8 @@ func UpdateConfig(key string, value interface{}) error {
 	switch key {
 	case "ExistingHash":
 		config.ExistingHash = value.(string)
-	case "AdminConnectionString":
-		config.AdminConnectionString = value.(string)
-	case "GeneralConnectionString":
-		config.GeneralConnectionString = value.(string)
+	case "DBPath":
+		config.DBPath = value.(string)
 	default:
 		return fmt.Errorf("unknown configuration key: %s", key)
 	}

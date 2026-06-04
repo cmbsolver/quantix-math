@@ -3,24 +3,18 @@ A set of math utilities for solving the Cicada 3301 puzzle.
 
 ## Getting Started
 
-### Scripts
+### Database
 
-The project includes two shell scripts to help with environment setup and deployment using Podman:
+The project uses **SQLite** as its database engine. The database file (`quantix.db`) is automatically created in the root directory upon first run, based on the configuration in `settings/appsettings.json`.
 
-#### `create-dev-db.sh`
-Use this script to set up a clean PostgreSQL instance for local development.
-- **What it does**: Cleans up existing containers/volumes, pulls the latest Postgres image, and starts a new container named `postgres` with the password `quantixpw`.
-- **Port**: Exposes PostgreSQL on `5432`.
-- **Usage**:
-  ```bash
-  chmod +x create-dev-db.sh
-  ./create-dev-db.sh
-  ```
+### Deployment
+
+The project includes a shell script to help with deployment using Podman:
 
 #### `cont-only.sh`
-Use this script to deploy the entire Quantix stack (App + DB) within a Podman pod.
-- **What it does**: Creates a pod named `quantix-pod`, pulls the Quantix and Postgres images, and starts both containers within the same network namespace.
-- **Ports**: Exposes the web application on `3301` and the database on `5432`.
+Use this script to deploy the Quantix application within a Podman pod.
+- **What it does**: Creates a pod named `quantix-pod`, pulls the Quantix image, and starts the container.
+- **Ports**: Exposes the web application on `3301`.
 - **Usage**:
   ```bash
   chmod +x cont-only.sh

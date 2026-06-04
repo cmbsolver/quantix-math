@@ -1,8 +1,8 @@
 # Stage 1: Build the application
 FROM golang:1.26-alpine AS builder
 
-# Install build dependencies if needed (e.g., git, gcc)
-RUN apk add --no-cache git
+# Install build dependencies: git and gcc/musl-dev for CGO (required by go-sqlite3)
+RUN apk add --no-cache git gcc musl-dev
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -15,8 +15,8 @@ RUN go mod download
 COPY . .
 
 # Build the application
-# CGO_ENABLED=0 creates a statically linked binary for alpine
-RUN CGO_ENABLED=0 GOOS=linux go build -o quantix-math main.go
+# CGO_ENABLED=1 is required for go-sqlite3
+RUN CGO_ENABLED=1 GOOS=linux go build -o quantix-math main.go
 
 # Stage 2: Run the application
 FROM alpine:latest
