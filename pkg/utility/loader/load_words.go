@@ -132,7 +132,7 @@ func filterNumbersOut(text string) string {
 	wordArray := strings.Split(text, "")
 	var newWordArray []string
 	for _, character := range wordArray {
-		if strings.ContainsAny(character, "ABCDEFGHIJKLMOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'-") {
+		if strings.ContainsAny(character, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'-") {
 			newWordArray = append(newWordArray, character)
 		}
 	}
