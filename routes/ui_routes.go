@@ -62,6 +62,11 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Dictionary Words",
 		})
 	})
+	app.Get("/anagram_finder", func(c *fiber.Ctx) error {
+		return c.Render("anagram_finder", fiber.Map{
+			"Title": "Anagram Finder",
+		})
+	})
 
 	app.Get("/coordinate_graph", func(c *fiber.Ctx) error {
 		return c.Render("coordinate_graph", fiber.Map{

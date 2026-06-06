@@ -173,3 +173,36 @@ func GetRecordCount(db *gorm.DB) int64 {
 	db.Model(&DictionaryWord{}).Count(&count)
 	return count
 }
+
+// GetAnagrams finds all words in the dictionary that are anagrams of the input word.
+func GetAnagrams(db *gorm.DB, word string) []DictionaryWord {
+	var words []DictionaryWord
+	word = strings.ToLower(strings.TrimSpace(word))
+	if word == "" {
+		return nil
+	}
+
+	length := len(word)
+	// Only fetch words of the same length to narrow down candidates.
+	db.Where("dict_word_length = ?", length).Find(&words)
+
+	targetSorted := sortString(word)
+	var anagrams []DictionaryWord
+
+	for _, w := range words {
+		if strings.ToLower(w.DictionaryWordText) == word {
+			continue // Skip the word itself
+		}
+		if sortString(strings.ToLower(w.DictionaryWordText)) == targetSorted {
+			anagrams = append(anagrams, w)
+		}
+	}
+
+	return sortDistinctDictionaryWords(anagrams)
+}
+
+func sortString(w string) string {
+	s := strings.Split(w, "")
+	slices.Sort(s)
+	return strings.Join(s, "")
+}

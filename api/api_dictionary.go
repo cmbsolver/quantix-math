@@ -153,3 +153,31 @@ func DownloadDictionaryWordsExcelHandler(c *fiber.Ctx) error {
 
 	return c.SendStream(reader)
 }
+
+type AnagramRequest struct {
+	Word string `json:"word"`
+}
+
+func GetAnagramsHandler(c *fiber.Ctx) error {
+	var req AnagramRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+
+	if req.Word == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("word is required")
+	}
+
+	conn, err := db.InitConnection()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString("failed to connect to database")
+	}
+	defer func() { _ = db.CloseConnection(conn) }()
+
+	anagrams := tables.GetAnagrams(conn, req.Word)
+
+	return c.JSON(fiber.Map{
+		"anagrams": anagrams,
+		"count":    len(anagrams),
+	})
+}

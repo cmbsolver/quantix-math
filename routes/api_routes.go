@@ -14,6 +14,7 @@ func RegisterAPIRoutes(app *fiber.App) {
 	// Dictionary routes
 	apiGroup.Post("/dictionary/words", api.GetDictionaryWordsByParamHandler)
 	apiGroup.Get("/dictionary/words/download", api.DownloadDictionaryWordsExcelHandler)
+	apiGroup.Post("/dictionary/anagrams", api.GetAnagramsHandler)
 
 	// Binutils routes
 	apiGroup.Post("/binutils/file-to-csv", api.FileToCSVHandler)

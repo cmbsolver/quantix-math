@@ -1,0 +1,133 @@
+<div class="container mt-4">
+    <h1>Anagram Finder</h1>
+    <p class="text-muted">Find anagrams for a word using the DictionaryWord database.</p>
+
+    <form id="anagramForm" class="row g-3">
+        <div class="col-md-8">
+            <label for="wordInput" class="form-label">Enter Word</label>
+            <input type="text" class="form-control" id="wordInput" placeholder="e.g. listen" required>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Find Anagrams</button>
+        </div>
+    </form>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+
+    <div id="resultContainer" class="mt-4" style="display:none;">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Results</h5>
+                <p class="card-text">
+                    <strong>Count:</strong> <span id="countText"></span>
+                </p>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm align-middle">
+                        <thead>
+                        <tr>
+                            <th>Word</th>
+                            <th>Runeglish</th>
+                            <th>Rune</th>
+                            <th class="text-end">Gem Sum</th>
+                            <th class="text-end">Word Len</th>
+                            <th class="text-end">Runeglish Len</th>
+                            <th class="text-end">Rune Len</th>
+                            <th>Language</th>
+                        </tr>
+                        </thead>
+                        <tbody id="anagramsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('anagramForm');
+        const wordInput = document.getElementById('wordInput');
+        const errorContainer = document.getElementById('errorContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const countText = document.getElementById('countText');
+        const anagramsTableBody = document.getElementById('anagramsTableBody');
+
+        function escapeHtml(value) {
+            const s = String(value ?? '');
+            return s
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function td(value, className) {
+            const cls = className ? ` class="${className}"` : '';
+            return `<td${cls}>${escapeHtml(value)}</td>`;
+        }
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalBtnText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Searching...';
+
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            anagramsTableBody.innerHTML = '';
+
+            const word = wordInput.value.trim();
+
+            fetch('/api/dictionary/anagrams', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word: word })
+            })
+                .then(function(response) {
+                    if (!response.ok) {
+                        return response.text().then(function(text) {
+                            throw new Error(text || 'Request failed');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(function(data) {
+                    const anagrams = data.anagrams || [];
+                    countText.textContent = data.count ?? anagrams.length;
+
+                    if (anagrams.length === 0) {
+                        anagramsTableBody.innerHTML = '<tr><td colspan="8" class="text-center">No anagrams found.</td></tr>';
+                    } else {
+                        const rowsHtml = anagrams.map(function(w) {
+                            return `
+                                <tr>
+                                    ${td(w.DictionaryWordText)}
+                                    ${td(w.RuneglishWordText)}
+                                    ${td(w.RuneWordText)}
+                                    ${td(w.GemSum, 'text-end')}
+                                    ${td(w.DictionaryWordLength, 'text-end')}
+                                    ${td(w.RuneglishWordLength, 'text-end')}
+                                    ${td(w.RuneWordLength, 'text-end')}
+                                    ${td(w.Language)}
+                                </tr>
+                            `;
+                        }).join('');
+                        anagramsTableBody.innerHTML = rowsHtml;
+                    }
+                    resultContainer.style.display = 'block';
+                })
+                .catch(function(err) {
+                    errorContainer.textContent = err.message;
+                    errorContainer.style.display = 'block';
+                })
+                .finally(function() {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                });
+        });
+    });
+</script>
