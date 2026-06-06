@@ -175,25 +175,47 @@ func GetRecordCount(db *gorm.DB) int64 {
 }
 
 // GetAnagrams finds all words in the dictionary that are anagrams of the input word.
-func GetAnagrams(db *gorm.DB, word string) []DictionaryWord {
+// searchType can be "latin", "runeglish", or "rune".
+func GetAnagrams(db *gorm.DB, word string, searchType string) []DictionaryWord {
 	var words []DictionaryWord
-	word = strings.ToLower(strings.TrimSpace(word))
+	word = strings.TrimSpace(word)
 	if word == "" {
 		return nil
 	}
 
-	length := len(word)
+	lengthColumn := "dict_word_length"
+	switch searchType {
+	case "runeglish":
+		lengthColumn = "dict_runeglish_length"
+		word = strings.ToUpper(word)
+	case "rune":
+		lengthColumn = "dict_rune_length"
+	default:
+		word = strings.ToLower(word)
+	}
+
+	length := len([]rune(word))
 	// Only fetch words of the same length to narrow down candidates.
-	db.Where("dict_word_length = ?", length).Find(&words)
+	db.Where(fmt.Sprintf("%s = ?", lengthColumn), length).Find(&words)
 
 	targetSorted := sortString(word)
 	var anagrams []DictionaryWord
 
 	for _, w := range words {
-		if strings.ToLower(w.DictionaryWordText) == word {
+		var wText string
+		switch searchType {
+		case "runeglish":
+			wText = w.RuneglishWordText
+		case "rune":
+			wText = w.RuneWordText
+		default:
+			wText = strings.ToLower(w.DictionaryWordText)
+		}
+
+		if wText == word {
 			continue // Skip the word itself
 		}
-		if sortString(strings.ToLower(w.DictionaryWordText)) == targetSorted {
+		if sortString(wText) == targetSorted {
 			anagrams = append(anagrams, w)
 		}
 	}

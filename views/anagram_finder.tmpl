@@ -3,9 +3,17 @@
     <p class="text-muted">Find anagrams for a word using the DictionaryWord database.</p>
 
     <form id="anagramForm" class="row g-3">
-        <div class="col-md-8">
-            <label for="wordInput" class="form-label">Enter Word</label>
+        <div class="col-md-5">
+            <label for="wordInput" class="form-label">Enter Word/Rune</label>
             <input type="text" class="form-control" id="wordInput" placeholder="e.g. listen" required>
+        </div>
+        <div class="col-md-3">
+            <label for="searchType" class="form-label">Search Type</label>
+            <select class="form-select" id="searchType">
+                <option value="latin">Latin</option>
+                <option value="runeglish">Runeglish</option>
+                <option value="rune">Rune</option>
+            </select>
         </div>
         <div class="col-md-4 d-flex align-items-end">
             <button type="submit" class="btn btn-primary w-100">Find Anagrams</button>
@@ -48,6 +56,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('anagramForm');
         const wordInput = document.getElementById('wordInput');
+        const searchType = document.getElementById('searchType');
         const errorContainer = document.getElementById('errorContainer');
         const resultContainer = document.getElementById('resultContainer');
         const countText = document.getElementById('countText');
@@ -81,11 +90,12 @@
             anagramsTableBody.innerHTML = '';
 
             const word = wordInput.value.trim();
+            const type = searchType.value;
 
             fetch('/api/dictionary/anagrams', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ word: word })
+                body: JSON.stringify({ word: word, type: type })
             })
                 .then(function(response) {
                     if (!response.ok) {

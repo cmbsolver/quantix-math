@@ -156,6 +156,7 @@ func DownloadDictionaryWordsExcelHandler(c *fiber.Ctx) error {
 
 type AnagramRequest struct {
 	Word string `json:"word"`
+	Type string `json:"type"` // latin, runeglish, rune
 }
 
 func GetAnagramsHandler(c *fiber.Ctx) error {
@@ -174,7 +175,7 @@ func GetAnagramsHandler(c *fiber.Ctx) error {
 	}
 	defer func() { _ = db.CloseConnection(conn) }()
 
-	anagrams := tables.GetAnagrams(conn, req.Word)
+	anagrams := tables.GetAnagrams(conn, req.Word, req.Type)
 
 	return c.JSON(fiber.Map{
 		"anagrams": anagrams,
