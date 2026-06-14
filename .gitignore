@@ -36,3 +36,4 @@ go.work.sum
 /.idea/go.imports.xml
 /assets/files/coordinates/
 /quantix.db
+/.junie/memory/**

@@ -24,4 +24,7 @@ func RegisterAPIRoutes(app *fiber.App) {
 
 	// Graph routes
 	apiGroup.Post("/graph/process", api.ProcessGraphHandler)
+
+	// Runer routes
+	apiGroup.Post("/runer/calculate-lines", api.CalculateLinesHandler)
 }

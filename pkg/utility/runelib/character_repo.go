@@ -335,6 +335,18 @@ func (repo *CharacterRepo) ContainsLineSeperator(value string) bool {
 	return false
 }
 
+var runeSeparatorSet = map[string]struct{}{
+	"•": {}, "␍": {}, "␊": {}, "\"": {},
+}
+
+// IsRuneSeparator checks if the given string value exists in the predefined "runeSeparatorSet" and returns true if found.
+func (repo *CharacterRepo) IsRuneSeparator(value string) bool {
+	if _, exists := runeSeparatorSet[value]; exists {
+		return true
+	}
+	return false
+}
+
 // IsRune checks if the given string value exists in the rune set. Optionally includes dinkus set for validation if specified.
 func (repo *CharacterRepo) IsRune(value string, includeDunkus bool) bool {
 	if includeDunkus {
@@ -358,6 +370,13 @@ var runeToValueMap = map[string]int{
 func (repo *CharacterRepo) GetValueFromRune(rune string) int {
 	if value, exists := runeToValueMap[rune]; exists {
 		return value
+	}
+	return 0
+}
+
+func (repo *CharacterRepo) GetValueFromRune64(rune string) int64 {
+	if value, exists := runeToValueMap[rune]; exists {
+		return int64(value)
 	}
 	return 0
 }
