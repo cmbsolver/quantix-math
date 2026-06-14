@@ -1,23 +1,42 @@
 <div class="container mt-4">
     <h1>Sequence Generator</h1>
     <form id="sequenceForm">
-        <div class="mb-3">
-            <label for="sequenceType" class="form-label">Sequence Type</label>
-            <select class="form-select" id="sequenceType" name="sequenceType" required>
-                <option value="fibonacci">Fibonacci</option>
-                <option value="fibonacci_prime">Fibonacci Prime</option>
-                <option value="prime">Prime</option>
-                <option value="natural">Natural</option>
-                <option value="cubes">Cubes</option>
-                <option value="central_polygonal">Central Polygonal</option>
-                <option value="cake">Cake</option>
-                <option value="catalan">Catalan</option>
-                <option value="totient">Totient</option>
-                <option value="totient_prime">Totient Prime</option>
-                <option value="zekendorf">Zekendorf</option>
-                <option value="lucas">Lucas</option>
-                <option value="collatz">Collatz</option>
-            </select>
+        <div class="mb-3 position-relative">
+            <label for="sequenceSearch" class="form-label">Sequence Type</label>
+            <input type="text" class="form-control" id="sequenceSearch" placeholder="Type to search sequence..." autocomplete="off">
+            <input type="hidden" id="sequenceType" name="sequenceType" required>
+            <ul id="sequenceList" class="list-group mt-1 shadow-sm" style="display:none; position:absolute; z-index:1000; width: 100%; max-height: 300px; overflow-y: auto;">
+                <li class="list-group-item list-group-item-action" data-value="fibonacci">Fibonacci</li>
+                <li class="list-group-item list-group-item-action" data-value="fibonacci_prime">Fibonacci Prime</li>
+                <li class="list-group-item list-group-item-action" data-value="prime">Prime</li>
+                <li class="list-group-item list-group-item-action" data-value="natural">Natural</li>
+                <li class="list-group-item list-group-item-action" data-value="central_polygonal">Central Polygonal</li>
+                <li class="list-group-item list-group-item-action" data-value="cake">Cake</li>
+                <li class="list-group-item list-group-item-action" data-value="catalan">Catalan</li>
+                <li class="list-group-item list-group-item-action" data-value="totient">Totient</li>
+                <li class="list-group-item list-group-item-action" data-value="totient_prime">Totient Prime</li>
+                <li class="list-group-item list-group-item-action" data-value="zekendorf">Zekendorf</li>
+                <li class="list-group-item list-group-item-action" data-value="lucas">Lucas</li>
+                <li class="list-group-item list-group-item-action" data-value="groups_order_n">Number of Groups (A000001)</li>
+                <li class="list-group-item list-group-item-action" data-value="kolakoski">Kolakoski Sequence (A000002)</li>
+                <li class="list-group-item list-group-item-action" data-value="zero">Zero Sequence (A000004)</li>
+                <li class="list-group-item list-group-item-action" data-value="divisor_count">Number of Divisors (A000005)</li>
+                <li class="list-group-item list-group-item-action" data-value="zero_characteristic">Zero Characteristic (A000007)</li>
+                <li class="list-group-item list-group-item-action" data-value="ways_to_make_change">Ways to Make Change (A000008)</li>
+                <li class="list-group-item list-group-item-action" data-value="partitions_distinct">Partitions into Distinct Parts (A000009)</li>
+                <li class="list-group-item list-group-item-action" data-value="euler">Euler numbers (A000364)</li>
+                <li class="list-group-item list-group-item-action" data-value="perfect">Perfect numbers (A000396)</li>
+                <li class="list-group-item list-group-item-action" data-value="fourth_powers">Fourth Powers (A000583)</li>
+                <li class="list-group-item list-group-item-action" data-value="modular_j">Modular function j (A000521)</li>
+                <li class="list-group-item list-group-item-action" data-value="cubes">Cubes (A000578)</li>
+                <li class="list-group-item list-group-item-action" data-value="sum_odd_divisors">Sum of Odd Divisors (A000593)</li>
+                <li class="list-group-item list-group-item-action" data-value="ramanujan_tau">Ramanujan's tau function (A000594)</li>
+                <li class="list-group-item list-group-item-action" data-value="alkanes">Number of Alkanes (A000602)</li>
+                <li class="list-group-item list-group-item-action" data-value="threshold_functions">Threshold functions (A000609)</li>
+                <li class="list-group-item list-group-item-action" data-value="fubini">Fubini numbers (A000670)</li>
+                <li class="list-group-item list-group-item-action" data-value="abelian_groups_order_n">Number of Abelian groups (A000688)</li>
+                <li class="list-group-item list-group-item-action" data-value="collatz">Collatz</li>
+            </ul>
         </div>
         <div class="mb-3">
             <label for="maxNumber" class="form-label">(Max) Number or Position</label>
@@ -56,6 +75,53 @@ document.addEventListener('DOMContentLoaded', function() {
     const resultValue = document.getElementById('resultValue');
     const resultSequence = document.getElementById('resultSequence');
 
+    const sequenceSearch = document.getElementById('sequenceSearch');
+    const sequenceList = document.getElementById('sequenceList');
+    const sequenceType = document.getElementById('sequenceType');
+    const listItems = sequenceList.querySelectorAll('li');
+
+    sequenceSearch.addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        let hasMatches = false;
+
+        listItems.forEach(item => {
+            const text = item.textContent.toLowerCase();
+            if (text.includes(filter)) {
+                item.style.display = '';
+                hasMatches = true;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        sequenceList.style.display = hasMatches ? 'block' : 'none';
+        
+        // Clear hidden input if search is cleared
+        if (!this.value) {
+            sequenceType.value = '';
+        }
+    });
+
+    sequenceSearch.addEventListener('focus', function() {
+        if (this.value || listItems.length > 0) {
+            sequenceList.style.display = 'block';
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!sequenceSearch.contains(e.target) && !sequenceList.contains(e.target)) {
+            sequenceList.style.display = 'none';
+        }
+    });
+
+    listItems.forEach(item => {
+        item.addEventListener('click', function() {
+            sequenceSearch.value = this.textContent;
+            sequenceType.value = this.getAttribute('data-value');
+            sequenceList.style.display = 'none';
+        });
+    });
+
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -72,6 +138,14 @@ document.addEventListener('DOMContentLoaded', function() {
             maxNumber: document.getElementById('maxNumber').value,
             positional: document.getElementById('positional').checked
         };
+
+        if (!formData.sequenceType) {
+            errorContainer.textContent = 'Please select a valid sequence from the list.';
+            errorContainer.style.display = 'block';
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+            return;
+        }
 
         fetch('/api/sequence', {
             method: 'POST',

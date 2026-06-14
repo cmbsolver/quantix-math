@@ -38,7 +38,7 @@ func GetTotientSequence(maxNumber *big.Int) (*NumericSequence, error) {
 
 // GetTotientPrimeSequence generates the Totient Prime sequence.
 func GetTotientPrimeSequence(maxNumber *big.Int) (*NumericSequence, error) {
-	retval := &NumericSequence{Name: "Totient", Number: new(big.Int).Set(maxNumber)}
+	retval := &NumericSequence{Name: "Totient Prime", Number: new(big.Int).Set(maxNumber)}
 	one := big.NewInt(1)
 	i := big.NewInt(1)
 	cmp := i.Cmp(maxNumber)

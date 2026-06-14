@@ -50,3 +50,25 @@ func GetSequenceHandler(c *fiber.Ctx) error {
 
 	return c.JSON(getSequenceResponse(seq))
 }
+
+type CheckRequest struct {
+	Number string `json:"number"`
+}
+
+func CheckNumberInSequencesHandler(c *fiber.Ctx) error {
+	var req CheckRequest
+	if err := c.BodyParser(&req); err != nil {
+		return c.Status(fiber.StatusBadRequest).SendString("Invalid request body")
+	}
+
+	if req.Number == "" {
+		return c.Status(fiber.StatusBadRequest).SendString("number is required")
+	}
+
+	results, err := sequences.CheckNumberInSequences(req.Number)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).SendString(err.Error())
+	}
+
+	return c.JSON(results)
+}

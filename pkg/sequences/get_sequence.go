@@ -20,7 +20,7 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	case "central_polygonal":
 		sequence, err = GetCentralPolygonalNumbersSequence(maxNumber, positional)
 	case "cubes":
-		sequence, err = GetCubesSequence(maxNumber, positional)
+		sequence, err = GetCubesA000578Sequence(maxNumber, positional)
 	case "natural":
 		sequence, err = GetNaturalSequence(maxNumber, positional)
 	case "prime":
@@ -41,6 +41,38 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetZekendorfRepresentationSequence(maxNumber, positional)
 	case "lucas":
 		sequence, err = GenerateLucas(maxNumber, positional)
+	case "euler":
+		sequence, err = GetEulerNumbersSequence(maxNumber, positional)
+	case "perfect":
+		sequence, err = GetPerfectNumbersSequence(maxNumber, positional)
+	case "groups_order_n":
+		sequence, err = GetGroupsOrderNSequence(maxNumber, positional)
+	case "modular_j":
+		sequence, err = GetModularJCoefficientsSequence(maxNumber, positional)
+	case "ramanujan_tau":
+		sequence, err = GetRamanujanTauSequence(maxNumber, positional)
+	case "fourth_powers":
+		sequence, err = GetFourthPowersSequence(maxNumber, positional)
+	case "sum_odd_divisors":
+		sequence, err = GetSumOddDivisorsSequence(maxNumber, positional)
+	case "alkanes":
+		sequence, err = GetAlkanesSequence(maxNumber, positional)
+	case "abelian_groups_order_n":
+		sequence, err = GetAbelianGroupsOrderNSequence(maxNumber, positional)
+	case "threshold_functions":
+		sequence, err = GetThresholdFunctionsSequence(maxNumber, positional)
+	case "fubini":
+		sequence, err = GetFubiniSequence(maxNumber, positional)
+	case "kolakoski":
+		sequence, err = GetKolakoskiSequence(maxNumber, positional)
+	case "zero":
+		sequence, err = GetZeroSequence(maxNumber, positional)
+	case "zero_characteristic":
+		sequence, err = GetZeroCharacteristicSequence(maxNumber, positional)
+	case "divisor_count":
+		sequence, err = GetDivisorCountSequence(maxNumber, positional)
+	case "ways_to_make_change":
+		sequence, err = GetWaysToMakeChangeSequence(maxNumber, positional)
 	case "collatz":
 		sequence, err = GetCollatzSequence(maxNumber.Int64(), positional)
 	default:
