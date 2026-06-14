@@ -28,6 +28,10 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"threshold_functions", "fubini", "schroeder_fourth",
 		"powers_of_4",
+		"powers_of_3",
+		"unlabeled_digraphs",
+		"mersenne_numbers",
+		"sets_of_lists",
 		"zero_characteristic", "collatz",
 		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal",
 	}
@@ -49,6 +53,16 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 
 func getSequenceName(st string) string {
 	switch st {
+	case "powers_of_3":
+		return "Powers of 3 (A000244)"
+	case "unlabeled_digraphs":
+		return "Unlabeled Directed Graphs (A000273)"
+	case "mersenne_numbers":
+		return "Mersenne numbers (A000225)"
+	case "labeled_trees":
+		return "Labeled Trees (A000272)"
+	case "sets_of_lists":
+		return "Sets of Lists (A000262)"
 	case "natural":
 		return "Natural"
 	case "partitions_distinct":
@@ -201,7 +215,11 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 	case "cubes", "central_polygonal", "cake", "catalan", "totient", "totient_prime",
 		"fibonacci_prime", "zekendorf", "groups_order_n", "ramanujan_tau",
 		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
-		"threshold_functions", "fubini", "kolakoski", "ways_to_make_change", "collatz", "divisor_count", "lucas", "square_pyramidal", "pentagonal", "partitions_distinct", "nn", "schroeder_fourth", "powers_of_4", "tetrahedral":
+		"threshold_functions", "fubini", "schroeder_fourth",
+		"powers_of_4",
+		"powers_of_3",
+		"mersenne_numbers",
+		"unlabeled_digraphs", "labeled_trees", "sets_of_lists":
 		// Fallback: generate sequence and check (with reasonable limit)
 		seq, err := GetSequence(n.String(), st, false)
 		if err == nil && seq != nil {

@@ -97,6 +97,16 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetCollatzSequence(maxNumber.Int64(), positional)
 	case "powers_of_4":
 		sequence, err = GetPowersOf4Sequence(maxNumber, positional)
+	case "powers_of_3":
+		sequence, err = GetPowersOf3Sequence(maxNumber, positional)
+	case "unlabeled_digraphs":
+		sequence, err = GetUnlabeledDigraphsSequence(maxNumber, positional)
+	case "labeled_trees":
+		sequence, err = GetLabeledTreesSequence(maxNumber, positional)
+	case "sets_of_lists":
+		sequence, err = GetSetsOfListsSequence(maxNumber, positional)
+	case "mersenne_numbers":
+		sequence, err = GetMersenneNumbersSequence(maxNumber, positional)
 	default:
 		fmt.Printf("Unknown sequence type: %s\n", sequenceType)
 		err = fmt.Errorf("unknown sequence type: %s", sequenceType)
