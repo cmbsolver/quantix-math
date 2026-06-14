@@ -27,6 +27,7 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"threshold_functions", "fubini", "kolakoski", "zero",
 		"zero_characteristic", "divisor_count", "ways_to_make_change", "collatz",
+		"euler", "perfect", "modular_j",
 	}
 
 	var results []CheckResult
