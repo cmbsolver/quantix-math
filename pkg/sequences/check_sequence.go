@@ -21,13 +21,15 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 	}
 
 	sequenceTypes := []string{
-		"natural", "cubes", "prime", "fibonacci", "lucas", "fourth_powers",
+		"natural", "partitions_distinct", "kolakoski", "zero", "divisor_count", "ways_to_make_change", "groups_order_n", "nn", "squares", "cubes", "prime", "emirp", "semiprime", "circular_prime", "fibonacci", "lucas", "fourth_powers",
 		"central_polygonal", "cake", "catalan", "totient", "totient_prime",
-		"fibonacci_prime", "zekendorf", "groups_order_n", "ramanujan_tau",
+		"tetrahedral",
+		"fibonacci_prime", "zekendorf", "ramanujan_tau",
 		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
-		"threshold_functions", "fubini", "kolakoski", "zero",
-		"zero_characteristic", "divisor_count", "ways_to_make_change", "collatz",
-		"euler", "perfect", "modular_j",
+		"threshold_functions", "fubini", "schroeder_fourth",
+		"powers_of_4",
+		"zero_characteristic", "collatz",
+		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal",
 	}
 
 	var results []CheckResult
@@ -49,14 +51,28 @@ func getSequenceName(st string) string {
 	switch st {
 	case "natural":
 		return "Natural"
+	case "partitions_distinct":
+		return "Partitions into distinct parts (A000009)"
+	case "squares":
+		return "Squares (A000290)"
 	case "cubes":
 		return "Cubes (A000578)"
 	case "prime":
 		return "Prime"
+	case "emirp":
+		return "Emirp"
+	case "semiprime":
+		return "Semi-prime"
+	case "circular_prime":
+		return "Circular Prime"
 	case "fibonacci":
 		return "Fibonacci"
 	case "lucas":
 		return "Lucas"
+	case "pentagonal":
+		return "Pentagonal numbers (A000326)"
+	case "square_pyramidal":
+		return "Square pyramidal numbers (A000330)"
 	case "euler":
 		return "Euler numbers (A000364)"
 	case "perfect":
@@ -81,6 +97,14 @@ func getSequenceName(st string) string {
 		return "Zekendorf Representation"
 	case "groups_order_n":
 		return "Number of Groups (A000001)"
+	case "nn":
+		return "n^n (A000312)"
+	case "powers_of_4":
+		return "Powers of 4 (A000302)"
+	case "tetrahedral":
+		return "Tetrahedral numbers (A000292)"
+	case "schroeder_fourth":
+		return "Schroeder's fourth problem (A000311)"
 	case "ramanujan_tau":
 		return "Ramanujan's tau function (A000594)"
 	case "sum_odd_divisors":
@@ -116,6 +140,13 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		if n.Sign() >= 0 {
 			return true, n.String(), nil
 		}
+	case "squares":
+		if n.Sign() >= 0 {
+			root := new(big.Int).Sqrt(n)
+			if new(big.Int).Mul(root, root).Cmp(n) == 0 {
+				return true, root.String(), nil
+			}
+		}
 	case "fourth_powers":
 		if n.Sign() >= 0 {
 			root := new(big.Int).Sqrt(n)
@@ -128,6 +159,18 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		}
 	case "prime":
 		if IsPrime(n) {
+			return true, "", nil
+		}
+	case "emirp":
+		if IsEmirp(n) {
+			return true, "", nil
+		}
+	case "semiprime":
+		if IsSemiPrime(n) {
+			return true, "", nil
+		}
+	case "circular_prime":
+		if IsCircularPrime(n) {
 			return true, "", nil
 		}
 	case "fibonacci":
@@ -158,7 +201,7 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 	case "cubes", "central_polygonal", "cake", "catalan", "totient", "totient_prime",
 		"fibonacci_prime", "zekendorf", "groups_order_n", "ramanujan_tau",
 		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
-		"threshold_functions", "fubini", "kolakoski", "ways_to_make_change", "collatz", "divisor_count", "lucas":
+		"threshold_functions", "fubini", "kolakoski", "ways_to_make_change", "collatz", "divisor_count", "lucas", "square_pyramidal", "pentagonal", "partitions_distinct", "nn", "schroeder_fourth", "powers_of_4", "tetrahedral":
 		// Fallback: generate sequence and check (with reasonable limit)
 		seq, err := GetSequence(n.String(), st, false)
 		if err == nil && seq != nil {

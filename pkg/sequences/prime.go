@@ -175,3 +175,81 @@ func IsCircularPrime(n *big.Int) bool {
 
 	return true
 }
+
+// GetEmirpSequence generates the emirp sequence.
+func GetEmirpSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
+	numericSequence := &NumericSequence{Name: "Emirp", Number: new(big.Int).Set(maxNumber)}
+	numberToCalculate := new(big.Int).Set(maxNumber)
+	if isPositional {
+		numberToCalculate = new(big.Int).SetUint64(^uint64(0)) // Max uint64 value
+	}
+	counter := big.NewInt(0)
+
+	for i := big.NewInt(0); i.Cmp(numberToCalculate) <= 0; i.Add(i, big.NewInt(1)) {
+		if IsEmirp(i) {
+			if !isPositional {
+				numericSequence.Sequence = append(numericSequence.Sequence, new(big.Int).Set(i))
+			} else {
+				if counter.Cmp(maxNumber) == 0 {
+					numericSequence.Sequence = append(numericSequence.Sequence, new(big.Int).Set(i))
+					break
+				}
+			}
+			counter.Add(counter, big.NewInt(1))
+		}
+	}
+
+	return numericSequence, nil
+}
+
+// GetSemiPrimeSequence generates the semi-prime sequence.
+func GetSemiPrimeSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
+	numericSequence := &NumericSequence{Name: "Semi-prime", Number: new(big.Int).Set(maxNumber)}
+	numberToCalculate := new(big.Int).Set(maxNumber)
+	if isPositional {
+		numberToCalculate = new(big.Int).SetUint64(^uint64(0)) // Max uint64 value
+	}
+	counter := big.NewInt(0)
+
+	for i := big.NewInt(0); i.Cmp(numberToCalculate) <= 0; i.Add(i, big.NewInt(1)) {
+		if IsSemiPrime(i) {
+			if !isPositional {
+				numericSequence.Sequence = append(numericSequence.Sequence, new(big.Int).Set(i))
+			} else {
+				if counter.Cmp(maxNumber) == 0 {
+					numericSequence.Sequence = append(numericSequence.Sequence, new(big.Int).Set(i))
+					break
+				}
+			}
+			counter.Add(counter, big.NewInt(1))
+		}
+	}
+
+	return numericSequence, nil
+}
+
+// GetCircularPrimeSequence generates the circular prime sequence.
+func GetCircularPrimeSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
+	numericSequence := &NumericSequence{Name: "Circular Prime", Number: new(big.Int).Set(maxNumber)}
+	numberToCalculate := new(big.Int).Set(maxNumber)
+	if isPositional {
+		numberToCalculate = new(big.Int).SetUint64(^uint64(0)) // Max uint64 value
+	}
+	counter := big.NewInt(0)
+
+	for i := big.NewInt(0); i.Cmp(numberToCalculate) <= 0; i.Add(i, big.NewInt(1)) {
+		if IsCircularPrime(i) {
+			if !isPositional {
+				numericSequence.Sequence = append(numericSequence.Sequence, new(big.Int).Set(i))
+			} else {
+				if counter.Cmp(maxNumber) == 0 {
+					numericSequence.Sequence = append(numericSequence.Sequence, new(big.Int).Set(i))
+					break
+				}
+			}
+			counter.Add(counter, big.NewInt(1))
+		}
+	}
+
+	return numericSequence, nil
+}

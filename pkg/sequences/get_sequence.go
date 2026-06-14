@@ -19,12 +19,20 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	switch sequenceType {
 	case "central_polygonal":
 		sequence, err = GetCentralPolygonalNumbersSequence(maxNumber, positional)
+	case "squares":
+		sequence, err = GetSquaresSequence(maxNumber, positional)
 	case "cubes":
 		sequence, err = GetCubesA000578Sequence(maxNumber, positional)
 	case "natural":
 		sequence, err = GetNaturalSequence(maxNumber, positional)
 	case "prime":
 		sequence, err = GetPrimeSequence(maxNumber, positional)
+	case "emirp":
+		sequence, err = GetEmirpSequence(maxNumber, positional)
+	case "semiprime":
+		sequence, err = GetSemiPrimeSequence(maxNumber, positional)
+	case "circular_prime":
+		sequence, err = GetCircularPrimeSequence(maxNumber, positional)
 	case "fibonacci_prime":
 		sequence, err = GetFibonacciPrimeSequence(maxNumber, positional)
 	case "cake":
@@ -41,6 +49,16 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetZekendorfRepresentationSequence(maxNumber, positional)
 	case "lucas":
 		sequence, err = GenerateLucas(maxNumber, positional)
+	case "nn":
+		sequence, err = GetNtoNSequence(maxNumber, positional)
+	case "schroeder_fourth":
+		sequence, err = GetSchroederFourthSequence(maxNumber, positional)
+	case "partitions_distinct":
+		sequence, err = GetPartitionsDistinctSequence(maxNumber, positional)
+	case "pentagonal":
+		sequence, err = GetPentagonalSequence(maxNumber, positional)
+	case "square_pyramidal":
+		sequence, err = GetSquarePyramidalSequence(maxNumber, positional)
 	case "euler":
 		sequence, err = GetEulerNumbersSequence(maxNumber, positional)
 	case "perfect":
@@ -53,6 +71,8 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetRamanujanTauSequence(maxNumber, positional)
 	case "fourth_powers":
 		sequence, err = GetFourthPowersSequence(maxNumber, positional)
+	case "tetrahedral":
+		sequence, err = GetTetrahedralSequence(maxNumber, positional)
 	case "sum_odd_divisors":
 		sequence, err = GetSumOddDivisorsSequence(maxNumber, positional)
 	case "alkanes":
@@ -75,6 +95,8 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetWaysToMakeChangeSequence(maxNumber, positional)
 	case "collatz":
 		sequence, err = GetCollatzSequence(maxNumber.Int64(), positional)
+	case "powers_of_4":
+		sequence, err = GetPowersOf4Sequence(maxNumber, positional)
 	default:
 		fmt.Printf("Unknown sequence type: %s\n", sequenceType)
 		err = fmt.Errorf("unknown sequence type: %s", sequenceType)

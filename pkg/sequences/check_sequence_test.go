@@ -53,3 +53,36 @@ func TestCheckNumberInSequences(t *testing.T) {
 		})
 	}
 }
+
+func TestCheckNumberInNewSequences(t *testing.T) {
+	tests := []struct {
+		number   string
+		wantName string
+	}{
+		{"13", "Emirp"},
+		{"4", "Semi-prime"},
+		{"197", "Circular Prime"},
+		{"7", "Prime"},
+		{"16", "Powers of 4 (A000302)"},
+		{"1", "Natural"},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.number, func(t *testing.T) {
+			results, err := CheckNumberInSequences(tt.number)
+			if err != nil {
+				t.Fatalf("CheckNumberInSequences(%s) error = %v", tt.number, err)
+			}
+			found := false
+			for _, res := range results {
+				if res.SequenceName == tt.wantName {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Errorf("CheckNumberInSequences(%s) did not find sequence %s, results: %v", tt.number, tt.wantName, results)
+			}
+		})
+	}
+}
