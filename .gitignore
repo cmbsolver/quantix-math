@@ -37,3 +37,4 @@ go.work.sum
 /assets/files/coordinates/
 /quantix.db
 /.junie/memory/**
+/.output.txt

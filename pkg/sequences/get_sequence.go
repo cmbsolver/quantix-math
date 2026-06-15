@@ -133,8 +133,16 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetSubfactorialSequence(maxNumber, positional)
 	case "binary_partitions":
 		sequence, err = GetBinaryPartitionsSequence(maxNumber, positional)
+	case "binary_rooted_trees":
+		sequence, err = GetBinaryRootedTreesA002572Sequence(maxNumber, positional)
+	case "sqrt3_convergents":
+		sequence, err = GetSqrt3ConvergentsA002531Sequence(maxNumber, positional)
+	case "sqrt3_convergents_denominators":
+		sequence, err = GetSqrt3ConvergentsDenominatorsSequence(maxNumber, positional)
 	case "factorial":
 		sequence, err = GetFactorialSequence(maxNumber, positional)
+	case "planted_3_trees":
+		sequence, err = GetPlanted3TreesSequence(maxNumber, positional)
 	case "rooted_unlabeled_trees":
 		sequence, err = GetRootedUnlabeledTreesSequence(maxNumber, positional)
 	case "unlabeled_trees":
@@ -143,6 +151,8 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetUnlabeledDigraphsSequence(maxNumber, positional)
 	case "unlabeled_graphs":
 		sequence, err = GetUnlabeledGraphsSequence(maxNumber, positional)
+	case "connected_planar_graphs":
+		sequence, err = GetConnectedPlanarGraphsSequence(maxNumber, positional)
 	case "unlabeled_posets":
 		sequence, err = GetUnlabeledPosetsSequence(maxNumber, positional)
 	case "bicolorable_necklaces":
@@ -161,10 +171,28 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetSelfInversePermutationsSequence(maxNumber, positional)
 	case "sylvester":
 		sequence, err = GetSylvesterSequence(maxNumber, positional)
+	case "theta_series_square_lattice":
+		sequence, err = GetThetaSeriesSquareLatticeSequence(maxNumber, positional)
+	case "theta_series_d4_lattice":
+		sequence, err = GetThetaSeriesD4LatticeSequence(maxNumber, positional)
 	case "mersenne_numbers":
 		sequence, err = GetMersenneNumbersSequence(maxNumber, positional)
 	case "mersenne_prime_exponents":
 		sequence, err = GetMersennePrimeExponentsSequence(maxNumber, positional)
+	case "radon_hurwitz":
+		sequence, err = GetRadonSequence(maxNumber, positional)
+	case "lcm_1_to_n":
+		sequence, err = GetLCM1ToNSequence(maxNumber, positional)
+	case "loeschian":
+		sequence, err = GetLoeschianSequence(maxNumber, positional)
+	case "composites":
+		sequence, err = GetCompositesSequence(maxNumber, positional)
+	case "quarter_squares":
+		sequence, err = GetQuarterSquaresSequence(maxNumber, positional)
+	case "ways_two_squares":
+		sequence, err = GetWaysTwoSquaresSequence(maxNumber, positional)
+	case "stern":
+		sequence, err = GetSternSequence(maxNumber, positional)
 	default:
 		fmt.Printf("Unknown sequence type: %s\n", sequenceType)
 		err = fmt.Errorf("unknown sequence type: %s", sequenceType)
