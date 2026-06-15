@@ -21,17 +21,30 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 	}
 
 	sequenceTypes := []string{
-		"natural", "partitions_distinct", "kolakoski", "zero", "divisor_count", "ways_to_make_change", "groups_order_n", "nn", "squares", "cubes", "prime", "emirp", "semiprime", "circular_prime", "fibonacci", "lucas", "fourth_powers",
-		"central_polygonal", "cake", "catalan", "totient", "totient_prime",
+		"hamming_weight", "natural", "parity", "partitions_distinct", "partitions", "kolakoski", "zero", "divisor_count", "sum_divisors", "ways_to_make_change", "groups_order_n", "nn", "squares", "cubes", "prime", "primes_a000040", "emirp", "semiprime", "circular_prime", "fibonacci", "lucas", "fourth_powers",
+		"triangular", "central_polygonal", "cake", "bell", "catalan", "totient", "totient_prime",
 		"tetrahedral",
 		"fibonacci_prime", "zekendorf", "ramanujan_tau",
 		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"threshold_functions", "fubini", "schroeder_fourth",
+		"partitions_into_2_squares",
+		"powers_of_2",
 		"powers_of_4",
-		"powers_of_3",
-		"unlabeled_digraphs",
-		"mersenne_numbers",
+		"subfactorial", "self_inverse_permutations",
+		"binary_partitions",
+		"unlabeled_graphs",
+		"kendall_mann",
+		"bicolorable_necklaces",
+		"factorial",
+		"labeled_rooted_trees",
+		"plane_partitions",
+		"tangent",
+		"free_polyominoes",
+		"euler_zigzag",
+		"sylvester",
+		"mersenne_numbers", "mersenne_prime_exponents",
 		"sets_of_lists",
+		"unlabeled_trees",
 		"zero_characteristic", "collatz",
 		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal",
 	}
@@ -53,26 +66,70 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 
 func getSequenceName(st string) string {
 	switch st {
+	case "hamming_weight":
+		return "Hamming weight (A000120)"
 	case "powers_of_3":
 		return "Powers of 3 (A000244)"
+	case "powers_of_2":
+		return "Powers of 2 (A000079)"
+	case "subfactorial":
+		return "Subfactorial (A000166)"
+	case "binary_partitions":
+		return "Binary partitions (A000123)"
+	case "kendall_mann":
+		return "Kendall-Mann numbers (A000140)"
+	case "bicolorable_necklaces":
+		return "Bicolorable Primitive Necklaces (A000048)"
+	case "factorial":
+		return "Factorial numbers (A000142)"
+	case "unlabeled_trees":
+		return "Unlabeled Trees (A000055)"
 	case "unlabeled_digraphs":
 		return "Unlabeled Directed Graphs (A000273)"
+	case "unlabeled_graphs":
+		return "Unlabeled Graphs (A000088)"
+	case "unlabeled_posets":
+		return "Unlabeled Posets (A000112)"
+	case "simplicial_polyhedra":
+		return "Simplicial polyhedra (A000109)"
+	case "labeled_rooted_trees":
+		return "Labeled Rooted Trees (A000169)"
+	case "plane_partitions":
+		return "Plane partitions (A000219)"
+	case "tangent":
+		return "Tangent Numbers (A000182)"
+	case "euler_zigzag":
+		return "Euler zigzag numbers (A000111)"
 	case "mersenne_numbers":
 		return "Mersenne numbers (A000225)"
+	case "mersenne_prime_exponents":
+		return "Mersenne prime exponents (A000043)"
+	case "sylvester":
+		return "Sylvester's sequence (A000058)"
 	case "labeled_trees":
 		return "Labeled Trees (A000272)"
 	case "sets_of_lists":
 		return "Sets of Lists (A000262)"
+	case "free_polyominoes":
+		return "Free Polyominoes (A000105)"
+	case "self_inverse_permutations":
+		return "Self-inverse permutations (A000085)"
 	case "natural":
 		return "Natural"
+	case "parity":
+		return "n mod 2; parity of n (A000035)"
 	case "partitions_distinct":
 		return "Partitions into distinct parts (A000009)"
+	case "partitions":
+		return "Partitions of n (A000041)"
 	case "squares":
 		return "Squares (A000290)"
 	case "cubes":
 		return "Cubes (A000578)"
 	case "prime":
-		return "Prime"
+		return "The prime numbers (A000040)"
+	case "primes_a000040":
+		return "The prime numbers (A000040)"
 	case "emirp":
 		return "Emirp"
 	case "semiprime":
@@ -81,6 +138,8 @@ func getSequenceName(st string) string {
 		return "Circular Prime"
 	case "fibonacci":
 		return "Fibonacci"
+	case "pell":
+		return "Pell numbers (A000129)"
 	case "lucas":
 		return "Lucas"
 	case "pentagonal":
@@ -93,12 +152,16 @@ func getSequenceName(st string) string {
 		return "Perfect numbers (A000396)"
 	case "fourth_powers":
 		return "Fourth Powers (A000583)"
+	case "triangular":
+		return "Triangular numbers (A000217)"
 	case "modular_j":
 		return "Modular function j (A000521)"
 	case "central_polygonal":
-		return "Central Polygonal Numbers"
+		return "Central polygonal numbers (the Lazy Caterer's sequence) (A000124)"
 	case "cake":
 		return "Cake"
+	case "bell":
+		return "Bell numbers (A000110)"
 	case "catalan":
 		return "Catalan"
 	case "totient":
@@ -137,12 +200,20 @@ func getSequenceName(st string) string {
 		return "Zero Sequence (A000004)"
 	case "zero_characteristic":
 		return "Zero Characteristic (A000007)"
+	case "partitions_into_2_squares":
+		return "Partitions into 2 squares (A000161)"
 	case "divisor_count":
 		return "Number of Divisors (A000005)"
+	case "sum_divisors":
+		return "Sum of Divisors (A000203)"
 	case "ways_to_make_change":
 		return "Ways to Make Change (A000008)"
+	case "rooted_unlabeled_trees":
+		return "Rooted Unlabeled Trees (A000081)"
 	case "collatz":
 		return "Collatz"
+	case "odious_numbers":
+		return "Odious numbers (A000069)"
 	default:
 		return st
 	}
@@ -150,9 +221,29 @@ func getSequenceName(st string) string {
 
 func checkExistence(n *big.Int, st string) (bool, string, error) {
 	switch st {
+	case "triangular":
+		// n is a triangular number iff 8n + 1 is a perfect square
+		if n.Sign() >= 0 {
+			v := new(big.Int).Mul(big.NewInt(8), n)
+			v.Add(v, big.NewInt(1))
+			if isPerfectSquare(v) {
+				// (sqrt(8n+1)-1)/2 = position
+				root := new(big.Int).Sqrt(v)
+				pos := new(big.Int).Sub(root, big.NewInt(1))
+				pos.Div(pos, big.NewInt(2))
+				return true, pos.String(), nil
+			}
+		}
 	case "natural":
 		if n.Sign() >= 0 {
 			return true, n.String(), nil
+		}
+	case "parity":
+		if n.Cmp(big.NewInt(0)) == 0 {
+			return true, "even indices", nil
+		}
+		if n.Cmp(big.NewInt(1)) == 0 {
+			return true, "odd indices", nil
 		}
 	case "squares":
 		if n.Sign() >= 0 {
@@ -171,7 +262,11 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 				}
 			}
 		}
-	case "prime":
+	case "odious_numbers":
+		if IsOdious(n) {
+			return true, "", nil
+		}
+	case "prime", "primes_a000040":
 		if IsPrime(n) {
 			return true, "", nil
 		}
@@ -201,6 +296,18 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		if isPerfectSquare(v1) || isPerfectSquare(v2) {
 			return true, "", nil
 		}
+	case "pell":
+		// A number is a Pell number if and only if 8*n^2 + 1 or 8*n^2 - 1 is a perfect square
+		if n.Sign() < 0 {
+			return false, "", nil
+		}
+		n2 := new(big.Int).Mul(n, n)
+		eightN2 := new(big.Int).Mul(big.NewInt(8), n2)
+		v1 := new(big.Int).Add(eightN2, big.NewInt(1))
+		v2 := new(big.Int).Sub(eightN2, big.NewInt(1))
+		if isPerfectSquare(v1) || isPerfectSquare(v2) {
+			return true, "", nil
+		}
 	case "zero":
 		if n.Cmp(big.NewInt(0)) == 0 {
 			return true, "any", nil
@@ -212,14 +319,20 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		if n.Cmp(big.NewInt(1)) == 0 {
 			return true, "0", nil
 		}
-	case "cubes", "central_polygonal", "cake", "catalan", "totient", "totient_prime",
+	case "cubes", "central_polygonal", "cake", "bell", "catalan", "totient", "totient_prime",
+		"hamming_weight",
+		"factorial", "kendall_mann", "bicolorable_necklaces", "binary_partitions", "partitions",
 		"fibonacci_prime", "zekendorf", "groups_order_n", "ramanujan_tau",
-		"sum_odd_divisors", "alkanes", "abelian_groups_order_n",
+		"sum_divisors", "sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"threshold_functions", "fubini", "schroeder_fourth",
+		"partitions_into_2_squares",
+		"powers_of_2",
 		"powers_of_4",
-		"powers_of_3",
-		"mersenne_numbers",
-		"unlabeled_digraphs", "labeled_trees", "sets_of_lists":
+		"tangent", "self_inverse_permutations",
+		"euler_zigzag",
+		"sylvester",
+		"mersenne_numbers", "mersenne_prime_exponents", "rooted_unlabeled_trees", "unlabeled_trees", "unlabeled_digraphs", "unlabeled_graphs",
+		"unlabeled_posets", "simplicial_polyhedra", "labeled_trees", "sets_of_lists", "free_polyominoes":
 		// Fallback: generate sequence and check (with reasonable limit)
 		seq, err := GetSequence(n.String(), st, false)
 		if err == nil && seq != nil {

@@ -2,48 +2,69 @@ package sequences
 
 import (
 	"math/big"
-	"reflect"
 	"testing"
 )
 
 func TestGetCentralPolygonalNumbersSequence(t *testing.T) {
 	tests := []struct {
-		name       string
 		maxNumber  *big.Int
 		positional bool
-		wantSeq    []*big.Int
+		expected   []*big.Int
 	}{
 		{
-			name:       "First 5 terms",
-			maxNumber:  big.NewInt(4),
+			maxNumber:  big.NewInt(11),
 			positional: false,
-			wantSeq: []*big.Int{
-				big.NewInt(1),  // n=0: (0*1)/2 + 1 = 1
-				big.NewInt(2),  // n=1: (1*2)/2 + 1 = 2
-				big.NewInt(4),  // n=2: (2*3)/2 + 1 = 4
-				big.NewInt(7),  // n=3: (3*4)/2 + 1 = 7
-				big.NewInt(11), // n=4: (4*5)/2 + 1 = 11
+			expected: []*big.Int{
+				big.NewInt(1),
+				big.NewInt(2),
+				big.NewInt(4),
+				big.NewInt(7),
+				big.NewInt(11),
 			},
 		},
 		{
-			name:       "Term at position 4",
+			maxNumber:  big.NewInt(0),
+			positional: true,
+			expected:   []*big.Int{big.NewInt(1)},
+		},
+		{
+			maxNumber:  big.NewInt(1),
+			positional: true,
+			expected:   []*big.Int{big.NewInt(2)},
+		},
+		{
+			maxNumber:  big.NewInt(2),
+			positional: true,
+			expected:   []*big.Int{big.NewInt(4)},
+		},
+		{
+			maxNumber:  big.NewInt(3),
+			positional: true,
+			expected:   []*big.Int{big.NewInt(7)},
+		},
+		{
 			maxNumber:  big.NewInt(4),
 			positional: true,
-			wantSeq: []*big.Int{
-				big.NewInt(7), // n=4: (4*3)/2 + 1 = 7 (Wait, let me check the code logic again)
-			},
+			expected:   []*big.Int{big.NewInt(11)},
 		},
 	}
 
 	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := GetCentralPolygonalNumbersSequence(tt.maxNumber, tt.positional)
-			if err != nil {
-				t.Fatalf("GetCentralPolygonalNumbersSequence() error = %v", err)
+		seq, err := GetCentralPolygonalNumbersSequence(tt.maxNumber, tt.positional)
+		if err != nil {
+			t.Errorf("GetCentralPolygonalNumbersSequence(%v, %v) returned error: %v", tt.maxNumber, tt.positional, err)
+			continue
+		}
+
+		if len(seq.Sequence) != len(tt.expected) {
+			t.Errorf("GetCentralPolygonalNumbersSequence(%v, %v) length = %d, expected %d", tt.maxNumber, tt.positional, len(seq.Sequence), len(tt.expected))
+			continue
+		}
+
+		for i, v := range seq.Sequence {
+			if v.Cmp(tt.expected[i]) != 0 {
+				t.Errorf("GetCentralPolygonalNumbersSequence(%v, %v) at index %d = %v, expected %v", tt.maxNumber, tt.positional, i, v, tt.expected[i])
 			}
-			if !reflect.DeepEqual(got.Sequence, tt.wantSeq) {
-				t.Errorf("GetCentralPolygonalNumbersSequence() Sequence = %v, want %v", got.Sequence, tt.wantSeq)
-			}
-		})
+		}
 	}
 }
