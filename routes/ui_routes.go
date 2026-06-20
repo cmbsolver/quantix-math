@@ -68,6 +68,11 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Dictionary Words",
 		})
 	})
+	app.Get("/liber-primus", func(c *fiber.Ctx) error {
+		return c.Render("liber_primus", fiber.Map{
+			"Title": "Liber Primus",
+		})
+	})
 	app.Get("/anagram_finder", func(c *fiber.Ctx) error {
 		return c.Render("anagram_finder", fiber.Map{
 			"Title": "Anagram Finder",

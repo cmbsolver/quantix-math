@@ -38,3 +38,5 @@ go.work.sum
 /quantix.db
 /.junie/memory/**
 /.output.txt
+/benchmarks.txt
+/test_output.txt

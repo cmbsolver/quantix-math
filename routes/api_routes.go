@@ -28,4 +28,7 @@ func RegisterAPIRoutes(app *fiber.App) {
 
 	// Runer routes
 	apiGroup.Post("/runer/calculate-lines", api.CalculateLinesHandler)
+
+	// Liber Primus routes
+	apiGroup.Get("/liber-primus/metadata/:id", api.GetMetadataHandler)
 }

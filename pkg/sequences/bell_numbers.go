@@ -64,13 +64,15 @@ func calculateBell(n int64) *big.Int {
 
 	bells := make([]*big.Int, n+1)
 	bells[0] = big.NewInt(1)
+	term := new(big.Int)
+	binom := new(big.Int)
 
 	for i := int64(0); i < n; i++ {
 		nextBell := big.NewInt(0)
 		for k := int64(0); k <= i; k++ {
 			// C(i, k) * B(k)
-			term := new(big.Int).Binomial(i, k)
-			term.Mul(term, bells[k])
+			binom.Binomial(i, k)
+			term.Mul(binom, bells[k])
 			nextBell.Add(nextBell, term)
 		}
 		bells[i+1] = nextBell

@@ -39,25 +39,28 @@ func GetCollatzSequence(n int64, isPosition bool) (*NumericSequence, error) {
 	return sequence, nil
 }
 
-// getCollatzSequenceInternal generates a Collatz sequence recursively starting from a given number.
+// getCollatzSequenceInternal generates a Collatz sequence iteratively starting from a given number.
 // The sequence is appended to the provided NumericSequence object.
 // Returns the updated NumericSequence or an error if the input number is less than 1.
 func getCollatzSequenceInternal(n int64, sequence *NumericSequence) (*NumericSequence, error) {
-	// Generate the Collatz sequence
-	if n > 1 {
-		if n%2 == 0 {
-			n /= 2
-		} else {
-			n = 3*n + 1
-		}
-		sequence.Sequence = append(sequence.Sequence, big.NewInt(n))
-		return getCollatzSequenceInternal(n, sequence)
-	} else if n < 1 {
-		// Stop when n reaches 1
-		err := fmt.Errorf("number must be greater than 1")
-		return nil, err
-	} else {
-		// If n is 1, we stop the recursion
-		return sequence, nil
+	if n < 1 {
+		return nil, fmt.Errorf("number must be greater than 1")
 	}
+
+	curr := big.NewInt(n)
+	one := big.NewInt(1)
+	two := big.NewInt(2)
+	three := big.NewInt(3)
+	mod := new(big.Int)
+
+	for curr.Cmp(one) != 0 {
+		if mod.Mod(curr, two).Sign() == 0 {
+			curr.Div(curr, two)
+		} else {
+			curr.Mul(curr, three)
+			curr.Add(curr, one)
+		}
+		sequence.Sequence = append(sequence.Sequence, new(big.Int).Set(curr))
+	}
+	return sequence, nil
 }

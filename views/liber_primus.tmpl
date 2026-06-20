@@ -1,0 +1,174 @@
+<style>
+    .lpviewer-container { max-width: 1000px; margin: 20px auto; padding: 20px; }
+    .lpviewer-controls { display: flex; align-items: center; margin-bottom: 20px; gap: 10px; }
+    .lpviewer-page-select { padding: 8px; border-radius: 4px; border: 1px solid #ccc; min-width: 80px; }
+    .lpviewer-image { max-width: 100%; height: auto; max-height: 600px; }
+    .lpviewer-text-content, .lpviewer-rune-content { padding: 15px; border-radius: 4px; border: 1px solid #eee; white-space: pre-wrap; font-family: monospace; line-height: 1.5; overflow-wrap: anywhere; }
+</style>
+
+<div class="lpviewer-container">
+    <div class="lpviewer-controls">
+        <label for="lpviewer-mode-select">Mode: </label>
+        <select id="lpviewer-mode-select" class="lpviewer-page-select">
+            <option value="page">Page</option>
+            <option value="section">Section</option>
+        </select>
+        <label for="lpviewer-page-select">Select: </label>
+        <select id="lpviewer-page-select" class="lpviewer-page-select">
+            <!-- Generate options via JS -->
+        </select>
+        <button id="lpviewer-load-button" class="btn btn-primary">Load</button>
+    </div>
+
+    <ul class="nav nav-tabs" id="lpTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="image-tab" data-bs-toggle="tab" data-bs-target="#image-tab-pane" type="button" role="tab" aria-selected="true">Image</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="text-tab" data-bs-toggle="tab" data-bs-target="#text-tab-pane" type="button" role="tab" aria-selected="false">Text</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="runeglish-tab" data-bs-toggle="tab" data-bs-target="#runeglish-tab-pane" type="button" role="tab" aria-selected="false">Runeglish</button>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3" id="lpTabsContent">
+        <div class="tab-pane fade show active" id="image-tab-pane" role="tabpanel" tabindex="0">
+            <div class="row">
+                <div class="col-md-9">
+                    <div id="lpviewer-image-container" class="text-center"></div>
+                </div>
+                <div class="col-md-3">
+                    <div id="lpviewer-metadata" class="alert alert-info" style="display:none; position: sticky; top: 20px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="text-tab-pane" role="tabpanel" tabindex="0">
+            <div id="lpviewer-text-lb" class="lpviewer-rune-content"></div>
+        </div>
+        <div class="tab-pane fade" id="runeglish-tab-pane" role="tabpanel" tabindex="0">
+            <div id="lpviewer-runeglish" class="lpviewer-text-content"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const modeSelect = document.getElementById('lpviewer-mode-select');
+        const pageSelect = document.getElementById('lpviewer-page-select');
+        const pages = Array.from({length: 58}, (_, i) => i);
+        const sections = ['0-2', '3-7', '8-14', '15-22', '23-26', '27-32', '33-39', '40-53', '54-55', '56-56', '57-57'];
+
+        function updateOptions() {
+            pageSelect.innerHTML = '';
+            const mode = modeSelect.value;
+            const options = (mode === 'page') ? pages : sections;
+            options.forEach(opt => {
+                const option = document.createElement('option');
+                option.value = opt;
+                option.textContent = (mode === 'page') ? 'Page ' + opt : 'Section ' + opt;
+                pageSelect.appendChild(option);
+            });
+        }
+
+        modeSelect.addEventListener('change', updateOptions);
+        updateOptions();
+
+        const runeToLetter = {
+            'ᛝ': 'ING', 'ᛟ': 'OE', 'ᛇ': 'EO', 'ᛡ': 'IO', 'ᛠ': 'EA', 'ᚫ': 'AE', 'ᚦ': 'TH', 'ᚠ': 'F', 'ᚢ': 'U', 'ᚩ': 'O',
+            'ᚱ': 'R', 'ᚳ': 'C', 'ᚷ': 'G', 'ᚹ': 'W', 'ᚻ': 'H', 'ᚾ': 'N', 'ᛁ': 'I', 'ᛄ': 'J', 'ᛈ': 'P', 'ᛉ': 'X', 'ᛋ': 'S',
+            'ᛏ': 'T', 'ᛒ': 'B', 'ᛖ': 'E', 'ᛗ': 'M', 'ᛚ': 'L', 'ᛞ': 'D', 'ᚪ': 'A', 'ᚣ': 'Y', '•': ' ', '⊹': '.',
+        };
+
+        function transposeRuneToLatin(text) {
+            return text.split('').map(char => runeToLetter[char] || char).join('');
+        }
+
+        function getPagesFromSection(section) {
+            const [start, end] = section.split('-').map(Number);
+            const pages = [];
+            for (let i = start; i <= end; i++) {
+                pages.push(i);
+            }
+            return pages;
+        }
+
+        function fetchMetadata(id, container) {
+            container.innerHTML = '<div class="text-center p-3"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            container.style.display = 'block';
+
+            fetch(`/api/liber-primus/metadata/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    let colorCountsHtml = '';
+                    if (data.color_counts) {
+                        // Sort by count descending
+                        const sortedColors = Object.entries(data.color_counts)
+                            .sort((a, b) => b[1] - a[1]);
+                        
+                        colorCountsHtml = '<br><strong>All Sampled Colors:</strong><br><div style="max-height: 300px; overflow-y: auto;"><ul style="font-size: 0.8em; padding-left: 15px; margin-bottom:0;">';
+                        for (const [color, count] of sortedColors) {
+                            colorCountsHtml += `<li><span style="display:inline-block;width:10px;height:10px;background-color:${color};border:1px solid #000; margin-right:5px;"></span> ${color}: ${count}</li>`;
+                        }
+                        colorCountsHtml += '</ul></div>';
+                    }
+                    container.innerHTML = `
+                        <strong>${data.description}</strong><br>
+                        Dimensions: ${data.dimensions}<br>
+                        Color: ${data.color}<br>
+                        ICC Profile: ${data.icc_profile}
+                        ${data.icc_description ? '<br>ICC Description: ' + data.icc_description : ''}
+                        ${data.jfif ? `<br>JFIF Version: ${data.jfif.version}<br>Density: ${data.jfif.x_density}x${data.jfif.y_density} ${data.jfif.units}` : ''}
+                        ${colorCountsHtml}
+                    `;
+                    container.style.display = 'block';
+                })
+                .catch(() => {
+                    container.textContent = 'Error loading metadata.';
+                    container.style.display = 'block';
+                });
+        }
+
+        function loadPageContent() {
+            const mode = modeSelect.value;
+            const selectedValue = pageSelect.value;
+            const imageContainer = document.getElementById('lpviewer-image-container');
+            const metadataContainer = document.getElementById('lpviewer-metadata');
+            
+            metadataContainer.style.display = 'none';
+
+            if (mode === 'page') {
+                imageContainer.innerHTML = `<img src="/assets/files/images/${selectedValue}.jpg" class="lpviewer-image" alt="Page ${selectedValue}">`;
+                fetchMetadata(selectedValue, metadataContainer);
+            } else {
+                const pages = getPagesFromSection(selectedValue);
+                imageContainer.innerHTML = pages.map(p =>
+                    `<div class="section-image-wrapper" data-page="${p}" style="cursor: pointer; margin: 10px 0;">
+                        <img src="/assets/files/images/${p}.jpg" class="lpviewer-image" alt="Page ${p}">
+                        <p class="text-muted small">Click to view metadata</p>
+                    </div>`
+                ).join('');
+
+                document.querySelectorAll('.section-image-wrapper').forEach(wrapper => {
+                    wrapper.addEventListener('click', function() {
+                        fetchMetadata(this.dataset.page, metadataContainer);
+                    });
+                });
+            }
+
+            fetch(`/assets/files/text/${selectedValue}.txt`)
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('lpviewer-text-lb').textContent = data;
+                    document.getElementById('lpviewer-runeglish').textContent = transposeRuneToLatin(data);
+                })
+                .catch(err => {
+                    document.getElementById('lpviewer-text-lb').textContent = 'Error loading text.';
+                    document.getElementById('lpviewer-runeglish').textContent = 'Error loading text.';
+                });
+        }
+
+        document.getElementById('lpviewer-load-button').addEventListener('click', loadPageContent);
+        loadPageContent();
+    });
+</script>
