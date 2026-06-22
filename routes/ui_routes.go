@@ -84,4 +84,10 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Coordinate Graph",
 		})
 	})
+
+	app.Get("/mobius_calculator", func(c *fiber.Ctx) error {
+		return c.Render("mobius_calculator", fiber.Map{
+			"Title": "Möbius Numbers Calculator",
+		})
+	})
 }

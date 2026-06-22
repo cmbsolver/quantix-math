@@ -26,6 +26,11 @@ func RegisterAPIRoutes(app *fiber.App) {
 	// Graph routes
 	apiGroup.Post("/graph/process", api.ProcessGraphHandler)
 
+	// Mobius routes
+	apiGroup.Post("/mobius/direct", api.MobiusDirectHandler)
+	apiGroup.Post("/mobius/mask", api.MobiusMaskHandler)
+	apiGroup.Post("/mobius/divisor", api.MobiusDivisorHandler)
+
 	// Runer routes
 	apiGroup.Post("/runer/calculate-lines", api.CalculateLinesHandler)
 

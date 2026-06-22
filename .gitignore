@@ -40,3 +40,4 @@ go.work.sum
 /.output.txt
 /benchmarks.txt
 /test_output.txt
+/scripts/**
