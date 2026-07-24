@@ -39,6 +39,7 @@ func GetFibonacciSequenceFromPos(position int64) (*NumericSequence, error) {
 		Name:     "Fibonacci",
 		Number:   big.NewInt(position),
 		Sequence: sequence,
+		Result:   tmpVal,
 	}, nil
 }
 

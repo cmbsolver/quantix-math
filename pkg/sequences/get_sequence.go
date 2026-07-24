@@ -17,6 +17,221 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	var err error
 
 	switch sequenceType {
+	case "necklaces_color_swap_turnover_a000011":
+		sequence, err = GetOEISLookupSequence("A000011", "Necklaces with color swap and turnover allowed", maxNumber, positional)
+	case "all_ones_a000012":
+		sequence, err = GetAllOnesA000012Sequence(maxNumber, positional)
+	case "necklaces_color_swap_a000013":
+		sequence, err = GetOEISLookupSequence("A000013", "Necklaces with color swap", maxNumber, positional)
+	case "series_reduced_trees_a000014":
+		sequence, err = GetOEISLookupSequence("A000014", "Series-reduced trees", maxNumber, positional)
+	case "smallest_prime_power_a000015":
+		sequence, err = GetSmallestPrimePowerA000015Sequence(maxNumber, positional)
+	case "shift_register_sequences_a000016":
+		sequence, err = GetOEISLookupSequence("A000016", "Shift register output sequences", maxNumber, positional)
+	case "walks_cubic_lattice_a000017":
+		sequence, err = GetOEISLookupSequence("A000017", "Walks on cubic lattice (erroneous)", maxNumber, positional)
+	case "walks_diamond_lattice_a000018":
+		sequence, err = GetOEISLookupSequence("A000018", "Walks on diamond lattice", maxNumber, positional)
+	case "primitive_permutation_groups_a000019":
+		sequence, err = GetOEISLookupSequence("A000019", "Primitive permutation groups", maxNumber, positional)
+	case "primitive_polynomials_a000020":
+		sequence, err = GetOEISLookupSequence("A000020", "Primitive polynomials", maxNumber, positional)
+	case "form_x2_12y2_a000021":
+		sequence, err = GetOEISLookupSequence("A000021", "Numbers of form x^2 + 12y^2", maxNumber, positional)
+	case "centered_hydrocarbons_a000022":
+		sequence, err = GetOEISLookupSequence("A000022", "Centered hydrocarbons", maxNumber, positional)
+	case "exp_minus_2x_a000023":
+		sequence, err = GetOEISLookupSequence("A000023", "Expansion of e.g.f. exp(-2x)/(1-x)", maxNumber, positional)
+	case "form_x2_10y2_a000024":
+		sequence, err = GetOEISLookupSequence("A000024", "Numbers of form x^2 + 10y^2", maxNumber, positional)
+	case "mock_theta_f_q_a000025":
+		sequence, err = GetOEISLookupSequence("A000025", "Mock theta function f(q)", maxNumber, positional)
+	case "mosaic_numbers_a000026":
+		sequence, err = GetOEISLookupSequence("A000026", "Mosaic numbers", maxNumber, positional)
+	case "binary_weight_odd_a000028":
+		sequence, err = GetOEISLookupSequence("A000028", "Binary weight of exponents is odd", maxNumber, positional)
+	case "necklaces_turnover_a000029":
+		sequence, err = GetOEISLookupSequence("A000029", "Necklaces with turnover allowed (bracelets)", maxNumber, positional)
+	case "initial_digit_a000030":
+		sequence, err = GetInitialDigitA000030Sequence(maxNumber, positional)
+	case "necklaces_no_turnover_a000031":
+		sequence, err = GetOEISLookupSequence("A000031", "Necklaces with no turnover allowed", maxNumber, positional)
+	case "menage_hit_polynomials_a000033":
+		sequence, err = GetOEISLookupSequence("A000033", "Ménage hit polynomials", maxNumber, positional)
+	case "period_12_a000034":
+		sequence, err = GetPeriod12A000034Sequence(maxNumber, positional)
+	case "parity_a000035":
+		sequence, err = GetParityA000035Sequence(maxNumber, positional)
+	case "record_values_p_n_a000036":
+		sequence, err = GetOEISLookupSequence("A000036", "Record values of |P(n)|", maxNumber, positional)
+	case "nonsquares_a000037":
+		sequence, err = GetOEISLookupSequence("A000037", "Nonsquares", maxNumber, positional)
+	case "twice_characteristic_0_a000038":
+		sequence, err = GetOEISLookupSequence("A000038", "Twice characteristic function of {0}", maxNumber, positional)
+	case "mock_theta_f_q_coeff_a000039":
+		sequence, err = GetOEISLookupSequence("A000039", "Coefficients of mock theta function f(q)", maxNumber, positional)
+	case "unary_a000042":
+		sequence, err = GetUnaryA000042Sequence(maxNumber, positional)
+	case "mersenne_exponents_a000043":
+		sequence, err = GetOEISLookupSequence("A000043", "Mersenne exponents", maxNumber, positional)
+	case "dying_rabbits_a000044":
+		sequence, err = GetOEISLookupSequence("A000044", "Dying rabbits", maxNumber, positional)
+	case "primitive_necklaces_complement_a000046":
+		sequence, err = GetOEISLookupSequence("A000046", "Primitive necklaces (turnover, complement equivalent)", maxNumber, positional)
+	case "form_x2_minus_2y2_a000047":
+		sequence, err = GetOEISLookupSequence("A000047", "Numbers of form x^2 - 2y^2", maxNumber, positional)
+	case "primitive_necklaces_color_swap_a000048":
+		sequence, err = GetOEISLookupSequence("A000048", "Primitive necklaces with color swap", maxNumber, positional)
+	case "form_3x2_4y2_a000049":
+		sequence, err = GetOEISLookupSequence("A000049", "Numbers of form 3x^2 + 4y^2", maxNumber, positional)
+	case "form_x2_y2_a000050":
+		sequence, err = GetOEISLookupSequence("A000050", "Numbers of form x^2 + y^2", maxNumber, positional)
+	case "2n_plus_1_a000051":
+		sequence, err = GetA000051Sequence(maxNumber, positional)
+	case "alphabetical_123_a000052":
+		sequence, err = GetOEISLookupSequence("A000052", "Alphabetical 1,2,3... digit numbers", maxNumber, positional)
+	case "nyc_subway_1_a000053":
+		sequence, err = GetOEISLookupSequence("A000053", "NYC Subway 1 Train stops", maxNumber, positional)
+	case "nyc_subway_a_a000054":
+		sequence, err = GetOEISLookupSequence("A000054", "NYC Subway A Train stops", maxNumber, positional)
+	case "unlabeled_trees_a000055":
+		sequence, err = GetOEISLookupSequence("A000055", "Unlabeled trees", maxNumber, positional)
+	case "sl2_zn_order_a000056":
+		sequence, err = GetOEISLookupSequence("A000056", "Order of SL(2,Zn)", maxNumber, positional)
+	case "fibonacci_dividing_primes_a000057":
+		sequence, err = GetOEISLookupSequence("A000057", "Fibonacci dividing primes", maxNumber, positional)
+	case "sylvester_a000058":
+		sequence, err = GetA000058Sequence(maxNumber, positional)
+	case "form_2k4_plus_1_primes_a000059":
+		sequence, err = GetOEISLookupSequence("A000059", "k such that (2k)^4 + 1 is prime", maxNumber, positional)
+	case "signed_trees_a000060":
+		sequence, err = GetOEISLookupSequence("A000060", "Signed trees", maxNumber, positional)
+	case "generalized_tangent_a000061":
+		sequence, err = GetOEISLookupSequence("A000061", "Generalized tangent numbers", maxNumber, positional)
+	case "beatty_e_minus_2_a000062":
+		sequence, err = GetA000062Sequence(maxNumber, positional)
+	case "symmetrical_dissections_a000063":
+		sequence, err = GetOEISLookupSequence("A000063", "Symmetrical dissections of n-gon", maxNumber, positional)
+	case "change_1_2_5_10_a000064":
+		sequence, err = GetOEISLookupSequence("A000064", "Change for n cents (1,2,5,10)", maxNumber, positional)
+	case "partitions_minus_1_a000065":
+		sequence, err = GetPartitionsSequence(maxNumber, positional)
+		if err == nil && sequence != nil {
+			sequence.Name = "Partitions of n - 1 (A000065)"
+			if positional {
+				if sequence.Result != nil {
+					sequence.Result = new(big.Int).Sub(sequence.Result, big.NewInt(1))
+					sequence.Sequence = []*big.Int{sequence.Result}
+				}
+			} else {
+				for i := range sequence.Sequence {
+					sequence.Sequence[i] = new(big.Int).Sub(sequence.Sequence[i], big.NewInt(1))
+				}
+				if sequence.Result != nil {
+					sequence.Result = new(big.Int).Sub(sequence.Result, big.NewInt(1))
+				}
+			}
+		}
+	case "trivalent_graph_girth_a000066":
+		sequence, err = GetOEISLookupSequence("A000066", "Trivalent graph girth", maxNumber, positional)
+	case "form_x2_2y2_a000067":
+		sequence, err = GetOEISLookupSequence("A000067", "Numbers of form x^2 + 2y^2", maxNumber, positional)
+	case "form_k4_plus_1_primes_a000068":
+		sequence, err = GetOEISLookupSequence("A000068", "k such that k^4 + 1 is prime", maxNumber, positional)
+	case "odious_a000069":
+		sequence, err = GetA000069Sequence(maxNumber, positional)
+	case "sum_partitions_a000070":
+		sequence, err = GetOEISLookupSequence("A000070", "Sum of partition numbers", maxNumber, positional)
+	case "fibonacci_minus_1_a000071":
+		nPlus2 := new(big.Int).Add(maxNumber, big.NewInt(2))
+		var seqObj *NumericSequence
+		seqObj, err = GetFibonacciSequence(nPlus2, true)
+		if err == nil && seqObj != nil {
+			sequence = &NumericSequence{
+				Name:   "Fibonacci(n+2) - 1 (A000071)",
+				Number: new(big.Int).Set(maxNumber),
+			}
+			if positional {
+				if seqObj.Result != nil {
+					sequence.Result = new(big.Int).Sub(seqObj.Result, big.NewInt(1))
+					sequence.Sequence = []*big.Int{new(big.Int).Set(sequence.Result)}
+				}
+			} else {
+				// a(n) = Fib(n+2)-1 for n=0..limit-1
+				limit := maxNumber.Int64()
+				var seq []*big.Int
+				for i := int64(0); i < limit; i++ {
+					f, _ := GetFibonacciSequence(big.NewInt(i+2), true)
+					val := new(big.Int).Sub(f.Result, big.NewInt(1))
+					seq = append(seq, val)
+				}
+				sequence.Sequence = seq
+				if len(seq) > 0 {
+					sequence.Result = new(big.Int).Set(seq[len(seq)-1])
+				}
+			}
+		}
+	case "form_x2_4y2_a000072":
+		sequence, err = GetOEISLookupSequence("A000072", "Numbers of form x^2 + 4y^2", maxNumber, positional)
+	case "tribonacci_a000073":
+		sequence, err = GetA000073Sequence(maxNumber, positional)
+	case "odd_form_x2_y2_a000074":
+		sequence, err = GetOEISLookupSequence("A000074", "Odd numbers of form x^2 + y^2", maxNumber, positional)
+	case "form_2x2_3y2_a000075":
+		sequence, err = GetOEISLookupSequence("A000075", "Numbers of form 2x^2 + 3y^2", maxNumber, positional)
+	case "form_4x2_4xy_5y2_a000076":
+		sequence, err = GetOEISLookupSequence("A000076", "Numbers of form 4x^2 + 4xy + 5y^2", maxNumber, positional)
+	case "form_x2_6y2_a000077":
+		sequence, err = GetOEISLookupSequence("A000077", "Numbers of form x^2 + 6y^2", maxNumber, positional)
+	case "tetranacci_a000078":
+		sequence, err = GetA000078Sequence(maxNumber, positional)
+	case "powers_of_2_a000079":
+		sequence, err = GetPowersOf2Sequence(maxNumber, positional)
+	case "minimal_triangle_graphs_a000080":
+		sequence, err = GetOEISLookupSequence("A000080", "Minimal triangle graphs", maxNumber, positional)
+	case "rooted_unlabeled_trees_a000081":
+		sequence, err = GetOEISLookupSequence("A000081", "Rooted unlabeled trees", maxNumber, positional)
+	case "n2_phi_phi_a000082":
+		sequence, err = GetOEISLookupSequence("A000082", "n^2 * Product(1 + 1/p)", maxNumber, positional)
+	case "mixed_husimi_trees_a000083":
+		sequence, err = GetOEISLookupSequence("A000083", "Mixed Husimi trees", maxNumber, positional)
+	case "series_parallel_networks_a000084":
+		sequence, err = GetOEISLookupSequence("A000084", "Series-parallel networks", maxNumber, positional)
+	case "involutions_a000085":
+		sequence, err = GetOEISLookupSequence("A000085", "Involutions (self-inverse permutations)", maxNumber, positional)
+	case "solutions_x2_x_1_mod_n_a000086":
+		sequence, err = GetOEISLookupSequence("A000086", "Solutions to x^2 - x + 1 == 0 (mod n)", maxNumber, positional)
+	case "unrooted_maps_a000087":
+		sequence, err = GetOEISLookupSequence("A000087", "Unrooted nonseparable planar maps", maxNumber, positional)
+	case "simple_unlabeled_graphs_a000088":
+		sequence, err = GetOEISLookupSequence("A000088", "Simple unlabeled graphs", maxNumber, positional)
+	case "solutions_x2_1_mod_n_a000089":
+		sequence, err = GetOEISLookupSequence("A000089", "Solutions to x^2 + 1 == 0 (mod n)", maxNumber, positional)
+	case "exp_minus_x3_3_a000090":
+		sequence, err = GetOEISLookupSequence("A000090", "Expansion of exp(-x^3/3)/(1-x)", maxNumber, positional)
+	case "multiplicative_a000091":
+		sequence, err = GetOEISLookupSequence("A000091", "A000091", maxNumber, positional)
+	case "record_values_p_n_3d_a000092":
+		sequence, err = GetOEISLookupSequence("A000092", "Record values of |P(n)| in 3D", maxNumber, positional)
+	case "floor_n_1_5_a000093":
+		sequence, err = GetA000093Sequence(maxNumber, positional)
+	case "trees_diameter_4_a000094":
+		sequence, err = GetOEISLookupSequence("A000094", "Trees of diameter 4", maxNumber, positional)
+	case "fixed_points_gamma0_n_a000095":
+		sequence, err = GetOEISLookupSequence("A000095", "Fixed points of Gamma_0(n)", maxNumber, positional)
+	case "n_n_plus_3_2_a000096":
+		sequence, err = GetA000096Sequence(maxNumber, positional)
+	case "partitions_2kinds_1_2_a000097":
+		sequence, err = GetOEISLookupSequence("A000097", "Partitions (2 kinds of 1, 2)", maxNumber, positional)
+	case "partitions_2kinds_1_2_3_a000098":
+		sequence, err = GetOEISLookupSequence("A000098", "Partitions (2 kinds of 1, 2, 3)", maxNumber, positional)
+	case "record_values_p_n_2d_a000099":
+		sequence, err = GetOEISLookupSequence("A000099", "Record values of |P(n)| in 2D", maxNumber, positional)
+	case "sqrt_prime_a000006":
+		sequence, err = GetSqrtPrimeA000006Sequence(maxNumber, positional)
+	case "binary_quadratic_forms_a000003":
+		sequence, err = GetBinaryQuadraticFormsA000003Sequence(maxNumber, positional)
 	case "hamming_weight":
 		sequence, err = GetHammingWeightSequence(maxNumber, positional)
 	case "central_polygonal":
@@ -48,7 +263,7 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	case "catalan":
 		sequence, err = GetCatalanSequence(maxNumber, positional)
 	case "totient":
-		sequence, err = GetTotientSequence(maxNumber)
+		sequence, err = GetEulerTotientA000010Sequence(maxNumber, positional)
 	case "totient_prime":
 		sequence, err = GetTotientPrimeSequence(maxNumber)
 	case "fibonacci":
