@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-func TestGetWaysToMakeChangeSequence(t *testing.T) {
+func TestGetA000008Sequence(t *testing.T) {
 	tests := []struct {
 		maxNumber  *big.Int
 		positional bool
@@ -40,19 +40,19 @@ func TestGetWaysToMakeChangeSequence(t *testing.T) {
 			wantErr:    false,
 		},
 		{
-			maxNumber:  big.NewInt(1),
+			maxNumber:  big.NewInt(20),
 			positional: true,
 			wantName:   "Ways to Make Change (A000008)",
-			wantSeq:    []*big.Int{big.NewInt(1)},
-			wantResult: big.NewInt(1),
+			wantSeq:    []*big.Int{big.NewInt(40)},
+			wantResult: big.NewInt(40),
 			wantErr:    false,
 		},
 		{
-			maxNumber:  big.NewInt(2),
+			maxNumber:  big.NewInt(60),
 			positional: true,
 			wantName:   "Ways to Make Change (A000008)",
-			wantSeq:    []*big.Int{big.NewInt(2)},
-			wantResult: big.NewInt(2),
+			wantSeq:    []*big.Int{big.NewInt(546)},
+			wantResult: big.NewInt(546),
 			wantErr:    false,
 		},
 		{
@@ -63,23 +63,23 @@ func TestGetWaysToMakeChangeSequence(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		t.Run(reflect.TypeOf(tt.maxNumber).String(), func(t *testing.T) {
-			got, err := GetWaysToMakeChangeSequence(tt.maxNumber, tt.positional)
+		t.Run(tt.maxNumber.String(), func(t *testing.T) {
+			got, err := GetA000008Sequence(tt.maxNumber, tt.positional)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("GetWaysToMakeChangeSequence() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("GetA000008Sequence() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if tt.wantErr {
 				return
 			}
 			if got.Name != tt.wantName {
-				t.Errorf("GetWaysToMakeChangeSequence() Name = %v, want %v", got.Name, tt.wantName)
+				t.Errorf("GetA000008Sequence() Name = %v, want %v", got.Name, tt.wantName)
 			}
 			if !reflect.DeepEqual(got.Sequence, tt.wantSeq) {
-				t.Errorf("GetWaysToMakeChangeSequence() Sequence = %v, want %v", got.Sequence, tt.wantSeq)
+				t.Errorf("GetA000008Sequence() Sequence = %v, want %v", got.Sequence, tt.wantSeq)
 			}
 			if got.Result.Cmp(tt.wantResult) != 0 {
-				t.Errorf("GetWaysToMakeChangeSequence() Result = %v, want %v", got.Result, tt.wantResult)
+				t.Errorf("GetA000008Sequence() Result = %v, want %v", got.Result, tt.wantResult)
 			}
 		})
 	}

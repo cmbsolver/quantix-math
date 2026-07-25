@@ -65,6 +65,8 @@ func TestCheckNumberInNewSequences(t *testing.T) {
 		{"7", "Prime"},
 		{"16", "Powers of 4 (A000302)"},
 		{"1", "Natural"},
+		{"1", "Kolakoski Sequence (A000002)"},
+		{"2", "Kolakoski Sequence (A000002)"},
 	}
 
 	for _, tt := range tests {

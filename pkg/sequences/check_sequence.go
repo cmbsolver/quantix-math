@@ -21,7 +21,7 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 	}
 
 	sequenceTypes := []string{
-		"hamming_weight", "natural", "parity", "partitions_distinct", "partitions", "kolakoski", "zero", "divisor_count", "sum_divisors", "ways_to_make_change", "groups_order_n", "nn", "squares", "cubes", "prime", "primes_a000040", "emirp", "semiprime", "circular_prime", "fibonacci", "lucas", "fourth_powers",
+		"hamming_weight", "natural", "parity", "partitions_distinct", "partitions", "kolakoski", "zero_a000004", "divisor_count_a000005", "divisor_count", "sum_divisors", "change_1_2_5_10_a000008", "groups_order_n_a000001", "nn", "squares", "cubes", "prime", "primes_a000040", "emirp", "semiprime", "circular_prime", "fibonacci", "lucas", "fourth_powers",
 		"triangular", "central_polygonal", "cake", "bell", "catalan", "totient", "totient_prime",
 		"tetrahedral",
 		"fibonacci_prime", "zekendorf", "ramanujan_tau",
@@ -30,6 +30,7 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"partitions_into_2_squares",
 		"powers_of_2",
 		"powers_of_4",
+		"sqrt_prime_a000006",
 		"subfactorial", "self_inverse_permutations",
 		"binary_partitions",
 		"planted_3_trees",
@@ -48,8 +49,8 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"mersenne_numbers", "mersenne_prime_exponents",
 		"sets_of_lists",
 		"unlabeled_trees",
-		"zero_characteristic", "collatz",
-		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern",
+		"zero_characteristic_a000007", "collatz",
+		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern", "binary_quadratic_forms_a000003",
 	}
 
 	var results []CheckResult
@@ -181,8 +182,8 @@ func getSequenceName(st string) string {
 		return "Fibonacci Prime"
 	case "zekendorf":
 		return "Zekendorf Representation"
-	case "groups_order_n":
-		return "Number of Groups (A000001)"
+	case "groups_order_n_a000001":
+		return "Number of groups of order n (A000001)"
 	case "nn":
 		return "n^n (A000312)"
 	case "powers_of_4":
@@ -205,17 +206,19 @@ func getSequenceName(st string) string {
 		return "Fubini numbers (A000670)"
 	case "kolakoski":
 		return "Kolakoski Sequence (A000002)"
-	case "zero":
+	case "zero_a000004":
 		return "Zero Sequence (A000004)"
-	case "zero_characteristic":
+	case "zero_characteristic_a000007":
 		return "Zero Characteristic (A000007)"
 	case "partitions_into_2_squares":
 		return "Partitions into 2 squares (A000161)"
+	case "divisor_count_a000005":
+		return "Number of Divisors (A000005)"
 	case "divisor_count":
 		return "Number of Divisors (A000005)"
 	case "sum_divisors":
 		return "Sum of Divisors (A000203)"
-	case "ways_to_make_change":
+	case "change_1_2_5_10_a000008":
 		return "Ways to Make Change (A000008)"
 	case "rooted_unlabeled_trees":
 		return "Rooted Unlabeled Trees (A000081)"
@@ -245,6 +248,10 @@ func getSequenceName(st string) string {
 		return "Odious numbers (A000069)"
 	case "stern":
 		return "Stern's diatomic series (A002487)"
+	case "sqrt_prime_a000006":
+		return "Integer part of square root of n-th prime (A000006)"
+	case "binary_quadratic_forms_a000003":
+		return "Binary quadratic forms (A000003)"
 	default:
 		return st
 	}
@@ -354,11 +361,11 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		if isPerfectSquare(v1) || isPerfectSquare(v2) {
 			return true, "", nil
 		}
-	case "zero":
+	case "zero_a000004":
 		if n.Cmp(big.NewInt(0)) == 0 {
 			return true, "any", nil
 		}
-	case "zero_characteristic":
+	case "zero_characteristic_a000007":
 		if n.Cmp(big.NewInt(0)) == 0 {
 			return true, "any n > 0", nil
 		}
@@ -412,6 +419,21 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		if exists {
 			return true, pos, nil
 		}
+	case "kolakoski":
+		exists, pos := IsKolakoskiNumber(n)
+		if exists {
+			return true, pos, nil
+		}
+	case "binary_quadratic_forms_a000003":
+		// Fallback: generate sequence and check
+		seq, err := GetBinaryQuadraticFormsA000003Sequence(n, false)
+		if err == nil && seq != nil {
+			for i, val := range seq.Sequence {
+				if val.Cmp(n) == 0 {
+					return true, fmt.Sprintf("%d", i+1), nil
+				}
+			}
+		}
 	case "radon_hurwitz":
 		if n.Sign() > 0 {
 			return true, "", nil
@@ -425,9 +447,10 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		"hamming_weight",
 		"binary_rooted_trees",
 		"sqrt3_convergents",
+		"sqrt_prime_a000006",
 		"factorial", "kendall_mann", "bicolorable_necklaces", "binary_partitions", "partitions",
-		"fibonacci_prime", "zekendorf", "groups_order_n", "ramanujan_tau",
-		"sum_divisors", "sum_odd_divisors", "alkanes", "abelian_groups_order_n",
+		"fibonacci_prime", "zekendorf", "groups_order_n_a000001", "ramanujan_tau",
+		"sum_divisors", "divisor_count", "divisor_count_a000005", "sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"theta_series_d4_lattice",
 		"ways_two_squares",
 		"threshold_functions", "fubini", "schroeder_fourth",
@@ -438,6 +461,7 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		"euler_zigzag",
 		"sylvester",
 		"mersenne_numbers", "mersenne_prime_exponents", "rooted_unlabeled_trees", "unlabeled_trees", "unlabeled_digraphs", "unlabeled_graphs", "connected_planar_graphs",
+		"change_1_2_5_10_a000008",
 		"unlabeled_posets", "simplicial_polyhedra", "labeled_trees", "sets_of_lists", "free_polyominoes":
 		// Fallback: generate sequence and check (with reasonable limit)
 		seq, err := GetSequence(n.String(), st, false)

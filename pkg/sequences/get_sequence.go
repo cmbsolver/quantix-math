@@ -17,6 +17,10 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	var err error
 
 	switch sequenceType {
+	case "groups_order_n_a000001":
+		sequence, err = GetGroupsOrderNSequence(maxNumber, positional)
+	case "zero_a000004":
+		sequence, err = GetZeroSequence(maxNumber, positional)
 	case "necklaces_color_swap_turnover_a000011":
 		sequence, err = GetOEISLookupSequence("A000011", "Necklaces with color swap and turnover allowed", maxNumber, positional)
 	case "all_ones_a000012":
@@ -328,12 +332,14 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetKolakoskiSequence(maxNumber, positional)
 	case "zero":
 		sequence, err = GetZeroSequence(maxNumber, positional)
-	case "zero_characteristic":
+	case "zero_characteristic_a000007":
 		sequence, err = GetZeroCharacteristicSequence(maxNumber, positional)
+	case "divisor_count_a000005":
+		sequence, err = GetDivisorCountA000005Sequence(maxNumber, positional)
 	case "divisor_count":
-		sequence, err = GetDivisorCountSequence(maxNumber, positional)
-	case "ways_to_make_change":
-		sequence, err = GetWaysToMakeChangeSequence(maxNumber, positional)
+		sequence, err = GetDivisorCountA000005Sequence(maxNumber, positional)
+	case "change_1_2_5_10_a000008":
+		sequence, err = GetA000008Sequence(maxNumber, positional)
 	case "collatz":
 		sequence, err = GetCollatzSequence(maxNumber.Int64(), positional)
 	case "powers_of_2":

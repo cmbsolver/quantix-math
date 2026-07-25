@@ -7,7 +7,14 @@ import (
 
 // Kolakoski Sequence (OEIS A000002)
 // URL: https://oeis.org/A000002
+// The Kolakoski sequence is a self-describing sequence of 1s and 2s.
+// It is the unique sequence starting with 1 such that the sequence of its run lengths is the sequence itself.
 // a(n) is the length of n-th run; a(1) = 1; sequence consists just of 1's and 2's.
+// Example: 1, 2, 2, 1, 1, 2, 1, 2, 2, 1, ...
+// The first run has length a(1)=1, so it is "1".
+// The second run has length a(2)=2, so it is "2, 2".
+// The third run has length a(3)=2, so it is "1, 1".
+// The fourth run has length a(4)=1, so it is "2".
 
 // GetKolakoskiSequence returns the Kolakoski sequence (OEIS A000002).
 func GetKolakoskiSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
@@ -97,4 +104,16 @@ func generateKolakoski(n int) []int {
 	}
 
 	return a
+}
+
+// IsKolakoskiNumber checks if a number exists in the Kolakoski sequence.
+// The sequence consists only of 1's and 2's.
+func IsKolakoskiNumber(n *big.Int) (bool, string) {
+	if n.Cmp(big.NewInt(1)) == 0 {
+		return true, "a(1) = 1"
+	}
+	if n.Cmp(big.NewInt(2)) == 0 {
+		return true, "a(2) = 2"
+	}
+	return false, ""
 }

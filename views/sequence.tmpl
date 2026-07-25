@@ -6,69 +6,15 @@
             <input type="text" class="form-control" id="sequenceSearch" placeholder="Type to search sequence..." autocomplete="off">
             <input type="hidden" id="sequenceType" name="sequenceType" required>
             <ul id="sequenceList" class="list-group mt-1 shadow-sm" style="display:none; position:absolute; z-index:1000; width: 100%; max-height: 300px; overflow-y: auto;">
-                <li class="list-group-item list-group-item-action" data-value="fibonacci">Fibonacci</li>
-                <li class="list-group-item list-group-item-action" data-value="fibonacci_prime">Fibonacci Prime</li>
-                <li class="list-group-item list-group-item-action" data-value="groups_order_n">Number of Groups (A000001)</li>
+                <li class="list-group-item list-group-item-action" data-value="groups_order_n_a000001">Number of groups of order n (A000001)</li>
                 <li class="list-group-item list-group-item-action" data-value="kolakoski">Kolakoski Sequence (A000002)</li>
-                <li class="list-group-item list-group-item-action" data-value="zero">Zero Sequence (A000004)</li>
-                <li class="list-group-item list-group-item-action" data-value="divisor_count">Number of Divisors (A000005)</li>
-                <li class="list-group-item list-group-item-action" data-value="zero_characteristic">Zero Characteristic (A000007)</li>
-                <li class="list-group-item list-group-item-action" data-value="ways_to_make_change">Ways to Make Change (A000008)</li>
+                <li class="list-group-item list-group-item-action" data-value="binary_quadratic_forms_a000003">Number of classes of primitive positive definite binary quadratic forms of discriminant D = -4n (A000003)</li>
+                <li class="list-group-item list-group-item-action" data-value="zero_a000004">Zero Sequence (A000004)</li>
+                <li class="list-group-item list-group-item-action" data-value="divisor_count_a000005">Number of Divisors (A000005)</li>
+                <li class="list-group-item list-group-item-action" data-value="sqrt_prime_a000006">Integer part of square root of n-th prime (A000006)</li>
+                <li class="list-group-item list-group-item-action" data-value="zero_characteristic_a000007">The characteristic function of {0}: a(n) = 0^n (A000007)</li>
+                <li class="list-group-item list-group-item-action" data-value="change_1_2_5_10_a000008">Number of ways of making change for n cents using coins of 1, 2, 5, 10 cents (A000008)</li>
                 <li class="list-group-item list-group-item-action" data-value="partitions_distinct">Partitions into Distinct Parts (A000009)</li>
-                <li class="list-group-item list-group-item-action" data-value="primes_a000040">The prime numbers (A000040)</li>
-                <li class="list-group-item list-group-item-action" data-value="partitions">Partitions of n (A000041)</li>
-                <li class="list-group-item list-group-item-action" data-value="mersenne_prime_exponents">Mersenne prime exponents (A000043)</li>
-                <li class="list-group-item list-group-item-action" data-value="bicolorable_necklaces">Bicolorable Primitive Necklaces (A000048)</li>
-                <li class="list-group-item list-group-item-action" data-value="unlabeled_trees">Unlabeled trees (A000055)</li>
-                <li class="list-group-item list-group-item-action" data-value="sylvester">Sylvester's sequence (A000058)</li>
-                <li class="list-group-item list-group-item-action" data-value="odious_numbers">Odious numbers (A000069)</li>
-                <li class="list-group-item list-group-item-action" data-value="powers_of_2">Powers of 2 (A000079)</li>
-                <li class="list-group-item list-group-item-action" data-value="rooted_unlabeled_trees">Rooted unlabeled trees (A000081)</li>
-                <li class="list-group-item list-group-item-action" data-value="self_inverse_permutations">Self-inverse permutations (A000085)</li>
-                <li class="list-group-item list-group-item-action" data-value="unlabeled_graphs">Unlabeled Graphs (A000088)</li>
-                <li class="list-group-item list-group-item-action" data-value="free_polyominoes">Free Polyominoes (A000105)</li>
-                <li class="list-group-item list-group-item-action" data-value="simplicial_polyhedra">Simplicial polyhedra (A000109)</li>
-                <li class="list-group-item list-group-item-action" data-value="bell">Bell numbers (A000110)</li>
-                <li class="list-group-item list-group-item-action" data-value="euler_zigzag">Euler zigzag numbers (A000111)</li>
-                <li class="list-group-item list-group-item-action" data-value="unlabeled_posets">Unlabeled Posets (A000112)</li>
-                <li class="list-group-item list-group-item-action" data-value="hamming_weight">Hamming weight (A000120)</li>
-                <li class="list-group-item list-group-item-action" data-value="binary_partitions">Binary partitions (A000123)</li>
-                <li class="list-group-item list-group-item-action" data-value="central_polygonal">Central polygonal numbers (the Lazy Caterer's sequence) (A000124)</li>
-                <li class="list-group-item list-group-item-action" data-value="pell">Pell numbers (A000129)</li>
-                <li class="list-group-item list-group-item-action" data-value="kendall_mann">Kendall-Mann numbers (A000140)</li>
-                <li class="list-group-item list-group-item-action" data-value="factorial">Factorial numbers (A000142)</li>
-                <li class="list-group-item list-group-item-action" data-value="partitions_into_2_squares">Partitions into 2 squares (A000161)</li>
-                <li class="list-group-item list-group-item-action" data-value="subfactorial">Subfactorial (A000166)</li>
-                <li class="list-group-item list-group-item-action" data-value="labeled_rooted_trees">Labeled Rooted Trees (A000169)</li>
-                <li class="list-group-item list-group-item-action" data-value="tangent">Tangent Numbers (A000182)</li>
-                <li class="list-group-item list-group-item-action" data-value="sum_divisors">Sum of Divisors (A000203)</li>
-                <li class="list-group-item list-group-item-action" data-value="triangular">Triangular numbers (A000217)</li>
-                <li class="list-group-item list-group-item-action" data-value="plane_partitions">Plane partitions (A000219)</li>
-                <li class="list-group-item list-group-item-action" data-value="mersenne_numbers">Mersenne numbers (A000225)</li>
-                <li class="list-group-item list-group-item-action" data-value="powers_of_3">Powers of 3 (A000244)</li>
-                <li class="list-group-item list-group-item-action" data-value="sets_of_lists">Sets of Lists (A000262)</li>
-                <li class="list-group-item list-group-item-action" data-value="quarter_squares">Quarter-squares (A002620)</li>
-                <li class="list-group-item list-group-item-action" data-value="stern">Stern's diatomic series (A002487)</li>
-                <li class="list-group-item list-group-item-action" data-value="binary_rooted_trees">Binary rooted trees (A002572)</li>
-                <li class="list-group-item list-group-item-action" data-value="sqrt3_convergents_denominators">Denominators of convergents to sqrt(3) (A002530)</li>
-                <li class="list-group-item list-group-item-action" data-value="sqrt3_convergents">Numerators of convergents to sqrt(3) (A002531)</li>
-                <li class="list-group-item list-group-item-action" data-value="ways_two_squares">Ways as sum of at most two nonzero squares (A002654)</li>
-                <li class="list-group-item list-group-item-action" data-value="planted_3_trees">Planted 3-trees of height n (A002658)</li>
-                <li class="list-group-item list-group-item-action" data-value="labeled_trees">Labeled Trees (A000272)</li>
-                <li class="list-group-item list-group-item-action" data-value="unlabeled_digraphs">Unlabeled Directed Graphs (A000273)</li>
-                <li class="list-group-item list-group-item-action" data-value="squares">Squares (A000290)</li>
-                <li class="list-group-item list-group-item-action" data-value="tetrahedral">Tetrahedral numbers (A000292)</li>
-                <li class="list-group-item list-group-item-action" data-value="powers_of_4">Powers of 4 (A000302)</li>
-                <li class="list-group-item list-group-item-action" data-value="connected_planar_graphs">Connected Planar Graphs (A003094)</li>
-                <li class="list-group-item list-group-item-action" data-value="schroeder_fourth">Schroeder's fourth problem (A000311)</li>
-                <li class="list-group-item list-group-item-action" data-value="nn">n^n (A000312)</li>
-                <li class="list-group-item list-group-item-action" data-value="loeschian">Loeschian numbers (A003136)</li>
-                <li class="list-group-item list-group-item-action" data-value="pentagonal">Pentagonal numbers (A000326)</li>
-                <li class="list-group-item list-group-item-action" data-value="radon_hurwitz">Radon function (A003484)</li>
-                <li class="list-group-item list-group-item-action" data-value="lcm_1_to_n">Least common multiple of {1, 2, ..., n} (A003418)</li>
-                <li class="list-group-item list-group-item-action" data-value="composites">Composite numbers (A002808)</li>
-                <li class="list-group-item list-group-item-action" data-value="parity">n mod 2; parity of n (A000035)</li>
-                <li class="list-group-item list-group-item-action" data-value="square_pyramidal">Square pyramidal numbers (A000330)</li>
                 <li class="list-group-item list-group-item-action" data-value="necklaces_color_swap_turnover_a000011">Necklaces with color swap and turnover (A000011)</li>
                 <li class="list-group-item list-group-item-action" data-value="all_ones_a000012">All 1's (A000012)</li>
                 <li class="list-group-item list-group-item-action" data-value="necklaces_color_swap_a000013">Necklaces with color swap (A000013)</li>
@@ -96,22 +42,24 @@
                 <li class="list-group-item list-group-item-action" data-value="nonsquares_a000037">Nonsquares (A000037)</li>
                 <li class="list-group-item list-group-item-action" data-value="twice_characteristic_0_a000038">Twice characteristic function of {0} (A000038)</li>
                 <li class="list-group-item list-group-item-action" data-value="mock_theta_f_q_coeff_a000039">Coefficients of mock theta function f(q) (A000039)</li>
+                <li class="list-group-item list-group-item-action" data-value="primes_a000040">The prime numbers (A000040)</li>
+                <li class="list-group-item list-group-item-action" data-value="partitions">Partitions of n (A000041)</li>
                 <li class="list-group-item list-group-item-action" data-value="unary_a000042">Unary representation (A000042)</li>
                 <li class="list-group-item list-group-item-action" data-value="mersenne_exponents_a000043">Mersenne exponents (A000043)</li>
                 <li class="list-group-item list-group-item-action" data-value="dying_rabbits_a000044">Dying rabbits (A000044)</li>
                 <li class="list-group-item list-group-item-action" data-value="primitive_necklaces_complement_a000046">Primitive necklaces with complement (A000046)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_x2_minus_2y2_a000047">Numbers of form x^2 - 2y^2 (A000047)</li>
-                <li class="list-group-item list-group-item-action" data-value="primitive_necklaces_color_swap_a000048">Primitive necklaces with color swap (A000048)</li>
+                <li class="list-group-item list-group-item-action" data-value="bicolorable_necklaces">Bicolorable Primitive Necklaces (A000048)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_3x2_4y2_a000049">Numbers of form 3x^2 + 4y^2 (A000049)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_x2_y2_a000050">Numbers of form x^2 + y^2 (A000050)</li>
                 <li class="list-group-item list-group-item-action" data-value="2n_plus_1_a000051">2^n + 1 (A000051)</li>
                 <li class="list-group-item list-group-item-action" data-value="alphabetical_123_a000052">Alphabetical 1,2,3... digit numbers (A000052)</li>
                 <li class="list-group-item list-group-item-action" data-value="nyc_subway_1_a000053">NYC Subway 1 Train stops (A000053)</li>
                 <li class="list-group-item list-group-item-action" data-value="nyc_subway_a_a000054">NYC Subway A Train stops (A000054)</li>
-                <li class="list-group-item list-group-item-action" data-value="unlabeled_trees_a000055">Unlabeled trees (A000055)</li>
+                <li class="list-group-item list-group-item-action" data-value="unlabeled_trees">Unlabeled trees (A000055)</li>
                 <li class="list-group-item list-group-item-action" data-value="sl2_zn_order_a000056">Order of SL(2,Zn) (A000056)</li>
                 <li class="list-group-item list-group-item-action" data-value="fibonacci_dividing_primes_a000057">Fibonacci dividing primes (A000057)</li>
-                <li class="list-group-item list-group-item-action" data-value="sylvester_a000058">Sylvester's sequence (A000058)</li>
+                <li class="list-group-item list-group-item-action" data-value="sylvester">Sylvester's sequence (A000058)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_2k4_plus_1_primes_a000059">k such that (2k)^4 + 1 is prime (A000059)</li>
                 <li class="list-group-item list-group-item-action" data-value="signed_trees_a000060">Signed trees (A000060)</li>
                 <li class="list-group-item list-group-item-action" data-value="generalized_tangent_a000061">Generalized tangent numbers (A000061)</li>
@@ -122,7 +70,7 @@
                 <li class="list-group-item list-group-item-action" data-value="trivalent_graph_girth_a000066">Trivalent graph girth (A000066)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_x2_2y2_a000067">Numbers of form x^2 + 2y^2 (A000067)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_k4_plus_1_primes_a000068">k such that k^4 + 1 is prime (A000068)</li>
-                <li class="list-group-item list-group-item-action" data-value="odious_a000069">Odious numbers (A000069)</li>
+                <li class="list-group-item list-group-item-action" data-value="odious_numbers">Odious numbers (A000069)</li>
                 <li class="list-group-item list-group-item-action" data-value="sum_partitions_a000070">Sum of partition numbers (A000070)</li>
                 <li class="list-group-item list-group-item-action" data-value="fibonacci_minus_1_a000071">Fibonacci(n) - 1 (A000071)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_x2_4y2_a000072">Numbers of form x^2 + 4y^2 (A000072)</li>
@@ -132,9 +80,9 @@
                 <li class="list-group-item list-group-item-action" data-value="form_4x2_4xy_5y2_a000076">Numbers of form 4x^2 + 4xy + 5y^2 (A000076)</li>
                 <li class="list-group-item list-group-item-action" data-value="form_x2_6y2_a000077">Numbers of form x^2 + 6y^2 (A000077)</li>
                 <li class="list-group-item list-group-item-action" data-value="tetranacci_a000078">Tetranacci numbers (A000078)</li>
-                <li class="list-group-item list-group-item-action" data-value="powers_of_2_a000079">Powers of 2 (A000079)</li>
+                <li class="list-group-item list-group-item-action" data-value="powers_of_2">Powers of 2 (A000079)</li>
                 <li class="list-group-item list-group-item-action" data-value="minimal_triangle_graphs_a000080">Minimal triangle graphs (A000080)</li>
-                <li class="list-group-item list-group-item-action" data-value="rooted_unlabeled_trees_a000081">Rooted unlabeled trees (A000081)</li>
+                <li class="list-group-item list-group-item-action" data-value="rooted_unlabeled_trees">Rooted unlabeled trees (A000081)</li>
                 <li class="list-group-item list-group-item-action" data-value="n2_phi_phi_a000082">n^2 * Product(1 + 1/p) (A000082)</li>
                 <li class="list-group-item list-group-item-action" data-value="mixed_husimi_trees_a000083">Mixed Husimi trees (A000083)</li>
                 <li class="list-group-item list-group-item-action" data-value="series_parallel_networks_a000084">Series-parallel networks (A000084)</li>
@@ -153,12 +101,38 @@
                 <li class="list-group-item list-group-item-action" data-value="partitions_2kinds_1_2_a000097">Partitions (2 kinds of 1, 2) (A000097)</li>
                 <li class="list-group-item list-group-item-action" data-value="partitions_2kinds_1_2_3_a000098">Partitions (2 kinds of 1, 2, 3) (A000098)</li>
                 <li class="list-group-item list-group-item-action" data-value="record_values_p_n_2d_a000099">Record values of |P(n)| in 2D (A000099)</li>
-                <li class="list-group-item list-group-item-action" data-value="binary_quadratic_forms_a000003">Binary quadratic forms (A000003)</li>
-                <li class="list-group-item list-group-item-action" data-value="sqrt_prime_a000006">Integer part of square root of n-th prime (A000006)</li>
+                <li class="list-group-item list-group-item-action" data-value="free_polyominoes">Free Polyominoes (A000105)</li>
+                <li class="list-group-item list-group-item-action" data-value="simplicial_polyhedra">Simplicial polyhedra (A000109)</li>
+                <li class="list-group-item list-group-item-action" data-value="bell">Bell numbers (A000110)</li>
+                <li class="list-group-item list-group-item-action" data-value="euler_zigzag">Euler zigzag numbers (A000111)</li>
+                <li class="list-group-item list-group-item-action" data-value="unlabeled_posets">Unlabeled Posets (A000112)</li>
+                <li class="list-group-item list-group-item-action" data-value="hamming_weight">Hamming weight (A000120)</li>
+                <li class="list-group-item list-group-item-action" data-value="binary_partitions">Binary partitions (A000123)</li>
+                <li class="list-group-item list-group-item-action" data-value="central_polygonal">Central polygonal numbers (the Lazy Caterer's sequence) (A000124)</li>
+                <li class="list-group-item list-group-item-action" data-value="pell">Pell numbers (A000129)</li>
+                <li class="list-group-item list-group-item-action" data-value="kendall_mann">Kendall-Mann numbers (A000140)</li>
+                <li class="list-group-item list-group-item-action" data-value="factorial">Factorial numbers (A000142)</li>
+                <li class="list-group-item list-group-item-action" data-value="partitions_into_2_squares">Partitions into 2 squares (A000161)</li>
+                <li class="list-group-item list-group-item-action" data-value="subfactorial">Subfactorial (A000166)</li>
+                <li class="list-group-item list-group-item-action" data-value="labeled_rooted_trees">Labeled Rooted Trees (A000169)</li>
+                <li class="list-group-item list-group-item-action" data-value="tangent">Tangent Numbers (A000182)</li>
+                <li class="list-group-item list-group-item-action" data-value="sum_divisors">Sum of Divisors (A000203)</li>
+                <li class="list-group-item list-group-item-action" data-value="triangular">Triangular numbers (A000217)</li>
+                <li class="list-group-item list-group-item-action" data-value="plane_partitions">Plane partitions (A000219)</li>
+                <li class="list-group-item list-group-item-action" data-value="mersenne_numbers">Mersenne numbers (A000225)</li>
+                <li class="list-group-item list-group-item-action" data-value="powers_of_3">Powers of 3 (A000244)</li>
+                <li class="list-group-item list-group-item-action" data-value="sets_of_lists">Sets of Lists (A000262)</li>
+                <li class="list-group-item list-group-item-action" data-value="labeled_trees">Labeled Trees (A000272)</li>
+                <li class="list-group-item list-group-item-action" data-value="unlabeled_digraphs">Unlabeled Directed Graphs (A000273)</li>
+                <li class="list-group-item list-group-item-action" data-value="squares">Squares (A000290)</li>
+                <li class="list-group-item list-group-item-action" data-value="tetrahedral">Tetrahedral numbers (A000292)</li>
+                <li class="list-group-item list-group-item-action" data-value="powers_of_4">Powers of 4 (A000302)</li>
+                <li class="list-group-item list-group-item-action" data-value="schroeder_fourth">Schroeder's fourth problem (A000311)</li>
+                <li class="list-group-item list-group-item-action" data-value="nn">n^n (A000312)</li>
+                <li class="list-group-item list-group-item-action" data-value="pentagonal">Pentagonal numbers (A000326)</li>
+                <li class="list-group-item list-group-item-action" data-value="square_pyramidal">Square pyramidal numbers (A000330)</li>
                 <li class="list-group-item list-group-item-action" data-value="euler">Euler numbers (A000364)</li>
                 <li class="list-group-item list-group-item-action" data-value="perfect">Perfect numbers (A000396)</li>
-                <li class="list-group-item list-group-item-action" data-value="theta_series_square_lattice">Theta series of square lattice (A004018)</li>
-                <li class="list-group-item list-group-item-action" data-value="theta_series_d4_lattice">Theta series of D_4 lattice (A004011)</li>
                 <li class="list-group-item list-group-item-action" data-value="modular_j">Modular function j (A000521)</li>
                 <li class="list-group-item list-group-item-action" data-value="cubes">Cubes (A000578)</li>
                 <li class="list-group-item list-group-item-action" data-value="fourth_powers">Fourth Powers (A000583)</li>
@@ -168,17 +142,33 @@
                 <li class="list-group-item list-group-item-action" data-value="threshold_functions">Threshold functions (A000609)</li>
                 <li class="list-group-item list-group-item-action" data-value="fubini">Fubini numbers (A000670)</li>
                 <li class="list-group-item list-group-item-action" data-value="abelian_groups_order_n">Number of Abelian groups (A000688)</li>
-                <li class="list-group-item list-group-item-action" data-value="emirp">Emirp</li>
-                <li class="list-group-item list-group-item-action" data-value="semiprime">Semi-prime</li>
-                <li class="list-group-item list-group-item-action" data-value="circular_prime">Circular Prime</li>
-                <li class="list-group-item list-group-item-action" data-value="natural">Natural</li>
+                <li class="list-group-item list-group-item-action" data-value="stern">Stern's diatomic series (A002487)</li>
+                <li class="list-group-item list-group-item-action" data-value="sqrt3_convergents_denominators">Denominators of convergents to sqrt(3) (A002530)</li>
+                <li class="list-group-item list-group-item-action" data-value="sqrt3_convergents">Numerators of convergents to sqrt(3) (A002531)</li>
+                <li class="list-group-item list-group-item-action" data-value="binary_rooted_trees">Binary rooted trees (A002572)</li>
+                <li class="list-group-item list-group-item-action" data-value="quarter_squares">Quarter-squares (A002620)</li>
+                <li class="list-group-item list-group-item-action" data-value="ways_two_squares">Ways as sum of at most two nonzero squares (A002654)</li>
+                <li class="list-group-item list-group-item-action" data-value="planted_3_trees">Planted 3-trees of height n (A002658)</li>
+                <li class="list-group-item list-group-item-action" data-value="composites">Composite numbers (A002808)</li>
+                <li class="list-group-item list-group-item-action" data-value="connected_planar_graphs">Connected Planar Graphs (A003094)</li>
+                <li class="list-group-item list-group-item-action" data-value="loeschian">Loeschian numbers (A003136)</li>
+                <li class="list-group-item list-group-item-action" data-value="lcm_1_to_n">Least common multiple of {1, 2, ..., n} (A003418)</li>
+                <li class="list-group-item list-group-item-action" data-value="radon_hurwitz">Radon function (A003484)</li>
+                <li class="list-group-item list-group-item-action" data-value="theta_series_d4_lattice">Theta series of D_4 lattice (A004011)</li>
+                <li class="list-group-item list-group-item-action" data-value="theta_series_square_lattice">Theta series of square lattice (A004018)</li>
                 <li class="list-group-item list-group-item-action" data-value="cake">Cake</li>
                 <li class="list-group-item list-group-item-action" data-value="catalan">Catalan</li>
+                <li class="list-group-item list-group-item-action" data-value="circular_prime">Circular Prime</li>
+                <li class="list-group-item list-group-item-action" data-value="collatz">Collatz</li>
+                <li class="list-group-item list-group-item-action" data-value="emirp">Emirp</li>
+                <li class="list-group-item list-group-item-action" data-value="fibonacci">Fibonacci</li>
+                <li class="list-group-item list-group-item-action" data-value="fibonacci_prime">Fibonacci Prime</li>
+                <li class="list-group-item list-group-item-action" data-value="lucas">Lucas</li>
+                <li class="list-group-item list-group-item-action" data-value="natural">Natural</li>
+                <li class="list-group-item list-group-item-action" data-value="semiprime">Semi-prime</li>
                 <li class="list-group-item list-group-item-action" data-value="totient">Totient</li>
                 <li class="list-group-item list-group-item-action" data-value="totient_prime">Totient Prime</li>
                 <li class="list-group-item list-group-item-action" data-value="zekendorf">Zekendorf</li>
-                <li class="list-group-item list-group-item-action" data-value="lucas">Lucas</li>
-                <li class="list-group-item list-group-item-action" data-value="collatz">Collatz</li>
             </ul>
         </div>
         <div class="mb-3">

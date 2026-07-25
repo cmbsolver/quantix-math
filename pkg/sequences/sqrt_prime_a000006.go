@@ -9,7 +9,9 @@ import (
 // URL: https://oeis.org/A000006
 // Description: a(n) = floor(sqrt(prime(n))).
 
-// GetSqrtPrimeA000006Sequence returns the A000006 sequence.
+// GetSqrtPrimeA000006Sequence returns the A000006 sequence up to maxNumber or the n-th term.
+// If isPositional is true, it returns the n-th term where n = maxNumber.
+// If isPositional is false, it returns the first maxNumber terms of the sequence.
 func GetSqrtPrimeA000006Sequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
 	if isPositional {
 		return GetSqrtPrimeA000006AtPosition(maxNumber)
@@ -17,7 +19,7 @@ func GetSqrtPrimeA000006Sequence(maxNumber *big.Int, isPositional bool) (*Numeri
 	return GenerateSqrtPrimeA000006Sequence(maxNumber)
 }
 
-// GenerateSqrtPrimeA000006Sequence generates the A000006 sequence up to maxNumber (n terms).
+// GenerateSqrtPrimeA000006Sequence generates the A000006 sequence up to maxNumber (first n terms).
 func GenerateSqrtPrimeA000006Sequence(maxNumber *big.Int) (*NumericSequence, error) {
 	if maxNumber.Sign() <= 0 {
 		return &NumericSequence{

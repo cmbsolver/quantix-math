@@ -9,17 +9,17 @@ import (
 // URL: https://oeis.org/A000005
 // d(n) (also called tau(n) or sigma_0(n)), the number of divisors of n.
 
-// GetDivisorCountSequence returns the number of divisors of n (OEIS A000005).
-func GetDivisorCountSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
+// GetDivisorCountA000005Sequence returns the number of divisors of n (OEIS A000005).
+func GetDivisorCountA000005Sequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
 	if isPositional {
-		return GetDivisorCountAtPosition(maxNumber)
+		return GetDivisorCountA000005AtPosition(maxNumber)
 	}
-	return GenerateDivisorCountSequence(maxNumber)
+	return GenerateDivisorCountA000005Sequence(maxNumber)
 }
 
-// GenerateDivisorCountSequence generates the A000005 sequence up to maxNumber.
+// GenerateDivisorCountA000005Sequence generates the A000005 sequence up to maxNumber.
 // It returns a(1), a(2), ..., a(maxNumber).
-func GenerateDivisorCountSequence(maxNumber *big.Int) (*NumericSequence, error) {
+func GenerateDivisorCountA000005Sequence(maxNumber *big.Int) (*NumericSequence, error) {
 	if maxNumber.Cmp(big.NewInt(1)) < 0 {
 		return nil, fmt.Errorf("max number must be at least 1 for this sequence")
 	}
@@ -28,7 +28,7 @@ func GenerateDivisorCountSequence(maxNumber *big.Int) (*NumericSequence, error) 
 	sequence := make([]*big.Int, n)
 
 	for i := 1; i <= n; i++ {
-		count := countDivisors(int64(i))
+		count := countDivisorsA000005(int64(i))
 		sequence[i-1] = big.NewInt(count)
 	}
 
@@ -40,14 +40,14 @@ func GenerateDivisorCountSequence(maxNumber *big.Int) (*NumericSequence, error) 
 	}, nil
 }
 
-// GetDivisorCountAtPosition returns the n-th term of A000005 (n >= 1).
-func GetDivisorCountAtPosition(n *big.Int) (*NumericSequence, error) {
+// GetDivisorCountA000005AtPosition returns the n-th term of A000005 (n >= 1).
+func GetDivisorCountA000005AtPosition(n *big.Int) (*NumericSequence, error) {
 	if n.Cmp(big.NewInt(1)) < 0 {
 		return nil, fmt.Errorf("position must be at least 1")
 	}
 
 	val := n.Int64()
-	result := big.NewInt(countDivisors(val))
+	result := big.NewInt(countDivisorsA000005(val))
 
 	return &NumericSequence{
 		Name:     "Number of Divisors (A000005)",
@@ -57,9 +57,9 @@ func GetDivisorCountAtPosition(n *big.Int) (*NumericSequence, error) {
 	}, nil
 }
 
-// countDivisors calculates the number of divisors of n using prime factorization.
+// countDivisorsA000005 calculates the number of divisors of n using prime factorization.
 // d(n) = Product (e_i + 1) where n = Product p_i^e_i
-func countDivisors(n int64) int64 {
+func countDivisorsA000005(n int64) int64 {
 	if n <= 0 {
 		return 0
 	}

@@ -5,9 +5,11 @@ import (
 	"math/big"
 )
 
-// Zero Characteristic Sequence (OEIS A000007)
+// Characteristic function of {0} (OEIS A000007)
 // URL: https://oeis.org/A000007
-// The characteristic function of {0}: a(n) = 1 if n = 0, else 0.
+// The characteristic function of {0}: a(n) = 0^n.
+// Formerly M0002
+// a(0) = 1; a(n) = 0 for n > 0.
 
 // GetZeroCharacteristicSequence returns the characteristic function of {0} (OEIS A000007).
 func GetZeroCharacteristicSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {

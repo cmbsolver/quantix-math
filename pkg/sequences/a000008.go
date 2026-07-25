@@ -5,20 +5,22 @@ import (
 	"math/big"
 )
 
-// Ways to make change for n cents using coins of 1, 2, 5, 10 cents (OEIS A000008).
+// A000008: Number of ways of making change for n cents using coins of 1, 2, 5, 10 cents.
 // URL: https://oeis.org/A000008
-// a(n) is the number of ways to make change for n using {1, 2, 5, 10}.
+// Number of partitions of n into parts 1, 2, 5, and 10.
 
-// GetWaysToMakeChangeSequence returns the number of ways of making change for n cents using coins of 1, 2, 5, 10 cents (OEIS A000008).
-func GetWaysToMakeChangeSequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
+// GetA000008Sequence returns the number of ways of making change for n cents using coins of 1, 2, 5, 10 cents (OEIS A000008).
+// It can return either the entire sequence up to maxNumber or just the value at maxNumber position.
+func GetA000008Sequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
 	if isPositional {
-		return GetWaysToMakeChangeAtPosition(maxNumber)
+		return GetA000008AtPosition(maxNumber)
 	}
-	return GenerateWaysToMakeChangeSequence(maxNumber)
+	return GenerateA000008Sequence(maxNumber)
 }
 
-// GenerateWaysToMakeChangeSequence generates the A000008 sequence up to maxNumber.
-func GenerateWaysToMakeChangeSequence(maxNumber *big.Int) (*NumericSequence, error) {
+// GenerateA000008Sequence generates the A000008 sequence up to maxNumber.
+// It returns a(0), a(1), ..., a(maxNumber).
+func GenerateA000008Sequence(maxNumber *big.Int) (*NumericSequence, error) {
 	if maxNumber.Cmp(big.NewInt(0)) < 0 {
 		return nil, fmt.Errorf("max number cannot be negative")
 	}
@@ -51,8 +53,8 @@ func GenerateWaysToMakeChangeSequence(maxNumber *big.Int) (*NumericSequence, err
 	}, nil
 }
 
-// GetWaysToMakeChangeAtPosition returns the n-th term of A000008.
-func GetWaysToMakeChangeAtPosition(n *big.Int) (*NumericSequence, error) {
+// GetA000008AtPosition returns the n-th term of A000008.
+func GetA000008AtPosition(n *big.Int) (*NumericSequence, error) {
 	if n.Cmp(big.NewInt(0)) < 0 {
 		return nil, fmt.Errorf("position cannot be negative")
 	}
