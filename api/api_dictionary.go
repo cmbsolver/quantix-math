@@ -30,6 +30,17 @@ type DictionaryWordsByParamResponse struct {
 	Count int                     `json:"count"`
 }
 
+// GetDictionaryWordsByParamHandler handles the dictionary words search request
+// @Summary Search for dictionary words
+// @Description Returns a list of dictionary words based on the provided filters
+// @Tags Dictionary
+// @Accept  json
+// @Produce  json
+// @Param   request  body      DictionaryWordsByParamRequest  true  "Search Request"
+// @Success 200      {object}  DictionaryWordsByParamResponse
+// @Failure 400      {string}  string "Invalid request body or filters"
+// @Failure 500      {string}  string "Internal server error"
+// @Router /api/dictionary/words [post]
 func GetDictionaryWordsByParamHandler(c *fiber.Ctx) error {
 	var req DictionaryWordsByParamRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -73,6 +84,17 @@ func GetDictionaryWordsByParamHandler(c *fiber.Ctx) error {
 	})
 }
 
+// DownloadDictionaryWordsExcelHandler handles the request to download dictionary words as Excel
+// @Summary Download dictionary words as Excel
+// @Description Generates and returns an Excel file containing dictionary words based on filters
+// @Tags Dictionary
+// @Produce  application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+// @Param   field  query     []string  true  "Filter fields (e.g., dict_word_length, gem_sum)"
+// @Param   param  query     []int     true  "Filter values"
+// @Success 200    {file}    binary
+// @Failure 400    {string}  string "Invalid or mismatched parameters"
+// @Failure 500    {string}  string "Internal server error"
+// @Router /api/dictionary/words/download [get]
 func DownloadDictionaryWordsExcelHandler(c *fiber.Ctx) error {
 	queryArgs := c.Context().QueryArgs()
 	fieldArgs := queryArgs.PeekMulti("field")
@@ -159,6 +181,22 @@ type AnagramRequest struct {
 	Type string `json:"type"` // latin, runeglish, rune
 }
 
+type AnagramResponse struct {
+	Anagrams []string `json:"anagrams"`
+	Count    int      `json:"count"`
+}
+
+// GetAnagramsHandler handles the anagram search request
+// @Summary Find anagrams for a word
+// @Description Returns a list of anagrams for the given word and type
+// @Tags Dictionary
+// @Accept  json
+// @Produce  json
+// @Param   request  body      AnagramRequest  true  "Anagram Request"
+// @Success 200      {object}  AnagramResponse
+// @Failure 400      {string}  string "Invalid request body or word"
+// @Failure 500      {string}  string "Internal server error"
+// @Router /api/dictionary/anagrams [post]
 func GetAnagramsHandler(c *fiber.Ctx) error {
 	var req AnagramRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -175,10 +213,21 @@ func GetAnagramsHandler(c *fiber.Ctx) error {
 	}
 	defer func() { _ = db.CloseConnection(conn) }()
 
-	anagrams := tables.GetAnagrams(conn, req.Word, req.Type)
+	anagramWords := tables.GetAnagrams(conn, req.Word, req.Type)
+	var anagrams []string
+	for _, w := range anagramWords {
+		switch req.Type {
+		case "runeglish":
+			anagrams = append(anagrams, w.RuneglishWordText)
+		case "rune":
+			anagrams = append(anagrams, w.RuneWordText)
+		default:
+			anagrams = append(anagrams, w.DictionaryWordText)
+		}
+	}
 
-	return c.JSON(fiber.Map{
-		"anagrams": anagrams,
-		"count":    len(anagrams),
+	return c.JSON(AnagramResponse{
+		Anagrams: anagrams,
+		Count:    len(anagrams),
 	})
 }

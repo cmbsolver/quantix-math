@@ -33,6 +33,17 @@ func getSequenceResponse(seq *sequences.NumericSequence) SequenceResponse {
 	return retval
 }
 
+// GetSequenceHandler handles the sequence generation request
+// @Summary Get a numeric sequence
+// @Description Returns a numeric sequence based on the type and max number provided
+// @Tags Math
+// @Accept  json
+// @Produce  json
+// @Param   request  body      SequenceRequest  true  "Sequence Request"
+// @Success 200      {object}  SequenceResponse
+// @Failure 400      {string}  string "Invalid request body or missing parameters"
+// @Failure 500      {string}  string "Internal server error"
+// @Router /api/sequence [post]
 func GetSequenceHandler(c *fiber.Ctx) error {
 	var req SequenceRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -55,6 +66,17 @@ type CheckRequest struct {
 	Number string `json:"number"`
 }
 
+// CheckNumberInSequencesHandler handles the number check in sequences
+// @Summary Check if a number belongs to any known sequences
+// @Description Returns a list of sequences that the given number belongs to
+// @Tags Math
+// @Accept  json
+// @Produce  json
+// @Param   request  body      CheckRequest  true  "Check Request"
+// @Success 200      {array}   string
+// @Failure 400      {string}  string "Invalid request body or number"
+// @Failure 500      {string}  string "Internal server error"
+// @Router /api/check-number [post]
 func CheckNumberInSequencesHandler(c *fiber.Ctx) error {
 	var req CheckRequest
 	if err := c.BodyParser(&req); err != nil {

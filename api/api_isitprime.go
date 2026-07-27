@@ -20,6 +20,16 @@ type IsItPrimeResponse struct {
 	IsSemiprime     bool   `json:"isSemiprime"`
 }
 
+// GetIsItPrimeHandler handles the prime check request
+// @Summary Check if a number is prime, emirp, circular prime, or semiprime
+// @Description Returns the prime status of a given number
+// @Tags Math
+// @Accept  json
+// @Produce  json
+// @Param   request  body      IsItPrimeRequest  true  "Prime Check Request"
+// @Success 200      {object}  IsItPrimeResponse
+// @Failure 400      {string}  string "Invalid request body or number"
+// @Router /api/prime [post]
 func GetIsItPrimeHandler(c *fiber.Ctx) error {
 	var req IsItPrimeRequest
 	if err := c.BodyParser(&req); err != nil {

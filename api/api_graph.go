@@ -26,11 +26,25 @@ type GraphResponse struct {
 	TotalLength float64 `json:"totalLength"`
 }
 
+type ErrorResponse struct {
+	Error string `json:"error"`
+}
+
+// ProcessGraphHandler handles the graph processing request
+// @Summary Process a set of coordinate points
+// @Description Calculates lines between points and total length, filtering lines that pass through other points
+// @Tags Math
+// @Accept  json
+// @Produce  json
+// @Param   request  body      GraphRequest  true  "Graph Request"
+// @Success 200      {object}  GraphResponse
+// @Failure 400      {object}  ErrorResponse
+// @Router /api/graph/process [post]
 func ProcessGraphHandler(c *fiber.Ctx) error {
 	var req GraphRequest
 	if err := c.BodyParser(&req); err != nil {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"error": "Cannot parse request body",
+		return c.Status(fiber.StatusBadRequest).JSON(ErrorResponse{
+			Error: "Cannot parse request body",
 		})
 	}
 

@@ -11,6 +11,16 @@ type CalculateLinesRequest struct {
 	Input string `json:"input"`
 }
 
+// CalculateLinesHandler handles the rune line calculation request
+// @Summary Calculate rune lines from input
+// @Description Returns the calculated rune lines for the given input string
+// @Tags 3301 Tools
+// @Accept  json
+// @Produce  json
+// @Param   request  body      CalculateLinesRequest  true  "Calculate Lines Request"
+// @Success 200      {array}   string
+// @Failure 400      {string}  string "Invalid request body"
+// @Router /api/runer/calculate-lines [post]
 func CalculateLinesHandler(c *fiber.Ctx) error {
 	var req CalculateLinesRequest
 	if err := c.BodyParser(&req); err != nil {

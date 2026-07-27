@@ -103,6 +103,14 @@ func extractJFIF(data []byte) (*JFIFMetadata, error) {
 	}, nil
 }
 
+// GetMetadataHandler handles the request to get image metadata
+// @Summary Get Liber Primus page metadata
+// @Description Returns metadata (dimensions, colors, JFIF info) for a Liber Primus page image
+// @Tags 3301 Tools
+// @Produce  json
+// @Param   id   path      string  true  "Page ID"
+// @Success 200  {object}  ImageMetadata
+// @Router /api/liber-primus/metadata/{id} [get]
 func GetMetadataHandler(c *fiber.Ctx) error {
 	id := c.Params("id")
 

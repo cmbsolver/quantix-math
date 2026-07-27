@@ -1,0 +1,750 @@
+basePath: /
+definitions:
+  api.AnagramRequest:
+    properties:
+      type:
+        description: latin, runeglish, rune
+        type: string
+      word:
+        type: string
+    type: object
+  api.AnagramResponse:
+    properties:
+      anagrams:
+        items:
+          type: string
+        type: array
+      count:
+        type: integer
+    type: object
+  api.Base64ToCSVRequest:
+    properties:
+      base64:
+        type: string
+    type: object
+  api.BytesToCSVResponse:
+    properties:
+      csv:
+        type: string
+    type: object
+  api.CSVToBase64Request:
+    properties:
+      csv:
+        type: string
+    type: object
+  api.CSVToBase64Response:
+    properties:
+      base64:
+        type: string
+    type: object
+  api.CSVToBytesRequest:
+    properties:
+      csv:
+        type: string
+    type: object
+  api.CalculateLinesRequest:
+    properties:
+      input:
+        type: string
+    type: object
+  api.CheckRequest:
+    properties:
+      number:
+        type: string
+    type: object
+  api.DictionaryWordsByParamRequest:
+    properties:
+      filters:
+        items:
+          properties:
+            field:
+              type: string
+            param:
+              type: integer
+          type: object
+        type: array
+    type: object
+  api.DictionaryWordsByParamResponse:
+    properties:
+      count:
+        type: integer
+      words:
+        items:
+          $ref: '#/definitions/tables.DictionaryWord'
+        type: array
+    type: object
+  api.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  api.GraphRequest:
+    properties:
+      points:
+        items:
+          $ref: '#/definitions/api.Point'
+        type: array
+    type: object
+  api.GraphResponse:
+    properties:
+      lines:
+        items:
+          $ref: '#/definitions/api.Line'
+        type: array
+      points:
+        items:
+          $ref: '#/definitions/api.Point'
+        type: array
+      totalLength:
+        type: number
+    type: object
+  api.ImageMetadata:
+    properties:
+      color:
+        type: string
+      color_counts:
+        additionalProperties:
+          type: integer
+        type: object
+      description:
+        type: string
+      dimensions:
+        type: string
+      icc_description:
+        type: string
+      icc_profile:
+        type: string
+      jfif:
+        $ref: '#/definitions/api.JFIFMetadata'
+    type: object
+  api.InversionResult:
+    properties:
+      d:
+        type: integer
+      g_d:
+        type: number
+      mu_n_d:
+        type: integer
+      term:
+        type: number
+    type: object
+  api.IsItPrimeRequest:
+    properties:
+      number:
+        type: string
+    type: object
+  api.IsItPrimeResponse:
+    properties:
+      isCircularPrime:
+        type: boolean
+      isEmirp:
+        type: boolean
+      isPrime:
+        type: boolean
+      isSemiprime:
+        type: boolean
+      number:
+        type: string
+    type: object
+  api.JFIFMetadata:
+    properties:
+      units:
+        type: string
+      version:
+        type: string
+      x_density:
+        type: integer
+      y_density:
+        type: integer
+    type: object
+  api.Line:
+    properties:
+      length:
+        type: number
+      p1:
+        $ref: '#/definitions/api.Point'
+      p2:
+        $ref: '#/definitions/api.Point'
+    type: object
+  api.MobiusDirectRequest:
+    properties:
+      numbers:
+        description: Comma separated or single number
+        type: string
+    type: object
+  api.MobiusDirectResponse:
+    properties:
+      mu:
+        type: integer
+      "n":
+        type: integer
+      reason:
+        type: string
+    type: object
+  api.MobiusDivisorRequest:
+    properties:
+      "n":
+        type: integer
+    type: object
+  api.MobiusDivisorResponse:
+    properties:
+      divisors:
+        items:
+          type: integer
+        type: array
+      inversion_details:
+        items:
+          $ref: '#/definitions/api.InversionResult'
+        type: array
+      "n":
+        type: integer
+      sum_mu_d:
+        type: integer
+      total_inversion:
+        type: number
+    type: object
+  api.MobiusErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  api.MobiusMaskRequest:
+    properties:
+      data:
+        items:
+          type: number
+        type: array
+    type: object
+  api.Point:
+    properties:
+      x:
+        type: number
+      "y":
+        type: number
+    type: object
+  api.SequenceRequest:
+    properties:
+      maxNumber:
+        type: string
+      positional:
+        type: boolean
+      sequenceType:
+        type: string
+    type: object
+  api.SequenceResponse:
+    properties:
+      name:
+        type: string
+      number:
+        type: string
+      result:
+        type: string
+      sequence:
+        items:
+          type: string
+        type: array
+    type: object
+  tables.DictionaryWord:
+    properties:
+      dictRuneNoDoubletLength:
+        type: integer
+      dictionaryWordLength:
+        type: integer
+      dictionaryWordText:
+        type: string
+      gemProduct:
+        type: string
+      gemProductPrime:
+        type: boolean
+      gemSum:
+        type: integer
+      gemSumPrime:
+        type: boolean
+      language:
+        type: string
+      runeDistancePattern:
+        type: string
+      runePattern:
+        type: string
+      runePatternNoDoubletPattern:
+        type: string
+      runeWordLength:
+        type: integer
+      runeWordText:
+        type: string
+      runeWordTextNoDoublet:
+        type: string
+      runeglishWordLength:
+        type: integer
+      runeglishWordText:
+        type: string
+    type: object
+host: localhost:3301
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is the Quantix Math API documentation.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Quantix Math API
+  version: "1.0"
+paths:
+  /api/binutils/base64-to-csv:
+    post:
+      consumes:
+      - application/json
+      description: Converts a Base64 string to a hex-encoded CSV string
+      parameters:
+      - description: Base64 to CSV Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.Base64ToCSVRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BytesToCSVResponse'
+        "400":
+          description: Invalid request body or Base64 format
+          schema:
+            type: string
+      summary: Convert Base64 to hex CSV
+      tags:
+      - Utilities
+  /api/binutils/csv-to-base64:
+    post:
+      consumes:
+      - application/json
+      description: Converts a hex-encoded CSV string to a Base64 string
+      parameters:
+      - description: CSV to Base64 Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.CSVToBase64Request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.CSVToBase64Response'
+        "400":
+          description: Invalid request body or CSV format
+          schema:
+            type: string
+      summary: Convert hex CSV to Base64
+      tags:
+      - Utilities
+  /api/binutils/csv-to-bytes:
+    post:
+      consumes:
+      - application/json
+      description: Converts a hex-encoded CSV string back to binary data and returns
+        it as a file
+      parameters:
+      - description: CSV to Bytes Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.CSVToBytesRequest'
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Invalid request body or CSV format
+          schema:
+            type: string
+      summary: Convert hex CSV to binary
+      tags:
+      - Utilities
+  /api/binutils/file-to-csv:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Reads a file and returns its content as a hex-encoded CSV string
+      parameters:
+      - description: File to convert
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.BytesToCSVResponse'
+        "400":
+          description: File upload required
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Convert a file to hex CSV
+      tags:
+      - Utilities
+  /api/check-number:
+    post:
+      consumes:
+      - application/json
+      description: Returns a list of sequences that the given number belongs to
+      parameters:
+      - description: Check Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.CheckRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Invalid request body or number
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Check if a number belongs to any known sequences
+      tags:
+      - Math
+  /api/dictionary/anagrams:
+    post:
+      consumes:
+      - application/json
+      description: Returns a list of anagrams for the given word and type
+      parameters:
+      - description: Anagram Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.AnagramRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.AnagramResponse'
+        "400":
+          description: Invalid request body or word
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Find anagrams for a word
+      tags:
+      - Dictionary
+  /api/dictionary/words:
+    post:
+      consumes:
+      - application/json
+      description: Returns a list of dictionary words based on the provided filters
+      parameters:
+      - description: Search Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.DictionaryWordsByParamRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.DictionaryWordsByParamResponse'
+        "400":
+          description: Invalid request body or filters
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Search for dictionary words
+      tags:
+      - Dictionary
+  /api/dictionary/words/download:
+    get:
+      description: Generates and returns an Excel file containing dictionary words
+        based on filters
+      parameters:
+      - collectionFormat: csv
+        description: Filter fields (e.g., dict_word_length, gem_sum)
+        in: query
+        items:
+          type: string
+        name: field
+        required: true
+        type: array
+      - collectionFormat: csv
+        description: Filter values
+        in: query
+        items:
+          type: integer
+        name: param
+        required: true
+        type: array
+      produces:
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Invalid or mismatched parameters
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Download dictionary words as Excel
+      tags:
+      - Dictionary
+  /api/graph/process:
+    post:
+      consumes:
+      - application/json
+      description: Calculates lines between points and total length, filtering lines
+        that pass through other points
+      parameters:
+      - description: Graph Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.GraphRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.GraphResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.ErrorResponse'
+      summary: Process a set of coordinate points
+      tags:
+      - Math
+  /api/liber-primus/metadata/{id}:
+    get:
+      description: Returns metadata (dimensions, colors, JFIF info) for a Liber Primus
+        page image
+      parameters:
+      - description: Page ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.ImageMetadata'
+      summary: Get Liber Primus page metadata
+      tags:
+      - 3301 Tools
+  /api/mobius/direct:
+    post:
+      consumes:
+      - application/json
+      description: Returns the Mobius function value (mu) for a list of numbers
+      parameters:
+      - description: Mobius Direct Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.MobiusDirectRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/api.MobiusDirectResponse'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.MobiusErrorResponse'
+      summary: Calculate Mobius function for numbers
+      tags:
+      - Math
+  /api/mobius/divisor:
+    post:
+      consumes:
+      - application/json
+      description: Returns the divisor sum and Mobius inversion details for a number
+        N
+      parameters:
+      - description: Mobius Divisor Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.MobiusDivisorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.MobiusDivisorResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.MobiusErrorResponse'
+      summary: Calculate Mobius divisor sum and inversion
+      tags:
+      - Math
+  /api/mobius/mask:
+    post:
+      consumes:
+      - application/json
+      description: Applies the Mobius sequential index masking to the provided data
+      parameters:
+      - description: Mobius Mask Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.MobiusMaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              format: float64
+              type: number
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api.MobiusErrorResponse'
+      summary: Apply Mobius masking to a data sequence
+      tags:
+      - Math
+  /api/prime:
+    post:
+      consumes:
+      - application/json
+      description: Returns the prime status of a given number
+      parameters:
+      - description: Prime Check Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.IsItPrimeRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.IsItPrimeResponse'
+        "400":
+          description: Invalid request body or number
+          schema:
+            type: string
+      summary: Check if a number is prime, emirp, circular prime, or semiprime
+      tags:
+      - Math
+  /api/runer/calculate-lines:
+    post:
+      consumes:
+      - application/json
+      description: Returns the calculated rune lines for the given input string
+      parameters:
+      - description: Calculate Lines Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.CalculateLinesRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              type: string
+            type: array
+        "400":
+          description: Invalid request body
+          schema:
+            type: string
+      summary: Calculate rune lines from input
+      tags:
+      - 3301 Tools
+  /api/sequence:
+    post:
+      consumes:
+      - application/json
+      description: Returns a numeric sequence based on the type and max number provided
+      parameters:
+      - description: Sequence Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/api.SequenceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api.SequenceResponse'
+        "400":
+          description: Invalid request body or missing parameters
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get a numeric sequence
+      tags:
+      - Math
+swagger: "2.0"
