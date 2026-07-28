@@ -33,12 +33,12 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetSmallestPrimePowerA000015Sequence(maxNumber, positional)
 	case "shift_register_sequences_a000016":
 		sequence, err = GetOEISLookupSequence("A000016", "Shift register output sequences", maxNumber, positional)
-	case "walks_cubic_lattice_a000017":
-		sequence, err = GetOEISLookupSequence("A000017", "Walks on cubic lattice (erroneous)", maxNumber, positional)
-	case "walks_diamond_lattice_a000018":
-		sequence, err = GetOEISLookupSequence("A000018", "Walks on diamond lattice", maxNumber, positional)
+	case "point_symmetric_queens_a000017":
+		sequence, err = GetA000017Sequence(maxNumber, positional)
+	case "form_x2_16y2_a000018":
+		sequence, err = GetA000018Sequence(maxNumber, positional)
 	case "primitive_permutation_groups_a000019":
-		sequence, err = GetOEISLookupSequence("A000019", "Primitive permutation groups", maxNumber, positional)
+		sequence, err = GetPrimitivePermutationGroupsA000019Sequence(maxNumber, positional)
 	case "primitive_polynomials_a000020":
 		sequence, err = GetOEISLookupSequence("A000020", "Primitive polynomials", maxNumber, positional)
 	case "form_x2_12y2_a000021":

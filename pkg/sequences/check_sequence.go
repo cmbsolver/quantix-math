@@ -50,7 +50,9 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"sets_of_lists",
 		"unlabeled_trees",
 		"zero_characteristic_a000007", "collatz",
-		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern", "binary_quadratic_forms_a000003",
+		"point_symmetric_queens_a000017",
+		"primitive_permutation_groups_a000019",
+		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern", "binary_quadratic_forms_a000003", "form_x2_16y2_a000018",
 	}
 
 	var results []CheckResult
@@ -252,6 +254,12 @@ func getSequenceName(st string) string {
 		return "Integer part of square root of n-th prime (A000006)"
 	case "binary_quadratic_forms_a000003":
 		return "Binary quadratic forms (A000003)"
+	case "point_symmetric_queens_a000017":
+		return "Point symmetric queens (A000017)"
+	case "primitive_permutation_groups_a000019":
+		return "Primitive permutation groups (A000019)"
+	case "form_x2_16y2_a000018":
+		return "Numbers of form x^2 + 16y^2 (A000018)"
 	default:
 		return st
 	}
@@ -470,6 +478,25 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 				if val.Cmp(n) == 0 {
 					return true, fmt.Sprintf("%d", i), nil
 				}
+			}
+		}
+	case "point_symmetric_queens_a000017":
+		return IsPointSymmetricQueensA000017(n)
+	case "primitive_permutation_groups_a000019":
+		return IsPrimitivePermutationGroupA000019(n)
+	case "form_x2_16y2_a000018":
+		if n.Sign() <= 0 {
+			return false, "", nil
+		}
+		// m = x^2 + 16y^2
+		for y := int64(0); ; y++ {
+			y2_16 := 16 * y * y
+			if big.NewInt(y2_16).Cmp(n) > 0 {
+				break
+			}
+			rem := new(big.Int).Sub(n, big.NewInt(y2_16))
+			if isPerfectSquare(rem) {
+				return true, "", nil
 			}
 		}
 	}

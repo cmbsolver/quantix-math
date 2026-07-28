@@ -42,3 +42,4 @@ go.work.sum
 /test_output.txt
 /scripts/**
 /temp/**
+/implement_oeis_single.sh
