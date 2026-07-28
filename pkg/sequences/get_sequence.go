@@ -54,9 +54,9 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	case "positive_integers_a000027":
 		sequence, err = GetA000027Sequence(maxNumber, positional)
 	case "binary_weight_odd_a000028":
-		sequence, err = GetOEISLookupSequence("A000028", "Binary weight of exponents is odd", maxNumber, positional)
+		sequence, err = GetA000028Sequence(maxNumber, positional)
 	case "necklaces_turnover_a000029":
-		sequence, err = GetOEISLookupSequence("A000029", "Necklaces with turnover allowed (bracelets)", maxNumber, positional)
+		sequence, err = GetA000029Sequence(maxNumber, positional)
 	case "initial_digit_a000030":
 		sequence, err = GetInitialDigitA000030Sequence(maxNumber, positional)
 	case "necklaces_no_turnover_a000031":

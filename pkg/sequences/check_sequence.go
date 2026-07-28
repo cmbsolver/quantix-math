@@ -57,6 +57,7 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"mock_theta_f_q_a000025",
 		"mosaic_numbers_a000026",
 		"positive_integers_a000027",
+		"binary_weight_odd_a000028", "necklaces_turnover_a000029",
 		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern", "binary_quadratic_forms_a000003", "form_x2_16y2_a000018", "centered_hydrocarbons_a000022", "form_x2_12y2_a000021", "exp_minus_2x_a000023",
 	}
 
@@ -279,6 +280,10 @@ func getSequenceName(st string) string {
 		return "Mosaic numbers (A000026)"
 	case "positive_integers_a000027":
 		return "Positive integers (A000027)"
+	case "necklaces_turnover_a000029":
+		return "Bracelets with n beads of 2 colors (A000029)"
+	case "binary_weight_odd_a000028":
+		return "Binary weight of exponents is odd (A000028)"
 	case "exp_minus_2x_a000023":
 		return "Expansion of e.g.f. exp(-2x)/(1-x) (A000023)"
 	default:
@@ -507,6 +512,19 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		return IsPointSymmetricQueensA000017(n)
 	case "primitive_permutation_groups_a000019":
 		return IsPrimitivePermutationGroupA000019(n)
+	case "necklaces_turnover_a000029":
+		// A000029 sequence can grow fast, but let's check first few terms or use a reasonable limit
+		seq, err := GetA000029Sequence(big.NewInt(100), false)
+		if err == nil {
+			for i, term := range seq.Sequence {
+				if term.Cmp(n) == 0 {
+					return true, fmt.Sprintf("%d", i), nil
+				}
+				if term.Cmp(n) > 0 {
+					break
+				}
+			}
+		}
 	case "exp_minus_2x_a000023":
 		return IsA000023(n)
 	case "mock_theta_f_q_a000025":
@@ -532,6 +550,10 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 	case "positive_integers_a000027":
 		if n.Sign() > 0 {
 			return true, n.String(), nil
+		}
+	case "binary_weight_odd_a000028":
+		if isA000028(n.Int64()) {
+			return true, "", nil
 		}
 	case "form_x2_10y2_a000024":
 		if n.Sign() <= 0 {
