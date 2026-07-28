@@ -52,7 +52,12 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"zero_characteristic_a000007", "collatz",
 		"point_symmetric_queens_a000017",
 		"primitive_permutation_groups_a000019",
-		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern", "binary_quadratic_forms_a000003", "form_x2_16y2_a000018",
+		"primitive_polynomials_a000020",
+		"form_x2_10y2_a000024",
+		"mock_theta_f_q_a000025",
+		"mosaic_numbers_a000026",
+		"positive_integers_a000027",
+		"euler", "perfect", "modular_j", "square_pyramidal", "pentagonal", "radon_hurwitz", "lcm_1_to_n", "loeschian", "composites", "stern", "binary_quadratic_forms_a000003", "form_x2_16y2_a000018", "centered_hydrocarbons_a000022", "form_x2_12y2_a000021", "exp_minus_2x_a000023",
 	}
 
 	var results []CheckResult
@@ -258,8 +263,24 @@ func getSequenceName(st string) string {
 		return "Point symmetric queens (A000017)"
 	case "primitive_permutation_groups_a000019":
 		return "Primitive permutation groups (A000019)"
+	case "primitive_polynomials_a000020":
+		return "Primitive polynomials of degree n over GF(2) (A000020)"
 	case "form_x2_16y2_a000018":
 		return "Numbers of form x^2 + 16y^2 (A000018)"
+	case "form_x2_12y2_a000021":
+		return "Numbers of form x^2 + 12y^2 (A000021)"
+	case "centered_hydrocarbons_a000022":
+		return "Centered hydrocarbons (A000022)"
+	case "form_x2_10y2_a000024":
+		return "Numbers of form x^2 + 10y^2 (A000024)"
+	case "mock_theta_f_q_a000025":
+		return "Mock theta function f(q) (A000025)"
+	case "mosaic_numbers_a000026":
+		return "Mosaic numbers (A000026)"
+	case "positive_integers_a000027":
+		return "Positive integers (A000027)"
+	case "exp_minus_2x_a000023":
+		return "Expansion of e.g.f. exp(-2x)/(1-x) (A000023)"
 	default:
 		return st
 	}
@@ -458,6 +479,8 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		"sqrt_prime_a000006",
 		"factorial", "kendall_mann", "bicolorable_necklaces", "binary_partitions", "partitions",
 		"fibonacci_prime", "zekendorf", "groups_order_n_a000001", "ramanujan_tau",
+		"primitive_polynomials_a000020",
+		"centered_hydrocarbons_a000022",
 		"sum_divisors", "divisor_count", "divisor_count_a000005", "sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"theta_series_d4_lattice",
 		"ways_two_squares",
@@ -484,6 +507,47 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		return IsPointSymmetricQueensA000017(n)
 	case "primitive_permutation_groups_a000019":
 		return IsPrimitivePermutationGroupA000019(n)
+	case "exp_minus_2x_a000023":
+		return IsA000023(n)
+	case "mock_theta_f_q_a000025":
+		// Fallback: generate sequence and check
+		seq, err := GetA000025Sequence(n, false)
+		if err == nil && seq != nil {
+			for i, val := range seq.Sequence {
+				if val.Cmp(n) == 0 {
+					return true, fmt.Sprintf("%d", i), nil
+				}
+			}
+		}
+	case "mosaic_numbers_a000026":
+		// Fallback: generate sequence and check
+		seq, err := GetA000026Sequence(n, false)
+		if err == nil && seq != nil {
+			for i, val := range seq.Sequence {
+				if val.Cmp(n) == 0 {
+					return true, fmt.Sprintf("%d", i+1), nil
+				}
+			}
+		}
+	case "positive_integers_a000027":
+		if n.Sign() > 0 {
+			return true, n.String(), nil
+		}
+	case "form_x2_10y2_a000024":
+		if n.Sign() <= 0 {
+			return false, "", nil
+		}
+		// m = x^2 + 10y^2
+		for y := int64(0); ; y++ {
+			y2_10 := 10 * y * y
+			if big.NewInt(y2_10).Cmp(n) > 0 {
+				break
+			}
+			rem := new(big.Int).Sub(n, big.NewInt(y2_10))
+			if isPerfectSquare(rem) {
+				return true, "", nil
+			}
+		}
 	case "form_x2_16y2_a000018":
 		if n.Sign() <= 0 {
 			return false, "", nil
@@ -495,6 +559,21 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 				break
 			}
 			rem := new(big.Int).Sub(n, big.NewInt(y2_16))
+			if isPerfectSquare(rem) {
+				return true, "", nil
+			}
+		}
+	case "form_x2_12y2_a000021":
+		if n.Sign() <= 0 {
+			return false, "", nil
+		}
+		// m = x^2 + 12y^2
+		for y := int64(0); ; y++ {
+			y2_12 := 12 * y * y
+			if big.NewInt(y2_12).Cmp(n) > 0 {
+				break
+			}
+			rem := new(big.Int).Sub(n, big.NewInt(y2_12))
 			if isPerfectSquare(rem) {
 				return true, "", nil
 			}

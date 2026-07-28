@@ -39,20 +39,20 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetA000018Sequence(maxNumber, positional)
 	case "primitive_permutation_groups_a000019":
 		sequence, err = GetPrimitivePermutationGroupsA000019Sequence(maxNumber, positional)
-	case "primitive_polynomials_a000020":
-		sequence, err = GetOEISLookupSequence("A000020", "Primitive polynomials", maxNumber, positional)
 	case "form_x2_12y2_a000021":
-		sequence, err = GetOEISLookupSequence("A000021", "Numbers of form x^2 + 12y^2", maxNumber, positional)
+		sequence, err = GetA000021Sequence(maxNumber, positional)
 	case "centered_hydrocarbons_a000022":
-		sequence, err = GetOEISLookupSequence("A000022", "Centered hydrocarbons", maxNumber, positional)
+		sequence, err = GetA000022Sequence(maxNumber, positional)
 	case "exp_minus_2x_a000023":
-		sequence, err = GetOEISLookupSequence("A000023", "Expansion of e.g.f. exp(-2x)/(1-x)", maxNumber, positional)
+		sequence, err = GetA000023Sequence(maxNumber, positional)
 	case "form_x2_10y2_a000024":
-		sequence, err = GetOEISLookupSequence("A000024", "Numbers of form x^2 + 10y^2", maxNumber, positional)
+		sequence, err = GetA000024Sequence(maxNumber, positional)
 	case "mock_theta_f_q_a000025":
-		sequence, err = GetOEISLookupSequence("A000025", "Mock theta function f(q)", maxNumber, positional)
+		sequence, err = GetA000025Sequence(maxNumber, positional)
 	case "mosaic_numbers_a000026":
-		sequence, err = GetOEISLookupSequence("A000026", "Mosaic numbers", maxNumber, positional)
+		sequence, err = GetA000026Sequence(maxNumber, positional)
+	case "positive_integers_a000027":
+		sequence, err = GetA000027Sequence(maxNumber, positional)
 	case "binary_weight_odd_a000028":
 		sequence, err = GetOEISLookupSequence("A000028", "Binary weight of exponents is odd", maxNumber, positional)
 	case "necklaces_turnover_a000029":
@@ -226,6 +226,8 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetOEISLookupSequence("A000095", "Fixed points of Gamma_0(n)", maxNumber, positional)
 	case "n_n_plus_3_2_a000096":
 		sequence, err = GetA000096Sequence(maxNumber, positional)
+	case "primitive_polynomials_a000020":
+		sequence, err = GetOEISLookupSequence("A000020", "Primitive polynomials", maxNumber, positional)
 	case "partitions_2kinds_1_2_a000097":
 		sequence, err = GetOEISLookupSequence("A000097", "Partitions (2 kinds of 1, 2)", maxNumber, positional)
 	case "partitions_2kinds_1_2_3_a000098":
