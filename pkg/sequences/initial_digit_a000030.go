@@ -5,11 +5,12 @@ import (
 	"math/big"
 )
 
-// Initial digit of n.
+// Initial digit of n (OEIS A000030)
 // URL: https://oeis.org/A000030
-// Description: a(n) is the first digit of n.
+// Initial digit of n: a(n) is the first digit of n.
+// a(0) = 0.
 
-// GetInitialDigitA000030Sequence returns the A000030 sequence.
+// GetInitialDigitA000030Sequence returns the A000030 sequence (initial digit of n).
 func GetInitialDigitA000030Sequence(maxNumber *big.Int, isPositional bool) (*NumericSequence, error) {
 	if isPositional {
 		return GetInitialDigitA000030AtPosition(maxNumber)
@@ -18,36 +19,30 @@ func GetInitialDigitA000030Sequence(maxNumber *big.Int, isPositional bool) (*Num
 }
 
 // GenerateInitialDigitA000030Sequence generates the A000030 sequence up to maxNumber.
+// It returns a(0), a(1), ..., a(maxNumber).
 func GenerateInitialDigitA000030Sequence(maxNumber *big.Int) (*NumericSequence, error) {
 	if maxNumber.Sign() < 0 {
-		return &NumericSequence{
-			Name:     "Initial digit (A000030)",
-			Number:   maxNumber,
-			Sequence: []*big.Int{},
-		}, nil
+		return nil, fmt.Errorf("max number cannot be negative")
 	}
 
-	limit := maxNumber.Int64()
-	if maxNumber.IsInt64() && limit >= 0 {
-		var sequence []*big.Int
-		for n := int64(0); n < limit; n++ {
-			sequence = append(sequence, big.NewInt(int64(getInitialDigit(n))))
-		}
-		var result *big.Int
-		if len(sequence) > 0 {
-			result = sequence[len(sequence)-1]
-		} else {
-			result = big.NewInt(0)
-		}
-		return &NumericSequence{
-			Name:     "Initial digit (A000030)",
-			Number:   maxNumber,
-			Sequence: sequence,
-			Result:   result,
-		}, nil
+	n := int(maxNumber.Int64())
+	sequence := make([]*big.Int, n+1)
+
+	for i := 0; i <= n; i++ {
+		sequence[i] = big.NewInt(int64(getInitialDigit(int64(i))))
 	}
 
-	return nil, fmt.Errorf("maxNumber too large for current implementation")
+	result := big.NewInt(0)
+	if n < len(sequence) {
+		result = sequence[n]
+	}
+
+	return &NumericSequence{
+		Name:     "Initial digit (A000030)",
+		Number:   maxNumber,
+		Sequence: sequence,
+		Result:   result,
+	}, nil
 }
 
 // GetInitialDigitA000030AtPosition returns the n-th term of A000030.

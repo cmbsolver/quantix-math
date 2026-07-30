@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"quantix-math/pkg/sequences"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -23,7 +25,8 @@ func SetupUIRoutes(app *fiber.App) {
 	// About Page
 	app.Get("/sequence", func(c *fiber.Ctx) error {
 		return c.Render("sequence", fiber.Map{
-			"Title": "Numeric Sequences",
+			"Title":           "Numeric Sequences",
+			"SequenceOptions": sequences.GetSequenceDropdownOptions(),
 		})
 	})
 

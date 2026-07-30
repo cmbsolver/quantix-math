@@ -3,7 +3,274 @@ package sequences
 import (
 	"fmt"
 	"math/big"
+	"regexp"
+	"strings"
+	"unicode"
 )
+
+type SequenceOption struct {
+	Value string
+	Label string
+}
+
+var sequenceDropdownOptions = []SequenceOption{
+	{Value: "groups_order_n_a000001", Label: "groups_order_n_a000001"},
+	{Value: "zero_a000004", Label: "zero_a000004"},
+	{Value: "necklaces_color_swap_turnover_a000011", Label: "necklaces_color_swap_turnover_a000011"},
+	{Value: "all_ones_a000012", Label: "all_ones_a000012"},
+	{Value: "necklaces_color_swap_a000013", Label: "necklaces_color_swap_a000013"},
+	{Value: "series_reduced_trees_a000014", Label: "series_reduced_trees_a000014"},
+	{Value: "smallest_prime_power_a000015", Label: "smallest_prime_power_a000015"},
+	{Value: "shift_register_sequences_a000016", Label: "shift_register_sequences_a000016"},
+	{Value: "point_symmetric_queens_a000017", Label: "point_symmetric_queens_a000017"},
+	{Value: "form_x2_16y2_a000018", Label: "form_x2_16y2_a000018"},
+	{Value: "primitive_permutation_groups_a000019", Label: "primitive_permutation_groups_a000019"},
+	{Value: "form_x2_12y2_a000021", Label: "form_x2_12y2_a000021"},
+	{Value: "centered_hydrocarbons_a000022", Label: "centered_hydrocarbons_a000022"},
+	{Value: "exp_minus_2x_a000023", Label: "exp_minus_2x_a000023"},
+	{Value: "form_x2_10y2_a000024", Label: "form_x2_10y2_a000024"},
+	{Value: "mock_theta_f_q_a000025", Label: "mock_theta_f_q_a000025"},
+	{Value: "mosaic_numbers_a000026", Label: "mosaic_numbers_a000026"},
+	{Value: "positive_integers_a000027", Label: "positive_integers_a000027"},
+	{Value: "binary_weight_odd_a000028", Label: "binary_weight_odd_a000028"},
+	{Value: "necklaces_turnover_a000029", Label: "necklaces_turnover_a000029"},
+	{Value: "initial_digit_a000030", Label: "initial_digit_a000030"},
+	{Value: "necklaces_no_turnover_a000031", Label: "necklaces_no_turnover_a000031 (OEIS A000031)"},
+	{Value: "lucas_numbers_a000032", Label: "lucas_numbers_a000032 (OEIS A000032)"},
+	{Value: "menage_hit_polynomials_a000033", Label: "menage_hit_polynomials_a000033 (OEIS A000033)"},
+	{Value: "period_12_a000034", Label: "period_12_a000034 (OEIS A000034)"},
+	{Value: "parity_a000035", Label: "parity_a000035 (OEIS A000035)"},
+	{Value: "record_values_p_n_a000036", Label: "record_values_p_n_a000036 (OEIS A000036)"},
+	{Value: "nonsquares_a000037", Label: "nonsquares_a000037 (OEIS A000037)"},
+	{Value: "twice_characteristic_0_a000038", Label: "twice_characteristic_0_a000038 (OEIS A000038)"},
+	{Value: "mock_theta_f_q_coeff_a000039", Label: "mock_theta_f_q_coeff_a000039 (OEIS A000039)"},
+	{Value: "unary_a000042", Label: "unary_a000042"},
+	{Value: "mersenne_exponents_a000043", Label: "mersenne_exponents_a000043"},
+	{Value: "dying_rabbits_a000044", Label: "dying_rabbits_a000044"},
+	{Value: "primitive_necklaces_complement_a000046", Label: "primitive_necklaces_complement_a000046"},
+	{Value: "form_x2_minus_2y2_a000047", Label: "form_x2_minus_2y2_a000047"},
+	{Value: "primitive_necklaces_color_swap_a000048", Label: "primitive_necklaces_color_swap_a000048"},
+	{Value: "form_3x2_4y2_a000049", Label: "form_3x2_4y2_a000049"},
+	{Value: "form_x2_y2_a000050", Label: "form_x2_y2_a000050"},
+	{Value: "2n_plus_1_a000051", Label: "2n_plus_1_a000051"},
+	{Value: "alphabetical_123_a000052", Label: "alphabetical_123_a000052"},
+	{Value: "nyc_subway_1_a000053", Label: "nyc_subway_1_a000053"},
+	{Value: "nyc_subway_a_a000054", Label: "nyc_subway_a_a000054"},
+	{Value: "unlabeled_trees_a000055", Label: "unlabeled_trees_a000055"},
+	{Value: "sl2_zn_order_a000056", Label: "sl2_zn_order_a000056"},
+	{Value: "fibonacci_dividing_primes_a000057", Label: "fibonacci_dividing_primes_a000057"},
+	{Value: "sylvester_a000058", Label: "sylvester_a000058"},
+	{Value: "form_2k4_plus_1_primes_a000059", Label: "form_2k4_plus_1_primes_a000059"},
+	{Value: "signed_trees_a000060", Label: "signed_trees_a000060"},
+	{Value: "generalized_tangent_a000061", Label: "generalized_tangent_a000061"},
+	{Value: "beatty_e_minus_2_a000062", Label: "beatty_e_minus_2_a000062"},
+	{Value: "symmetrical_dissections_a000063", Label: "symmetrical_dissections_a000063"},
+	{Value: "change_1_2_5_10_a000064", Label: "change_1_2_5_10_a000064"},
+	{Value: "partitions_minus_1_a000065", Label: "partitions_minus_1_a000065"},
+	{Value: "trivalent_graph_girth_a000066", Label: "trivalent_graph_girth_a000066"},
+	{Value: "form_x2_2y2_a000067", Label: "form_x2_2y2_a000067"},
+	{Value: "form_k4_plus_1_primes_a000068", Label: "form_k4_plus_1_primes_a000068"},
+	{Value: "odious_a000069", Label: "odious_a000069"},
+	{Value: "sum_partitions_a000070", Label: "sum_partitions_a000070"},
+	{Value: "fibonacci_minus_1_a000071", Label: "fibonacci_minus_1_a000071"},
+	{Value: "form_x2_4y2_a000072", Label: "form_x2_4y2_a000072"},
+	{Value: "tribonacci_a000073", Label: "tribonacci_a000073"},
+	{Value: "odd_form_x2_y2_a000074", Label: "odd_form_x2_y2_a000074"},
+	{Value: "form_2x2_3y2_a000075", Label: "form_2x2_3y2_a000075"},
+	{Value: "form_4x2_4xy_5y2_a000076", Label: "form_4x2_4xy_5y2_a000076"},
+	{Value: "form_x2_6y2_a000077", Label: "form_x2_6y2_a000077"},
+	{Value: "tetranacci_a000078", Label: "tetranacci_a000078"},
+	{Value: "powers_of_2_a000079", Label: "powers_of_2_a000079"},
+	{Value: "minimal_triangle_graphs_a000080", Label: "minimal_triangle_graphs_a000080"},
+	{Value: "rooted_unlabeled_trees_a000081", Label: "rooted_unlabeled_trees_a000081"},
+	{Value: "n2_phi_phi_a000082", Label: "n2_phi_phi_a000082"},
+	{Value: "mixed_husimi_trees_a000083", Label: "mixed_husimi_trees_a000083"},
+	{Value: "series_parallel_networks_a000084", Label: "series_parallel_networks_a000084"},
+	{Value: "involutions_a000085", Label: "involutions_a000085"},
+	{Value: "solutions_x2_x_1_mod_n_a000086", Label: "solutions_x2_x_1_mod_n_a000086"},
+	{Value: "unrooted_maps_a000087", Label: "unrooted_maps_a000087"},
+	{Value: "simple_unlabeled_graphs_a000088", Label: "simple_unlabeled_graphs_a000088"},
+	{Value: "solutions_x2_1_mod_n_a000089", Label: "solutions_x2_1_mod_n_a000089"},
+	{Value: "exp_minus_x3_3_a000090", Label: "exp_minus_x3_3_a000090"},
+	{Value: "multiplicative_a000091", Label: "multiplicative_a000091"},
+	{Value: "record_values_p_n_3d_a000092", Label: "record_values_p_n_3d_a000092"},
+	{Value: "floor_n_1_5_a000093", Label: "floor_n_1_5_a000093"},
+	{Value: "trees_diameter_4_a000094", Label: "trees_diameter_4_a000094"},
+	{Value: "fixed_points_gamma0_n_a000095", Label: "fixed_points_gamma0_n_a000095"},
+	{Value: "n_n_plus_3_2_a000096", Label: "n_n_plus_3_2_a000096"},
+	{Value: "primitive_polynomials_a000020", Label: "primitive_polynomials_a000020"},
+	{Value: "partitions_2kinds_1_2_a000097", Label: "partitions_2kinds_1_2_a000097"},
+	{Value: "partitions_2kinds_1_2_3_a000098", Label: "partitions_2kinds_1_2_3_a000098"},
+	{Value: "record_values_p_n_2d_a000099", Label: "record_values_p_n_2d_a000099"},
+	{Value: "sqrt_prime_a000006", Label: "sqrt_prime_a000006"},
+	{Value: "binary_quadratic_forms_a000003", Label: "binary_quadratic_forms_a000003"},
+	{Value: "hamming_weight", Label: "hamming_weight"},
+	{Value: "central_polygonal", Label: "central_polygonal"},
+	{Value: "squares", Label: "squares"},
+	{Value: "cubes", Label: "cubes"},
+	{Value: "natural", Label: "natural"},
+	{Value: "parity", Label: "parity"},
+	{Value: "prime", Label: "prime"},
+	{Value: "primes_a000040", Label: "primes_a000040"},
+	{Value: "emirp", Label: "emirp"},
+	{Value: "semiprime", Label: "semiprime"},
+	{Value: "circular_prime", Label: "circular_prime"},
+	{Value: "fibonacci_prime", Label: "fibonacci_prime"},
+	{Value: "cake", Label: "cake"},
+	{Value: "bell", Label: "bell"},
+	{Value: "catalan", Label: "catalan"},
+	{Value: "totient", Label: "totient"},
+	{Value: "totient_prime", Label: "totient_prime"},
+	{Value: "fibonacci", Label: "fibonacci"},
+	{Value: "pell", Label: "pell"},
+	{Value: "zekendorf", Label: "zekendorf"},
+	{Value: "lucas", Label: "lucas"},
+	{Value: "nn", Label: "nn"},
+	{Value: "schroeder_fourth", Label: "schroeder_fourth"},
+	{Value: "partitions_distinct", Label: "partitions_distinct"},
+	{Value: "partitions", Label: "partitions"},
+	{Value: "partitions_into_2_squares", Label: "partitions_into_2_squares"},
+	{Value: "plane_partitions", Label: "plane_partitions"},
+	{Value: "tangent", Label: "tangent"},
+	{Value: "kendall_mann", Label: "kendall_mann"},
+	{Value: "pentagonal", Label: "pentagonal"},
+	{Value: "square_pyramidal", Label: "square_pyramidal"},
+	{Value: "euler", Label: "euler"},
+	{Value: "euler_zigzag", Label: "euler_zigzag"},
+	{Value: "perfect", Label: "perfect"},
+	{Value: "groups_order_n", Label: "groups_order_n"},
+	{Value: "modular_j", Label: "modular_j"},
+	{Value: "ramanujan_tau", Label: "ramanujan_tau"},
+	{Value: "fourth_powers", Label: "fourth_powers"},
+	{Value: "tetrahedral", Label: "tetrahedral"},
+	{Value: "triangular", Label: "triangular"},
+	{Value: "sum_divisors", Label: "sum_divisors"},
+	{Value: "sum_odd_divisors", Label: "sum_odd_divisors"},
+	{Value: "alkanes", Label: "alkanes"},
+	{Value: "abelian_groups_order_n", Label: "abelian_groups_order_n"},
+	{Value: "threshold_functions", Label: "threshold_functions"},
+	{Value: "fubini", Label: "fubini"},
+	{Value: "kolakoski", Label: "kolakoski"},
+	{Value: "zero", Label: "zero"},
+	{Value: "zero_characteristic_a000007", Label: "zero_characteristic_a000007"},
+	{Value: "divisor_count_a000005", Label: "divisor_count_a000005"},
+	{Value: "divisor_count", Label: "divisor_count"},
+	{Value: "change_1_2_5_10_a000008", Label: "change_1_2_5_10_a000008"},
+	{Value: "collatz", Label: "collatz"},
+	{Value: "powers_of_2", Label: "powers_of_2"},
+	{Value: "powers_of_4", Label: "powers_of_4"},
+	{Value: "powers_of_3", Label: "powers_of_3"},
+	{Value: "odious_numbers", Label: "odious_numbers"},
+	{Value: "subfactorial", Label: "subfactorial"},
+	{Value: "binary_partitions", Label: "binary_partitions"},
+	{Value: "binary_rooted_trees", Label: "binary_rooted_trees"},
+	{Value: "sqrt3_convergents", Label: "sqrt3_convergents"},
+	{Value: "sqrt3_convergents_denominators", Label: "sqrt3_convergents_denominators"},
+	{Value: "factorial", Label: "factorial"},
+	{Value: "planted_3_trees", Label: "planted_3_trees"},
+	{Value: "rooted_unlabeled_trees", Label: "rooted_unlabeled_trees"},
+	{Value: "unlabeled_trees", Label: "unlabeled_trees"},
+	{Value: "unlabeled_digraphs", Label: "unlabeled_digraphs"},
+	{Value: "unlabeled_graphs", Label: "unlabeled_graphs"},
+	{Value: "connected_planar_graphs", Label: "connected_planar_graphs"},
+	{Value: "unlabeled_posets", Label: "unlabeled_posets"},
+	{Value: "bicolorable_necklaces", Label: "bicolorable_necklaces"},
+	{Value: "simplicial_polyhedra", Label: "simplicial_polyhedra"},
+	{Value: "labeled_rooted_trees", Label: "labeled_rooted_trees"},
+	{Value: "labeled_trees", Label: "labeled_trees"},
+	{Value: "sets_of_lists", Label: "sets_of_lists"},
+	{Value: "free_polyominoes", Label: "free_polyominoes"},
+	{Value: "self_inverse_permutations", Label: "self_inverse_permutations"},
+	{Value: "sylvester", Label: "sylvester"},
+	{Value: "theta_series_square_lattice", Label: "theta_series_square_lattice"},
+	{Value: "theta_series_d4_lattice", Label: "theta_series_d4_lattice"},
+	{Value: "mersenne_numbers", Label: "mersenne_numbers"},
+	{Value: "mersenne_prime_exponents", Label: "mersenne_prime_exponents"},
+	{Value: "radon_hurwitz", Label: "radon_hurwitz"},
+	{Value: "lcm_1_to_n", Label: "lcm_1_to_n"},
+	{Value: "loeschian", Label: "loeschian"},
+	{Value: "composites", Label: "composites"},
+	{Value: "quarter_squares", Label: "quarter_squares"},
+	{Value: "ways_two_squares", Label: "ways_two_squares"},
+	{Value: "stern", Label: "stern"},
+}
+
+func init() {
+	for i := range sequenceDropdownOptions {
+		if sequenceDropdownOptions[i].Label == "" || sequenceDropdownOptions[i].Label == sequenceDropdownOptions[i].Value {
+			sequenceDropdownOptions[i].Label = humanizeSequenceLabel(sequenceDropdownOptions[i].Value)
+		}
+	}
+}
+
+func GetSequenceDropdownOptions() []SequenceOption {
+	options := make([]SequenceOption, len(sequenceDropdownOptions))
+	copy(options, sequenceDropdownOptions)
+	for i := range options {
+		if options[i].Label == "" || options[i].Label == options[i].Value {
+			options[i].Label = humanizeSequenceLabel(options[i].Value)
+		}
+	}
+	return options
+}
+
+var oeisSuffixPattern = regexp.MustCompile(`_a(\d{6})$`)
+var variablePowerPattern = regexp.MustCompile(`^([a-z])(\d+)$`)
+var coefficientPowerPattern = regexp.MustCompile(`^(\d+)([a-z]+)(\d+)$`)
+var dimensionPattern = regexp.MustCompile(`^(\d+)d$`)
+
+var tokenOverrides = map[string]string{
+	"nn":  "n^n",
+	"nyc": "NYC",
+	"sl2": "SL2",
+	"zn":  "Zn",
+}
+
+func humanizeSequenceToken(token string) string {
+	lowerToken := strings.ToLower(token)
+	if override, ok := tokenOverrides[lowerToken]; ok {
+		return override
+	}
+
+	if matches := coefficientPowerPattern.FindStringSubmatch(lowerToken); len(matches) == 4 {
+		return matches[1] + matches[2] + "^" + matches[3]
+	}
+
+	if matches := variablePowerPattern.FindStringSubmatch(lowerToken); len(matches) == 3 {
+		return matches[1] + "^" + matches[2]
+	}
+
+	if matches := dimensionPattern.FindStringSubmatch(lowerToken); len(matches) == 2 {
+		return matches[1] + "D"
+	}
+
+	runes := []rune(token)
+	if len(runes) == 0 {
+		return token
+	}
+	runes[0] = unicode.ToUpper(runes[0])
+	return string(runes)
+}
+
+func humanizeSequenceLabel(value string) string {
+	base := value
+	oeisLabel := ""
+
+	if matches := oeisSuffixPattern.FindStringSubmatch(value); len(matches) == 2 {
+		base = strings.TrimSuffix(value, matches[0])
+		oeisLabel = " (A" + matches[1] + ")"
+	}
+
+	words := strings.Split(strings.ReplaceAll(base, "_", " "), " ")
+	for i := range words {
+		if words[i] == "" {
+			continue
+		}
+		words[i] = humanizeSequenceToken(words[i])
+	}
+
+	return strings.Join(words, " ") + oeisLabel
+}
 
 func GetSequence(maxNumberString, sequenceType string, positional bool) (*NumericSequence, error) {
 	maxNumber := new(big.Int)
@@ -60,21 +327,23 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	case "initial_digit_a000030":
 		sequence, err = GetInitialDigitA000030Sequence(maxNumber, positional)
 	case "necklaces_no_turnover_a000031":
-		sequence, err = GetOEISLookupSequence("A000031", "Necklaces with no turnover allowed", maxNumber, positional)
+		sequence, err = GetA000031Sequence(maxNumber, positional)
+	case "lucas_numbers_a000032":
+		sequence, err = GetA000032Sequence(maxNumber, positional)
 	case "menage_hit_polynomials_a000033":
-		sequence, err = GetOEISLookupSequence("A000033", "Ménage hit polynomials", maxNumber, positional)
+		sequence, err = GetA000033Sequence(maxNumber, positional)
 	case "period_12_a000034":
 		sequence, err = GetPeriod12A000034Sequence(maxNumber, positional)
 	case "parity_a000035":
 		sequence, err = GetParityA000035Sequence(maxNumber, positional)
 	case "record_values_p_n_a000036":
-		sequence, err = GetOEISLookupSequence("A000036", "Record values of |P(n)|", maxNumber, positional)
+		sequence, err = GetA000036Sequence(maxNumber, positional)
 	case "nonsquares_a000037":
-		sequence, err = GetOEISLookupSequence("A000037", "Nonsquares", maxNumber, positional)
+		sequence, err = GetA000037Sequence(maxNumber, positional)
 	case "twice_characteristic_0_a000038":
-		sequence, err = GetOEISLookupSequence("A000038", "Twice characteristic function of {0}", maxNumber, positional)
+		sequence, err = GetA000038Sequence(maxNumber, positional)
 	case "mock_theta_f_q_coeff_a000039":
-		sequence, err = GetOEISLookupSequence("A000039", "Coefficients of mock theta function f(q)", maxNumber, positional)
+		sequence, err = GetA000039Sequence(maxNumber, positional)
 	case "unary_a000042":
 		sequence, err = GetUnaryA000042Sequence(maxNumber, positional)
 	case "mersenne_exponents_a000043":
