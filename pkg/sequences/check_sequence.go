@@ -51,9 +51,11 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"nonsquares_a000037",
 		"twice_characteristic_0_a000038",
 		"mock_theta_f_q_coeff_a000039",
+		"partitions_a000041",
 		"unary_a000042",
 		"mersenne_exponents_a000043",
 		"dying_rabbits_a000044",
+		"fibonacci_numbers_a000045",
 		"primitive_necklaces_complement_a000046",
 		"form_x2_minus_2y2_a000047",
 		"primitive_necklaces_color_swap_a000048",
@@ -136,6 +138,7 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"schroeder_fourth",
 		"partitions_distinct",
 		"partitions",
+		"partitions_a000041",
 		"partitions_into_2_squares",
 		"plane_partitions",
 		"tangent",
@@ -263,6 +266,8 @@ func getSequenceName(st string) string {
 		return "Mersenne numbers (A000225)"
 	case "mersenne_prime_exponents":
 		return "Mersenne prime exponents (A000043)"
+	case "mersenne_exponents_a000043":
+		return "Mersenne prime exponents (A000043)"
 	case "sylvester":
 		return "Sylvester's sequence (A000058)"
 	case "labeled_trees":
@@ -279,6 +284,8 @@ func getSequenceName(st string) string {
 		return "n mod 2; parity of n (A000035)"
 	case "partitions_distinct":
 		return "Partitions into distinct parts (A000009)"
+	case "partitions_a000041":
+		return "Partitions of n (A000041)"
 	case "partitions":
 		return "Partitions of n (A000041)"
 	case "squares":

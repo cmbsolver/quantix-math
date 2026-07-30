@@ -6,6 +6,37 @@ import (
 	"testing"
 )
 
+func TestMersennePrimeExponentsOEISExample(t *testing.T) {
+	seq, err := GenerateMersennePrimeExponentsSequence(big.NewInt(31))
+	if err != nil {
+		t.Fatalf("GenerateMersennePrimeExponentsSequence() error = %v", err)
+	}
+
+	wantExponents := []*big.Int{
+		big.NewInt(2),
+		big.NewInt(3),
+		big.NewInt(5),
+		big.NewInt(7),
+		big.NewInt(13),
+		big.NewInt(17),
+		big.NewInt(19),
+		big.NewInt(31),
+	}
+
+	if !reflect.DeepEqual(seq.Sequence, wantExponents) {
+		t.Fatalf("exponents = %v, want %v", seq.Sequence, wantExponents)
+	}
+
+	wantMersennePrimes := []string{"3", "7", "31", "127", "8191", "131071", "524287", "2147483647"}
+	for i, p := range seq.Sequence {
+		m := new(big.Int).Exp(big.NewInt(2), p, nil)
+		m.Sub(m, big.NewInt(1))
+		if m.String() != wantMersennePrimes[i] {
+			t.Fatalf("2^%v - 1 = %v, want %v", p, m, wantMersennePrimes[i])
+		}
+	}
+}
+
 func TestGenerateMersennePrimeExponentsSequence(t *testing.T) {
 	tests := []struct {
 		maxNumber *big.Int

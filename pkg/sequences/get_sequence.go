@@ -44,15 +44,17 @@ var sequenceDropdownOptions = []SequenceOption{
 	{Value: "nonsquares_a000037", Label: "nonsquares_a000037 (OEIS A000037)"},
 	{Value: "twice_characteristic_0_a000038", Label: "twice_characteristic_0_a000038 (OEIS A000038)"},
 	{Value: "mock_theta_f_q_coeff_a000039", Label: "mock_theta_f_q_coeff_a000039 (OEIS A000039)"},
-	{Value: "unary_a000042", Label: "unary_a000042"},
-	{Value: "mersenne_exponents_a000043", Label: "mersenne_exponents_a000043"},
-	{Value: "dying_rabbits_a000044", Label: "dying_rabbits_a000044"},
-	{Value: "primitive_necklaces_complement_a000046", Label: "primitive_necklaces_complement_a000046"},
-	{Value: "form_x2_minus_2y2_a000047", Label: "form_x2_minus_2y2_a000047"},
-	{Value: "primitive_necklaces_color_swap_a000048", Label: "primitive_necklaces_color_swap_a000048"},
-	{Value: "form_3x2_4y2_a000049", Label: "form_3x2_4y2_a000049"},
-	{Value: "form_x2_y2_a000050", Label: "form_x2_y2_a000050"},
-	{Value: "2n_plus_1_a000051", Label: "2n_plus_1_a000051"},
+	{Value: "partitions_a000041", Label: "partitions_a000041 (OEIS A000041)"},
+	{Value: "unary_a000042", Label: "unary_a000042 (OEIS A000042)"},
+	{Value: "mersenne_exponents_a000043", Label: "mersenne_exponents_a000043 (OEIS A000043)"},
+	{Value: "dying_rabbits_a000044", Label: "dying_rabbits_a000044 (OEIS A000044)"},
+	{Value: "fibonacci_numbers_a000045", Label: "fibonacci_numbers_a000045 (OEIS A000045)"},
+	{Value: "primitive_necklaces_complement_a000046", Label: "primitive_necklaces_complement_a000046 (OEIS A000046)"},
+	{Value: "form_x2_minus_2y2_a000047", Label: "form_x2_minus_2y2_a000047 (OEIS A000047)"},
+	{Value: "primitive_necklaces_color_swap_a000048", Label: "primitive_necklaces_color_swap_a000048 (OEIS A000048)"},
+	{Value: "form_3x2_4y2_a000049", Label: "form_3x2_4y2_a000049 (OEIS A000049)"},
+	{Value: "form_x2_y2_a000050", Label: "form_x2_y2_a000050 (OEIS A000050)"},
+	{Value: "2n_plus_1_a000051", Label: "2n_plus_1_a000051 (OEIS A000051)"},
 	{Value: "alphabetical_123_a000052", Label: "alphabetical_123_a000052"},
 	{Value: "nyc_subway_1_a000053", Label: "nyc_subway_1_a000053"},
 	{Value: "nyc_subway_a_a000054", Label: "nyc_subway_a_a000054"},
@@ -128,7 +130,7 @@ var sequenceDropdownOptions = []SequenceOption{
 	{Value: "nn", Label: "nn"},
 	{Value: "schroeder_fourth", Label: "schroeder_fourth"},
 	{Value: "partitions_distinct", Label: "partitions_distinct"},
-	{Value: "partitions", Label: "partitions"},
+	{Value: "partitions", Label: "partitions (OEIS A000041)"},
 	{Value: "partitions_into_2_squares", Label: "partitions_into_2_squares"},
 	{Value: "plane_partitions", Label: "plane_partitions"},
 	{Value: "tangent", Label: "tangent"},
@@ -347,17 +349,19 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 	case "unary_a000042":
 		sequence, err = GetUnaryA000042Sequence(maxNumber, positional)
 	case "mersenne_exponents_a000043":
-		sequence, err = GetOEISLookupSequence("A000043", "Mersenne exponents", maxNumber, positional)
+		sequence, err = GetMersennePrimeExponentsSequence(maxNumber, positional)
 	case "dying_rabbits_a000044":
-		sequence, err = GetOEISLookupSequence("A000044", "Dying rabbits", maxNumber, positional)
+		sequence, err = GetA000044Sequence(maxNumber, positional)
+	case "fibonacci_numbers_a000045":
+		sequence, err = GetA000045Sequence(maxNumber, positional)
 	case "primitive_necklaces_complement_a000046":
-		sequence, err = GetOEISLookupSequence("A000046", "Primitive necklaces (turnover, complement equivalent)", maxNumber, positional)
+		sequence, err = GetA000046Sequence(maxNumber, positional)
 	case "form_x2_minus_2y2_a000047":
-		sequence, err = GetOEISLookupSequence("A000047", "Numbers of form x^2 - 2y^2", maxNumber, positional)
+		sequence, err = GetA000047Sequence(maxNumber, positional)
 	case "primitive_necklaces_color_swap_a000048":
 		sequence, err = GetOEISLookupSequence("A000048", "Primitive necklaces with color swap", maxNumber, positional)
 	case "form_3x2_4y2_a000049":
-		sequence, err = GetOEISLookupSequence("A000049", "Numbers of form 3x^2 + 4y^2", maxNumber, positional)
+		sequence, err = GetA000049Sequence(maxNumber, positional)
 	case "form_x2_y2_a000050":
 		sequence, err = GetOEISLookupSequence("A000050", "Numbers of form x^2 + y^2", maxNumber, positional)
 	case "2n_plus_1_a000051":
@@ -555,6 +559,8 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetSchroederFourthSequence(maxNumber, positional)
 	case "partitions_distinct":
 		sequence, err = GetPartitionsDistinctSequence(maxNumber, positional)
+	case "partitions_a000041":
+		sequence, err = GetPartitionsSequence(maxNumber, positional)
 	case "partitions":
 		sequence, err = GetPartitionsSequence(maxNumber, positional)
 	case "partitions_into_2_squares":

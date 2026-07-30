@@ -19,6 +19,7 @@ func TestNewSequences(t *testing.T) {
 		{"parity_a000035", "10", true, "0"},
 		{"parity_a000035", "11", true, "1"},
 		{"unary_a000042", "3", true, "111"},
+		{"mersenne_exponents_a000043", "8", true, "31"},
 		{"form_x2_y2_a000050", "5", false, "9"}, // A000050[4] = 9 (n=0..4)
 		{"2n_plus_1_a000051", "5", true, "33"},
 		{"sylvester_a000058", "3", true, "43"},
@@ -29,6 +30,7 @@ func TestNewSequences(t *testing.T) {
 		{"floor_n_1_5_a000093", "5", true, "11"},
 		{"n_n_plus_3_2_a000096", "5", true, "20"},
 		{"partitions_minus_1_a000065", "5", true, "6"},
+		{"partitions_a000041", "5", true, "7"},
 		{"fibonacci_minus_1_a000071", "4", true, "7"}, // a(4) = Fib(6)-1 = 8-1 = 7
 	}
 
@@ -44,6 +46,20 @@ func TestNewSequences(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestSequenceDropdownOptionIncludesOEISForA000043(t *testing.T) {
+	options := GetSequenceDropdownOptions()
+	for _, option := range options {
+		if option.Value == "mersenne_exponents_a000043" {
+			if option.Label != "mersenne_exponents_a000043 (OEIS A000043)" {
+				t.Fatalf("label = %q, want %q", option.Label, "mersenne_exponents_a000043 (OEIS A000043)")
+			}
+			return
+		}
+	}
+
+	t.Fatalf("sequence option %q not found", "mersenne_exponents_a000043")
 }
 
 func TestOEISLookupsExtended(t *testing.T) {
