@@ -113,6 +113,9 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"record_values_p_n_2d_a000099",
 		"schroeder_second_a001003",
 		"motzkin_numbers_a001006",
+		"simple_groups_order_a001034",
+		"binary_lyndon_words_a001037",
+		"jacobsthal_numbers_a001045",
 		"crystal_ball_squashed_d5_lattice_a010025",
 		"thue_morse_a010060",
 		"cotesian_numerators_a100640",
@@ -122,6 +125,7 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"cotesian_numerator_c_n_2_a100645",
 		"cotesian_denominator_c_n_2_a100646",
 		"cotesian_numerator_c_n_3_a100647",
+		"cotesian_denominator_c_n_3_a100648",
 		"sqrt_prime_a000006",
 		"binary_quadratic_forms_a000003",
 		"hamming_weight",
@@ -359,6 +363,10 @@ func getSequenceName(st string) string {
 		return "Tetrahedral numbers (A000292)"
 	case "schroeder_second_a001003":
 		return "Schroeder's second problem (A001003)"
+	case "simple_groups_order_a001034":
+		return "Orders of noncyclic simple groups (A001034)"
+	case "binary_lyndon_words_a001037":
+		return "Binary Lyndon words count (A001037)"
 	case "schroeder_fourth":
 		return "Schroeder's fourth problem (A000311)"
 	case "ramanujan_tau":
@@ -415,6 +423,8 @@ func getSequenceName(st string) string {
 		return "Sqrt(3) Convergents Denominators (A002530)"
 	case "odious_numbers":
 		return "Odious numbers (A000069)"
+	case "jacobsthal_numbers_a001045":
+		return "Jacobsthal numbers (A001045)"
 	case "stern":
 		return "Stern's diatomic series (A002487)"
 	case "sqrt_prime_a000006":
@@ -467,6 +477,8 @@ func getSequenceName(st string) string {
 		return "Denominator of Cotesian number C(n,2) (A100646)"
 	case "cotesian_numerator_c_n_3_a100647":
 		return "Numerator of Cotesian number C(n,3) (A100647)"
+	case "cotesian_denominator_c_n_3_a100648":
+		return "Denominator of Cotesian number C(n,3) (A100648)"
 	default:
 		return st
 	}
@@ -671,6 +683,8 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		"theta_series_d4_lattice",
 		"ways_two_squares",
 		"threshold_functions", "fubini", "schroeder_fourth", "schroeder_second_a001003",
+		"binary_lyndon_words_a001037",
+		"jacobsthal_numbers_a001045",
 		"partitions_into_2_squares",
 		"powers_of_2",
 		"powers_of_4",
@@ -893,6 +907,16 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		}
 	case "cotesian_numerator_c_n_3_a100647":
 		seq, err := GenerateCotesianNumeratorCN3A100647Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_denominator_c_n_3_a100648":
+		seq, err := GenerateCotesianDenominatorCN3A100648Sequence(big.NewInt(1000))
 		if err != nil {
 			return false, "", err
 		}

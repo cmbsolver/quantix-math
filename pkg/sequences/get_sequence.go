@@ -106,6 +106,9 @@ var sequenceDropdownOptions = []SequenceOption{
 	{Value: "record_values_p_n_2d_a000099", Label: "record_values_p_n_2d_a000099"},
 	{Value: "schroeder_second_a001003", Label: "schroeder_second_a001003 (OEIS A001003)"},
 	{Value: "motzkin_numbers_a001006", Label: "motzkin_numbers_a001006 (OEIS A001006)"},
+	{Value: "simple_groups_order_a001034", Label: "simple_groups_order_a001034 (OEIS A001034)"},
+	{Value: "binary_lyndon_words_a001037", Label: "binary_lyndon_words_a001037 (OEIS A001037)"},
+	{Value: "jacobsthal_numbers_a001045", Label: "jacobsthal_numbers_a001045 (OEIS A001045)"},
 	{Value: "crystal_ball_squashed_d5_lattice_a010025", Label: "crystal_ball_squashed_d5_lattice_a010025 (OEIS A010025)"},
 	{Value: "thue_morse_a010060", Label: "thue_morse_a010060 (OEIS A010060)"},
 	{Value: "cotesian_numerators_a100640", Label: "cotesian_numerators_a100640 (OEIS A100640)"},
@@ -115,6 +118,7 @@ var sequenceDropdownOptions = []SequenceOption{
 	{Value: "cotesian_numerator_c_n_2_a100645", Label: "cotesian_numerator_c_n_2_a100645 (OEIS A100645)"},
 	{Value: "cotesian_denominator_c_n_2_a100646", Label: "cotesian_denominator_c_n_2_a100646 (OEIS A100646)"},
 	{Value: "cotesian_numerator_c_n_3_a100647", Label: "cotesian_numerator_c_n_3_a100647 (OEIS A100647)"},
+	{Value: "cotesian_denominator_c_n_3_a100648", Label: "cotesian_denominator_c_n_3_a100648 (OEIS A100648)"},
 	{Value: "sqrt_prime_a000006", Label: "sqrt_prime_a000006"},
 	{Value: "binary_quadratic_forms_a000003", Label: "binary_quadratic_forms_a000003"},
 	{Value: "hamming_weight", Label: "hamming_weight"},
@@ -522,6 +526,12 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetSchroederSecondA001003Sequence(maxNumber, positional)
 	case "motzkin_numbers_a001006":
 		sequence, err = GetMotzkinNumbersA001006Sequence(maxNumber, positional)
+	case "simple_groups_order_a001034":
+		sequence, err = GetA001034Sequence(maxNumber, positional)
+	case "binary_lyndon_words_a001037":
+		sequence, err = GetA001037Sequence(maxNumber, positional)
+	case "jacobsthal_numbers_a001045":
+		sequence, err = GetA001045Sequence(maxNumber, positional)
 	case "crystal_ball_squashed_d5_lattice_a010025":
 		sequence, err = GetA010025Sequence(maxNumber, positional)
 	case "thue_morse_a010060":
@@ -540,6 +550,8 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetCotesianDenominatorCN2A100646Sequence(maxNumber, positional)
 	case "cotesian_numerator_c_n_3_a100647":
 		sequence, err = GetCotesianNumeratorCN3A100647Sequence(maxNumber, positional)
+	case "cotesian_denominator_c_n_3_a100648":
+		sequence, err = GetCotesianDenominatorCN3A100648Sequence(maxNumber, positional)
 	case "sqrt_prime_a000006":
 		sequence, err = GetSqrtPrimeA000006Sequence(maxNumber, positional)
 	case "binary_quadratic_forms_a000003":

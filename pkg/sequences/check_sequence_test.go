@@ -1,6 +1,7 @@
 package sequences
 
 import (
+	"math/big"
 	"testing"
 )
 
@@ -86,5 +87,26 @@ func TestCheckNumberInNewSequences(t *testing.T) {
 				t.Errorf("CheckNumberInSequences(%s) did not find sequence %s, results: %v", tt.number, tt.wantName, results)
 			}
 		})
+	}
+}
+
+func TestCheckExistenceJacobsthalA001045(t *testing.T) {
+	valueIn := big.NewInt(43)
+	valueOut := big.NewInt(44)
+
+	exists, _, err := checkExistence(valueIn, "jacobsthal_numbers_a001045")
+	if err != nil {
+		t.Fatalf("checkExistence(%s, jacobsthal_numbers_a001045) unexpected error: %v", valueIn.String(), err)
+	}
+	if !exists {
+		t.Fatalf("expected %s to exist in Jacobsthal numbers", valueIn.String())
+	}
+
+	exists, _, err = checkExistence(valueOut, "jacobsthal_numbers_a001045")
+	if err != nil {
+		t.Fatalf("checkExistence(%s, jacobsthal_numbers_a001045) unexpected error: %v", valueOut.String(), err)
+	}
+	if exists {
+		t.Fatalf("expected %s not to exist in Jacobsthal numbers", valueOut.String())
 	}
 }
