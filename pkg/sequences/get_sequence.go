@@ -104,6 +104,17 @@ var sequenceDropdownOptions = []SequenceOption{
 	{Value: "partitions_2kinds_1_2_a000097", Label: "partitions_2kinds_1_2_a000097"},
 	{Value: "partitions_2kinds_1_2_3_a000098", Label: "partitions_2kinds_1_2_3_a000098"},
 	{Value: "record_values_p_n_2d_a000099", Label: "record_values_p_n_2d_a000099"},
+	{Value: "schroeder_second_a001003", Label: "schroeder_second_a001003 (OEIS A001003)"},
+	{Value: "motzkin_numbers_a001006", Label: "motzkin_numbers_a001006 (OEIS A001006)"},
+	{Value: "crystal_ball_squashed_d5_lattice_a010025", Label: "crystal_ball_squashed_d5_lattice_a010025 (OEIS A010025)"},
+	{Value: "thue_morse_a010060", Label: "thue_morse_a010060 (OEIS A010060)"},
+	{Value: "cotesian_numerators_a100640", Label: "cotesian_numerators_a100640 (OEIS A100640)"},
+	{Value: "cotesian_denominators_a100641", Label: "cotesian_denominators_a100641 (OEIS A100641)"},
+	{Value: "cotesian_numerator_c_n_1_a100643", Label: "cotesian_numerator_c_n_1_a100643 (OEIS A100643)"},
+	{Value: "cotesian_denominator_c_n_1_a100644", Label: "cotesian_denominator_c_n_1_a100644 (OEIS A100644)"},
+	{Value: "cotesian_numerator_c_n_2_a100645", Label: "cotesian_numerator_c_n_2_a100645 (OEIS A100645)"},
+	{Value: "cotesian_denominator_c_n_2_a100646", Label: "cotesian_denominator_c_n_2_a100646 (OEIS A100646)"},
+	{Value: "cotesian_numerator_c_n_3_a100647", Label: "cotesian_numerator_c_n_3_a100647 (OEIS A100647)"},
 	{Value: "sqrt_prime_a000006", Label: "sqrt_prime_a000006"},
 	{Value: "binary_quadratic_forms_a000003", Label: "binary_quadratic_forms_a000003"},
 	{Value: "hamming_weight", Label: "hamming_weight"},
@@ -507,6 +518,28 @@ func GetSequence(maxNumberString, sequenceType string, positional bool) (*Numeri
 		sequence, err = GetOEISLookupSequence("A000098", "Partitions (2 kinds of 1, 2, 3)", maxNumber, positional)
 	case "record_values_p_n_2d_a000099":
 		sequence, err = GetOEISLookupSequence("A000099", "Record values of |P(n)| in 2D", maxNumber, positional)
+	case "schroeder_second_a001003":
+		sequence, err = GetSchroederSecondA001003Sequence(maxNumber, positional)
+	case "motzkin_numbers_a001006":
+		sequence, err = GetMotzkinNumbersA001006Sequence(maxNumber, positional)
+	case "crystal_ball_squashed_d5_lattice_a010025":
+		sequence, err = GetA010025Sequence(maxNumber, positional)
+	case "thue_morse_a010060":
+		sequence, err = GetA010060Sequence(maxNumber, positional)
+	case "cotesian_numerators_a100640":
+		sequence, err = GetCotesianNumeratorsA100640Sequence(maxNumber, positional)
+	case "cotesian_denominators_a100641":
+		sequence, err = GetCotesianDenominatorsA100641Sequence(maxNumber, positional)
+	case "cotesian_numerator_c_n_1_a100643":
+		sequence, err = GetCotesianNumeratorCN1A100643Sequence(maxNumber, positional)
+	case "cotesian_denominator_c_n_1_a100644":
+		sequence, err = GetCotesianDenominatorCN1A100644Sequence(maxNumber, positional)
+	case "cotesian_numerator_c_n_2_a100645":
+		sequence, err = GetCotesianNumeratorCN2A100645Sequence(maxNumber, positional)
+	case "cotesian_denominator_c_n_2_a100646":
+		sequence, err = GetCotesianDenominatorCN2A100646Sequence(maxNumber, positional)
+	case "cotesian_numerator_c_n_3_a100647":
+		sequence, err = GetCotesianNumeratorCN3A100647Sequence(maxNumber, positional)
 	case "sqrt_prime_a000006":
 		sequence, err = GetSqrtPrimeA000006Sequence(maxNumber, positional)
 	case "binary_quadratic_forms_a000003":

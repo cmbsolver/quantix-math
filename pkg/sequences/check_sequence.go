@@ -111,6 +111,17 @@ func CheckNumberInSequences(numberStr string) ([]CheckResult, error) {
 		"partitions_2kinds_1_2_a000097",
 		"partitions_2kinds_1_2_3_a000098",
 		"record_values_p_n_2d_a000099",
+		"schroeder_second_a001003",
+		"motzkin_numbers_a001006",
+		"crystal_ball_squashed_d5_lattice_a010025",
+		"thue_morse_a010060",
+		"cotesian_numerators_a100640",
+		"cotesian_denominators_a100641",
+		"cotesian_numerator_c_n_1_a100643",
+		"cotesian_denominator_c_n_1_a100644",
+		"cotesian_numerator_c_n_2_a100645",
+		"cotesian_denominator_c_n_2_a100646",
+		"cotesian_numerator_c_n_3_a100647",
 		"sqrt_prime_a000006",
 		"binary_quadratic_forms_a000003",
 		"hamming_weight",
@@ -346,6 +357,8 @@ func getSequenceName(st string) string {
 		return "Powers of 4 (A000302)"
 	case "tetrahedral":
 		return "Tetrahedral numbers (A000292)"
+	case "schroeder_second_a001003":
+		return "Schroeder's second problem (A001003)"
 	case "schroeder_fourth":
 		return "Schroeder's fourth problem (A000311)"
 	case "ramanujan_tau":
@@ -436,6 +449,24 @@ func getSequenceName(st string) string {
 		return "Binary weight of exponents is odd (A000028)"
 	case "exp_minus_2x_a000023":
 		return "Expansion of e.g.f. exp(-2x)/(1-x) (A000023)"
+	case "crystal_ball_squashed_d5_lattice_a010025":
+		return "Crystal ball sequence for squashed {D_5}^* lattice (A010025)"
+	case "thue_morse_a010060":
+		return "Thue-Morse sequence (A010060)"
+	case "cotesian_numerators_a100640":
+		return "Numerators of Cotesian numbers C(n,k) (A100640)"
+	case "cotesian_denominators_a100641":
+		return "Denominators of Cotesian numbers C(n,k) (A100641)"
+	case "cotesian_numerator_c_n_1_a100643":
+		return "Numerator of Cotesian number C(n,1) (A100643)"
+	case "cotesian_denominator_c_n_1_a100644":
+		return "Denominator of Cotesian number C(n,1) (A100644)"
+	case "cotesian_numerator_c_n_2_a100645":
+		return "Numerator of Cotesian number C(n,2) (A100645)"
+	case "cotesian_denominator_c_n_2_a100646":
+		return "Denominator of Cotesian number C(n,2) (A100646)"
+	case "cotesian_numerator_c_n_3_a100647":
+		return "Numerator of Cotesian number C(n,3) (A100647)"
 	default:
 		return st
 	}
@@ -639,7 +670,7 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 		"sum_divisors", "divisor_count", "divisor_count_a000005", "sum_odd_divisors", "alkanes", "abelian_groups_order_n",
 		"theta_series_d4_lattice",
 		"ways_two_squares",
-		"threshold_functions", "fubini", "schroeder_fourth",
+		"threshold_functions", "fubini", "schroeder_fourth", "schroeder_second_a001003",
 		"partitions_into_2_squares",
 		"powers_of_2",
 		"powers_of_4",
@@ -759,6 +790,115 @@ func checkExistence(n *big.Int, st string) (bool, string, error) {
 			rem := new(big.Int).Sub(n, big.NewInt(y2_12))
 			if isPerfectSquare(rem) {
 				return true, "", nil
+			}
+		}
+	case "crystal_ball_squashed_d5_lattice_a010025":
+		if n.Sign() <= 0 {
+			return false, "", nil
+		}
+		limit := int64(1)
+		for {
+			term := CalculateA010025(int(limit))
+			termBig := new(big.Int).SetUint64(term)
+			cmp := termBig.Cmp(n)
+			if cmp == 0 {
+				return true, fmt.Sprintf("%d", limit), nil
+			}
+			if cmp > 0 {
+				break
+			}
+			limit *= 2
+		}
+		low, high := int64(0), limit
+		for low <= high {
+			mid := (low + high) / 2
+			term := CalculateA010025(int(mid))
+			termBig := new(big.Int).SetUint64(term)
+			cmp := termBig.Cmp(n)
+			if cmp == 0 {
+				return true, fmt.Sprintf("%d", mid), nil
+			}
+			if cmp < 0 {
+				low = mid + 1
+			} else {
+				high = mid - 1
+			}
+		}
+	case "thue_morse_a010060":
+		if n.Cmp(big.NewInt(0)) == 0 {
+			return true, "even binary-weight indices", nil
+		}
+		if n.Cmp(big.NewInt(1)) == 0 {
+			return true, "odd binary-weight indices", nil
+		}
+	case "cotesian_numerators_a100640":
+		seq, err := GenerateCotesianNumeratorsA100640Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_denominators_a100641":
+		seq, err := GenerateCotesianDenominatorsA100641Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_numerator_c_n_1_a100643":
+		seq, err := GenerateCotesianNumeratorCN1A100643Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_denominator_c_n_1_a100644":
+		seq, err := GenerateCotesianDenominatorCN1A100644Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_numerator_c_n_2_a100645":
+		seq, err := GenerateCotesianNumeratorCN2A100645Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_denominator_c_n_2_a100646":
+		seq, err := GenerateCotesianDenominatorCN2A100646Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
+			}
+		}
+	case "cotesian_numerator_c_n_3_a100647":
+		seq, err := GenerateCotesianNumeratorCN3A100647Sequence(big.NewInt(1000))
+		if err != nil {
+			return false, "", err
+		}
+		for i, v := range seq.Sequence {
+			if v.Cmp(n) == 0 {
+				return true, fmt.Sprintf("%d", i), nil
 			}
 		}
 	}
