@@ -36,4 +36,8 @@ func RegisterAPIRoutes(app *fiber.App) {
 
 	// Liber Primus routes
 	apiGroup.Get("/liber-primus/metadata/:id", api.GetMetadataHandler)
+
+	// Cipher analysis routes
+	apiGroup.Post("/cipher/analyze", api.CipherAnalyzeHandler)
+	apiGroup.Post("/cipher/matsui", api.MatsuiAnalyzeHandler)
 }

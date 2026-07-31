@@ -1,0 +1,90 @@
+<div class="container mt-4">
+    <h1>Matsui Analyzer</h1>
+    <p class="text-muted">Run Matsui linear cryptanalysis (Algorithm 1 and Algorithm 2 key ranking) from known plaintext/ciphertext samples and linear approximations.</p>
+
+    <form id="matsuiAnalyzerForm" class="row g-3">
+        <div class="col-12">
+            <label for="samplesInput" class="form-label">Samples (JSON array)</label>
+            <textarea id="samplesInput" class="form-control" rows="8" required>[{"plaintext":3,"ciphertext":5,"key_guess":1},{"plaintext":2,"ciphertext":7,"key_guess":1}]</textarea>
+        </div>
+
+        <div class="col-12">
+            <label for="approximationsInput" class="form-label">Approximations (JSON array)</label>
+            <textarea id="approximationsInput" class="form-control" rows="6" required>[{"plain_mask":1,"cipher_mask":1},{"plain_mask":3,"cipher_mask":1}]</textarea>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Analyze Matsui</button>
+            <button type="button" id="clearBtn" class="btn btn-danger ms-2">Clear</button>
+        </div>
+    </form>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+
+    <div id="resultContainer" class="card mt-4" style="display:none;">
+        <div class="card-body">
+            <h5 class="card-title">Results</h5>
+            <pre id="resultJson" class="bg-body-tertiary text-body p-3 rounded mb-0 border" style="white-space: pre-wrap;"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('matsuiAnalyzerForm');
+        const clearBtn = document.getElementById('clearBtn');
+        const errorContainer = document.getElementById('errorContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const resultJson = document.getElementById('resultJson');
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+
+            let samples;
+            let approximations;
+            try {
+                samples = JSON.parse(document.getElementById('samplesInput').value);
+                approximations = JSON.parse(document.getElementById('approximationsInput').value);
+            } catch (parseError) {
+                errorContainer.textContent = 'Samples and approximations must be valid JSON arrays.';
+                errorContainer.style.display = 'block';
+                return;
+            }
+
+            const payload = {
+                matsui: {
+                    samples,
+                    approximations
+                }
+            };
+
+            try {
+                const response = await fetch('/api/cipher/matsui', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Matsui analysis failed');
+                }
+
+                resultJson.textContent = JSON.stringify(data, null, 2);
+                resultContainer.style.display = 'block';
+            } catch (error) {
+                errorContainer.textContent = error.message;
+                errorContainer.style.display = 'block';
+            }
+        });
+
+        clearBtn.addEventListener('click', function () {
+            form.reset();
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            resultJson.textContent = '';
+        });
+    });
+</script>

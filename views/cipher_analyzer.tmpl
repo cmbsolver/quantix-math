@@ -1,0 +1,225 @@
+<div class="container mt-4">
+    <h1>Cipher Analyzer</h1>
+    <p class="text-muted">Analyze IoC, Chi-Squared, Kasiski, Entropy, Character Set, and ranked cipher likelihood.</p>
+    <p class="text-muted mb-4">Need Matsui linear cryptanalysis? Use the dedicated <a href="/matsui_analyzer">Matsui Analyzer</a> page.</p>
+
+    <form id="cipherAnalyzerForm" class="row g-3">
+        <div class="col-12">
+            <label for="cipherText" class="form-label">Cipher Text</label>
+            <textarea id="cipherText" class="form-control" rows="7" placeholder="Paste ciphertext or text to analyze" required></textarea>
+        </div>
+        <div class="col-12">
+            <label for="alphabet" class="form-label">Alphabet (optional)</label>
+            <input id="alphabet" class="form-control" placeholder="Example: ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789">
+        </div>
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Analyze</button>
+            <button type="button" id="clearBtn" class="btn btn-danger ms-2">Clear</button>
+        </div>
+    </form>
+
+    <div id="errorContainer" class="alert alert-danger mt-4" style="display:none;"></div>
+
+    <div id="resultContainer" class="mt-4" style="display:none;">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Summary</h5>
+                <div class="row g-3" id="summaryGrid"></div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Character Set</h5>
+                <div class="row g-3" id="characterSetGrid"></div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Kasiski Examination</h5>
+                <div class="row g-3 mb-3" id="kasiskiGrid"></div>
+                <div id="repeatDistancesContainer"></div>
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Cipher Ranking</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover align-middle mb-0" id="rankingTable">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Cipher</th>
+                                <th scope="col">Score</th>
+                                <th scope="col">Why</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title mb-3">Normalized Text</h5>
+                <div id="normalizedText" class="bg-body-tertiary text-body p-3 rounded border" style="white-space: pre-wrap; word-break: break-word;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('cipherAnalyzerForm');
+        const clearBtn = document.getElementById('clearBtn');
+        const errorContainer = document.getElementById('errorContainer');
+        const resultContainer = document.getElementById('resultContainer');
+        const summaryGrid = document.getElementById('summaryGrid');
+        const characterSetGrid = document.getElementById('characterSetGrid');
+        const kasiskiGrid = document.getElementById('kasiskiGrid');
+        const repeatDistancesContainer = document.getElementById('repeatDistancesContainer');
+        const rankingTableBody = document.querySelector('#rankingTable tbody');
+        const normalizedText = document.getElementById('normalizedText');
+
+        function metricCard(label, value) {
+            return `
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="border rounded p-3 h-100 bg-body-tertiary">
+                        <div class="text-muted small text-uppercase">${label}</div>
+                        <div class="fw-semibold fs-5">${value}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatNumber(value, digits = 4) {
+            if (typeof value !== 'number' || Number.isNaN(value)) return '-';
+            return value.toFixed(digits);
+        }
+
+        function formatPercent(value, digits = 2) {
+            if (typeof value !== 'number' || Number.isNaN(value)) return '-';
+            return `${(value * 100).toFixed(digits)}%`;
+        }
+
+        function getBestCandidateKeyLength(candidateKeyLengths) {
+            if (!candidateKeyLengths || typeof candidateKeyLengths !== 'object') return '-';
+
+            let bestLength = '-';
+            let bestScore = -1;
+            for (const [keyLength, score] of Object.entries(candidateKeyLengths)) {
+                if (typeof score === 'number' && score > bestScore) {
+                    bestScore = score;
+                    bestLength = keyLength;
+                }
+            }
+
+            return bestLength;
+        }
+
+        function renderResults(data) {
+            const charset = data.character_set || {};
+            const kasiski = data.kasiski || {};
+            const candidateKeyLengths = kasiski.candidate_key_lengths || {};
+            const repeats = kasiski.repeats || {};
+
+            summaryGrid.innerHTML = [
+                metricCard('Alphabet', charset.alphabet || '-'),
+                metricCard('Length', data.length ?? '-'),
+                metricCard('Index of Coincidence', formatNumber(data.ioc)),
+                metricCard('Chi-Squared', formatNumber(data.chi_squared)),
+                metricCard('Entropy', formatNumber(data.entropy)),
+                metricCard('Normalized Entropy', formatNumber(data.normalized_entropy))
+            ].join('');
+
+            characterSetGrid.innerHTML = [
+                metricCard('Alphabet Size', charset.alphabet_size ?? '-'),
+                metricCard('Observed Unique', charset.observed_unique ?? '-'),
+                metricCard('Coverage', formatPercent(charset.coverage)),
+                metricCard('Contains Numbers', charset.contains_numbers ? 'Yes' : 'No')
+            ].join('');
+
+            kasiskiGrid.innerHTML = [
+                metricCard('Best Candidate Key Length', getBestCandidateKeyLength(candidateKeyLengths)),
+                metricCard('Distinct Distances', Array.isArray(kasiski.distances) ? kasiski.distances.length : '-'),
+                metricCard('Total Repeats', Object.keys(repeats).length)
+            ].join('');
+
+            const repeatDistances = Array.isArray(kasiski.distances) ? kasiski.distances : [];
+            if (repeatDistances.length > 0) {
+                repeatDistancesContainer.innerHTML = `
+                    <div class="small text-muted mb-2">Repeat Distances</div>
+                    <div class="d-flex flex-wrap gap-2">
+                        ${repeatDistances.map((distance) => `<span class="badge text-bg-secondary">${distance}</span>`).join('')}
+                    </div>
+                `;
+            } else {
+                repeatDistancesContainer.innerHTML = '<div class="text-muted">No repeat distances detected.</div>';
+            }
+
+            const ranking = Array.isArray(data.ranking) ? data.ranking : [];
+            rankingTableBody.innerHTML = '';
+            ranking.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <th scope="row">${index + 1}</th>
+                    <td class="fw-semibold">${item.name || '-'}</td>
+                    <td>${formatNumber(item.score)}</td>
+                    <td class="text-muted">Heuristic confidence score from statistical signals.</td>
+                `;
+                rankingTableBody.appendChild(row);
+            });
+
+            if (ranking.length === 0) {
+                rankingTableBody.innerHTML = '<tr><td colspan="4" class="text-muted">No ranking results available.</td></tr>';
+            }
+
+            normalizedText.textContent = data.normalized_text || '-';
+        }
+
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+
+            const payload = {
+                text: document.getElementById('cipherText').value,
+                alphabet: document.getElementById('alphabet').value
+            };
+
+            try {
+                const response = await fetch('/api/cipher/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+
+                renderResults(data);
+                resultContainer.style.display = 'block';
+            } catch (error) {
+                errorContainer.textContent = error.message;
+                errorContainer.style.display = 'block';
+            }
+        });
+
+        clearBtn.addEventListener('click', function () {
+            form.reset();
+            errorContainer.style.display = 'none';
+            resultContainer.style.display = 'none';
+            summaryGrid.innerHTML = '';
+            characterSetGrid.innerHTML = '';
+            kasiskiGrid.innerHTML = '';
+            repeatDistancesContainer.innerHTML = '';
+            rankingTableBody.innerHTML = '';
+            normalizedText.textContent = '';
+        });
+    });
+</script>

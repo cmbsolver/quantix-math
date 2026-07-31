@@ -93,4 +93,16 @@ func SetupUIRoutes(app *fiber.App) {
 			"Title": "Möbius Numbers Calculator",
 		})
 	})
+
+	app.Get("/cipher_analyzer", func(c *fiber.Ctx) error {
+		return c.Render("cipher_analyzer", fiber.Map{
+			"Title": "Cipher Analyzer",
+		})
+	})
+
+	app.Get("/matsui_analyzer", func(c *fiber.Ctx) error {
+		return c.Render("matsui_analyzer", fiber.Map{
+			"Title": "Matsui Analyzer",
+		})
+	})
 }
