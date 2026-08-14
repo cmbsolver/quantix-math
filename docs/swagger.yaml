@@ -78,26 +78,6 @@ definitions:
       error:
         type: string
     type: object
-  api.GraphRequest:
-    properties:
-      points:
-        items:
-          $ref: '#/definitions/api.Point'
-        type: array
-    type: object
-  api.GraphResponse:
-    properties:
-      lines:
-        items:
-          $ref: '#/definitions/api.Line'
-        type: array
-      points:
-        items:
-          $ref: '#/definitions/api.Point'
-        type: array
-      totalLength:
-        type: number
-    type: object
   api.ImageMetadata:
     properties:
       color:
@@ -532,33 +512,6 @@ paths:
       summary: Download dictionary words as Excel
       tags:
       - Dictionary
-  /api/graph/process:
-    post:
-      consumes:
-      - application/json
-      description: Calculates lines between points and total length, filtering lines
-        that pass through other points
-      parameters:
-      - description: Graph Request
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/api.GraphRequest'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/api.GraphResponse'
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/api.ErrorResponse'
-      summary: Process a set of coordinate points
-      tags:
-      - Math
   /api/liber-primus/metadata/{id}:
     get:
       description: Returns metadata (dimensions, colors, JFIF info) for a Liber Primus

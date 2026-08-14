@@ -8,8 +8,6 @@ import (
 
 func RegisterAPIRoutes(app *fiber.App) {
 	apiGroup := app.Group("/api")
-	apiGroup.Post("/sequence", api.GetSequenceHandler)
-	apiGroup.Post("/check-number", api.CheckNumberInSequencesHandler)
 	apiGroup.Post("/prime", api.GetIsItPrimeHandler)
 
 	// Dictionary routes
@@ -22,9 +20,6 @@ func RegisterAPIRoutes(app *fiber.App) {
 	apiGroup.Post("/binutils/csv-to-bytes", api.CSVToBytesHandler)
 	apiGroup.Post("/binutils/base64-to-csv", api.Base64ToCSVHandler)
 	apiGroup.Post("/binutils/csv-to-base64", api.CSVToBase64Handler)
-
-	// Graph routes
-	apiGroup.Post("/graph/process", api.ProcessGraphHandler)
 
 	// Mobius routes
 	apiGroup.Post("/mobius/direct", api.MobiusDirectHandler)

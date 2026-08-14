@@ -379,46 +379,6 @@
                 }
             }
         },
-        "/api/graph/process": {
-            "post": {
-                "description": "Calculates lines between points and total length, filtering lines that pass through other points",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Math"
-                ],
-                "summary": "Process a set of coordinate points",
-                "parameters": [
-                    {
-                        "description": "Graph Request",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/api.GraphRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/api.GraphResponse"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/api.ErrorResponse"
-                        }
-                    }
-                }
-            }
-        },
         "/api/liber-primus/metadata/{id}": {
             "get": {
                 "description": "Returns metadata (dimensions, colors, JFIF info) for a Liber Primus page image",
@@ -826,37 +786,6 @@
             "properties": {
                 "error": {
                     "type": "string"
-                }
-            }
-        },
-        "api.GraphRequest": {
-            "type": "object",
-            "properties": {
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/api.Point"
-                    }
-                }
-            }
-        },
-        "api.GraphResponse": {
-            "type": "object",
-            "properties": {
-                "lines": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/api.Line"
-                    }
-                },
-                "points": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/api.Point"
-                    }
-                },
-                "totalLength": {
-                    "type": "number"
                 }
             }
         },

@@ -1,8 +1,6 @@
 package routes
 
 import (
-	"quantix-math/pkg/sequences"
-
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -19,20 +17,6 @@ func SetupUIRoutes(app *fiber.App) {
 	app.Get("/about", func(c *fiber.Ctx) error {
 		return c.Render("about", fiber.Map{
 			"Title": "About",
-		})
-	})
-
-	// About Page
-	app.Get("/sequence", func(c *fiber.Ctx) error {
-		return c.Render("sequence", fiber.Map{
-			"Title":           "Numeric Sequences",
-			"SequenceOptions": sequences.GetSequenceDropdownOptions(),
-		})
-	})
-
-	app.Get("/check-sequence", func(c *fiber.Ctx) error {
-		return c.Render("check_sequence", fiber.Map{
-			"Title": "Check Sequence",
 		})
 	})
 
@@ -79,12 +63,6 @@ func SetupUIRoutes(app *fiber.App) {
 	app.Get("/anagram_finder", func(c *fiber.Ctx) error {
 		return c.Render("anagram_finder", fiber.Map{
 			"Title": "Anagram Finder",
-		})
-	})
-
-	app.Get("/coordinate_graph", func(c *fiber.Ctx) error {
-		return c.Render("coordinate_graph", fiber.Map{
-			"Title": "Coordinate Graph",
 		})
 	})
 
